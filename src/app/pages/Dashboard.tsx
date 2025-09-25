@@ -12,7 +12,7 @@ import Header from "../../shared/components/Header";
 // Images will be loaded from API
 
 
-// Demo thumbnails (no APII)
+// Demo thumbnails (no APIIsssss)
 const lessonGreetings = "/images/lesson-greetings-BdV20h0N.jpg";
 const lessonFamily = "/images/lesson-family-Be3SmyDt.jpg";
 const lessonNumbers = "/images/lesson-numbers-DJNsYzix.jpg";
