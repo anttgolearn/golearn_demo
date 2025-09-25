@@ -13,7 +13,7 @@ import Header from "../../shared/components/Header";
 
 
 // Demo thumbnails (no API)
-const lessonGreetings = "/images/lesson-emotions-CLtOmn_z.jpg.jpg";
+const lessonGreetings = "/images/lesson-greetings-BdV20h0N.jpg";
 const lessonFamily = "/images/lesson-family-Be3SmyDt.jpg";
 const lessonNumbers = "/images/lesson-numbers-DJNsYzix.jpg";
 const lessonEmotions = "/images/lesson-emotions-CLtOmn_z.jpg";
