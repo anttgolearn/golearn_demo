@@ -6,7 +6,7 @@ import { Button } from "../../shared/ui/button"
 import { Card } from "../../shared/ui/card"
 import { Input } from "../../shared/ui/input"
 import { Badge } from "../../shared/ui/badge"
-import { ArrowLeft, Search, Play, Volume2, Star, Filter } from "lucide-react"
+import { ArrowLeft, Search, Play, Star, Filter } from "lucide-react"
 import { cn } from "../../lib/utils"
 
 interface DictionaryEntry {

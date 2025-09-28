@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../../shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/ui/card';
 import { Badge } from '../../../shared/ui/badge';
-import { Play, Pause, RotateCcw, CheckCircle, X, Clock, Brain, Star, Volume2 } from 'lucide-react';
+import { Play, Pause, RotateCcw, CheckCircle, X, Brain, Star } from 'lucide-react';
 
 interface QuizMixProps {
   onComplete: (score: number, timeSpent: number) => void;

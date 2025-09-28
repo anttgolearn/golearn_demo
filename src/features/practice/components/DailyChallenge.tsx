@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../../shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/ui/card';
 import { Badge } from '../../../shared/ui/badge';
-import { Play, Pause, RotateCcw, CheckCircle, X, Clock, Star, Trophy, Flame, Target } from 'lucide-react';
+import { Play, Pause, RotateCcw, CheckCircle, X, Star, Trophy, Flame, Target } from 'lucide-react';
 
 interface DailyChallengeProps {
   onComplete: (score: number, timeSpent: number) => void;
@@ -16,7 +16,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
   const [timeSpent, setTimeSpent] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [streak, setStreak] = useState(0);
+  const [streak] = useState(0);
   const [showInstructions, setShowInstructions] = useState(true);
 
   // Daily challenge - mixed difficulty questions

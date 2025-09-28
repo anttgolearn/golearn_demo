@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../../shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/ui/card';
 import { Badge } from '../../../shared/ui/badge';
-import { Play, Pause, RotateCcw, CheckCircle, X, Clock, MessageCircle, Mic, Volume2 } from 'lucide-react';
+import { Play, RotateCcw, CheckCircle, X, Clock, MessageCircle, Mic, Star } from 'lucide-react';
 
 interface ConversationPracticeProps {
   onComplete: (score: number, timeSpent: number) => void;
@@ -17,7 +17,6 @@ const ConversationPractice: React.FC<ConversationPracticeProps> = ({ onComplete,
   const [showResult, setShowResult] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
-  const [userResponses, setUserResponses] = useState<string[]>([]);
 
   // Conversation scenarios
   const scenarios = [
@@ -90,7 +89,6 @@ const ConversationPractice: React.FC<ConversationPracticeProps> = ({ onComplete,
     setIsPlaying(false);
     setIsRecording(false);
     setShowInstructions(true);
-    setUserResponses([]);
   };
 
   const formatTime = (seconds: number) => {
