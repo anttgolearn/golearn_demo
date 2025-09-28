@@ -1,7 +1,15 @@
 {
-  "installCommand": "npm ci || npm install",
+  "installCommand": "npm ci --legacy-peer-deps || npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
   "framework": "vite",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "functions": {
+    "app/api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
 
