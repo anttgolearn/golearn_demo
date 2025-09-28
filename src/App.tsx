@@ -11,6 +11,7 @@ type AppState = "landing" | "onboarding" | "dashboard" | "learning" | "profile" 
 
 function App() {
   const [appState, setAppState] = useState<AppState>("landing")
+  const [currentLessonId, setCurrentLessonId] = useState<string>("1")
   const routes = useMemo(() => ({
     landing: "#/",
     onboarding: "#/onboarding",
@@ -18,8 +19,8 @@ function App() {
     learning: "#/learning",
     profile: "#/profile",
     settings: "#/settings",
-    "lesson-detail": "#/lesson/1"
-  }), [])
+    "lesson-detail": `#/lesson/${currentLessonId}`
+  }), [currentLessonId])
 
   const parseHashToState = (): AppState => {
     const hash = window.location.hash.replace(/^#/, "") || "/"
@@ -27,14 +28,24 @@ function App() {
     if (hash.startsWith("/dashboard")) return "dashboard"
     if (hash.startsWith("/profile")) return "profile"
     if (hash.startsWith("/settings")) return "settings"
-    if (hash.startsWith("/lesson")) return "lesson-detail"
+    if (hash.startsWith("/lesson")) {
+      // Extract lesson ID from URL like /lesson/4
+      const match = hash.match(/^\/lesson\/(\d+)/)
+      if (match) {
+        setCurrentLessonId(match[1])
+      }
+      return "lesson-detail"
+    }
     if (hash.startsWith("/learning")) return "learning"
     return "landing"
   }
 
-  const navigate = (state: AppState) => {
+  const navigate = (state: AppState, lessonId?: string) => {
+    if (state === "lesson-detail" && lessonId) {
+      setCurrentLessonId(lessonId)
+    }
     setAppState(state)
-    const url = routes[state]
+    const url = state === "lesson-detail" && lessonId ? `#/lesson/${lessonId}` : routes[state]
     if (url) {
       window.location.hash = url
     }
@@ -72,7 +83,7 @@ function App() {
 
   const handleGoToSettings = () => navigate("settings")
 
-  const handleGoToLessonDetail = () => navigate("lesson-detail")
+  const handleGoToLessonDetail = (lessonId: string) => navigate("lesson-detail", lessonId)
 
   const handleLogout = () => navigate("landing")
 
@@ -97,7 +108,7 @@ function App() {
   }
 
   if (appState === "lesson-detail") {
-    return <LessonDetail onBackToDashboard={handleBackToDashboard} />
+    return <LessonDetail lessonId={currentLessonId} onBackToDashboard={handleBackToDashboard} />
   }
 
   return (

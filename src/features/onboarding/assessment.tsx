@@ -93,7 +93,7 @@ export function OnboardingAssessment({
       mediaType: "video",
       mediaUrl: "/resources/videos/vui mừng - nam.mp4",
       choices: [
-        { id: "a", label: "Vui", correct: true },
+        { id: "a", label: "Vui mừng", correct: true },
         { id: "b", label: "Buồn" },
         { id: "c", label: "Tức giận" },
       ],

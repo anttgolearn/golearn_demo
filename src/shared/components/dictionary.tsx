@@ -21,14 +21,15 @@ interface DictionaryEntry {
 
 // Demo dictionary entries and categories (no API)
 const categories = [
-  { id: "all", name: "All", count: 0 },
-  { id: "greetings", name: "Greetings", count: 0 },
-  { id: "courtesy", name: "Courtesy", count: 0 },
-  { id: "weather", name: "Weather", count: 0 },
-  { id: "family", name: "Family", count: 0 },
-  { id: "numbers", name: "Numbers", count: 0 },
-  { id: "colors", name: "Colors", count: 0 },
-  { id: "food", name: "Food", count: 0 },
+  { id: "all", name: "Tất cả", count: 0 },
+  { id: "greetings", name: "Chào hỏi", count: 0 },
+  { id: "courtesy", name: "Lịch sự", count: 0 },
+  { id: "weather", name: "Thời tiết", count: 0 },
+  { id: "family", name: "Gia đình", count: 0 },
+  { id: "numbers", name: "Số đếm", count: 0 },
+  { id: "colors", name: "Màu sắc", count: 0 },
+  { id: "food", name: "Đồ ăn", count: 0 },
+  { id: "emotions", name: "Cảm xúc", count: 0 },
 ]
 
 interface DictionaryProps {
@@ -56,6 +57,24 @@ export function Dictionary({ onBack }: DictionaryProps) {
       { word: 'Số 1', emoji: '1️⃣', description: 'Số đếm cơ bản', category: 'numbers', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/1.mp4' },
       { word: 'Màu đỏ', emoji: '🟥', description: 'Tên màu', category: 'colors', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/màu đỏ.mp4' },
       { word: 'Cơm', emoji: '🍚', description: 'Món ăn', category: 'food', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/cơm.mp4' },
+      // Cảm xúc (20 từ) - Đã cập nhật ánh xạ video chính xác
+      { word: 'Vui mừng', emoji: '😊', description: 'Cảm xúc tích cực, hạnh phúc', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/vui mừng - nam.mp4' },
+      { word: 'Buồn thảm', emoji: '😢', description: 'Cảm xúc tiêu cực, thất vọng', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/buồn thảm.mp4' },
+      { word: 'Giận dữ', emoji: '😠', description: 'Cảm xúc tức giận, bực bội', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/giận_dữ.mp4' },
+      { word: 'Hoảng sợ', emoji: '😨', description: 'Cảm xúc lo sợ, hoảng hốt', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/hoảng_sợ.mp4' },
+      { word: 'Lo sợ', emoji: '😰', description: 'Cảm xúc bồn chồn, không yên', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/lo_sợ.mp4' },
+      { word: 'Tuyệt vọng', emoji: '😞', description: 'Cảm xúc không đạt được mong muốn', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/tuyệt_vọng.mp4' },
+      { word: 'Ngạc nhiên', emoji: '😲', description: 'Cảm xúc bất ngờ, kinh ngạc', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/Ngạc_nhiên.mp4' },
+      { word: 'Cô đơn', emoji: '😌', description: 'Cảm xúc thoải mái, không căng thẳng', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/cô_đơn.mp4' },
+      { word: 'Hồi hộp', emoji: '😓', description: 'Cảm xúc áp lực, không thoải mái', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/hồi_hộp.mp4' },
+      { word: 'Tự tin', emoji: '😎', description: 'Cảm xúc tin tưởng vào bản thân', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/tự_tin.mp4' },
+      { word: 'Buồn thảm', emoji: '😳', description: 'Cảm xúc ngượng ngùng, e thẹn', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/buồn thảm.mp4' },
+      { word: 'Thích thú', emoji: '🤩', description: 'Cảm xúc hứng thú, yêu thích', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/thích_thú.mp4' },
+      { word: 'Nhẹn ngào', emoji: '😑', description: 'Cảm xúc không hứng thú, mệt mỏi', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/nguyện_ngào.mp4' },
+      { word: 'Ghen tị', emoji: '😒', description: 'Cảm xúc không vui vì người khác có gì đó', category: 'emotions', difficulty: 'hard', isFavorite: false, videoUrl: '/resources/videos/ghen_tị.mp4' },
+      { word: 'Xin lỗi', emoji: '🙏', description: 'Cảm xúc cảm kích, trân trọng', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/xin lỗi.mp4' },
+      { word: 'Hồi hộp', emoji: '🥺', description: 'Cảm xúc bồn chồn, lo lắng', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/hồi_hộp.mp4' },
+      { word: 'Bối rối', emoji: '😕', description: 'Cảm xúc không hiểu rõ, lúng túng', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/bối_rối.mp4' },
     ]
     setEntries(demoEntries)
     categories.forEach(category => {
@@ -265,14 +284,7 @@ export function Dictionary({ onBack }: DictionaryProps) {
                       <Play className="w-4 h-4 mr-1" />
                       Xem
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      <Volume2 className="w-4 h-4 mr-1" />
-                      Âm thanh
-                    </Button>
+                    
                   </div>
                 </div>
               </Card>
@@ -319,13 +331,13 @@ export function Dictionary({ onBack }: DictionaryProps) {
 
       {/* Video Preview Modal */}
       {videoPreview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-card rounded-xl shadow-xl w-full max-w-xl border border-border overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-card rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] border border-border overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0">
               <div className="font-medium">Xem ký hiệu</div>
               <Button variant="ghost" size="sm" onClick={() => setVideoPreview(null)}>Đóng</Button>
             </div>
-            <div className="p-4">
+            <div className="p-4 flex-1 overflow-y-auto">
               <div className="rounded-lg overflow-hidden border">
                 <video className="w-full aspect-video object-contain bg-black" src={videoPreview} playsInline autoPlay loop muted />
               </div>

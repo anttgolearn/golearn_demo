@@ -42,9 +42,27 @@ export const availableVideos = [
   "bố mẹ.mp4",
   "màu đỏ.mp4",
   "vui mừng - nam.mp4",
+  "vui_mừng.mp4",
   "cơm.mp4",
   "buổi sáng - bắc.mp4",
   "con chó - nam.mp4",
+  // Video cảm xúc
+  "buồn thảm.mp4",
+  "giận_dữ.mp4",
+  "hoảng_sợ.mp4",
+  "lo_sợ.mp4",
+  "tuyệt_vọng.mp4",
+  "Ngạc_nhiên.mp4",
+  "hồi_hộp.mp4",
+  "tự_tin.mp4",
+  "thích_thú.mp4",
+  "ghen_tị.mp4",
+  "nổi_giận.mp4",
+  "bối_rối.mp4",
+  "giận_dỗi.mp4",
+  "nghẹn_ngào.mp4",
+  "cô_đơn.mp4",
+  "xin lỗi.mp4",
   // Add more as needed
 ];
 

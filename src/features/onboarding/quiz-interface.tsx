@@ -664,13 +664,13 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
 
           {/* Mirror modal */}
           {showMirror && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-              <div className="bg-card rounded-xl shadow-xl w-full max-w-xl border border-border overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+              <div className="bg-card rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] border border-border overflow-hidden flex flex-col">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0">
                   <div className="font-medium">Mirror practice</div>
                   <Button variant="ghost" size="sm" onClick={() => setShowMirror(false)}>Đóng</Button>
                 </div>
-                <div className="p-4">
+                <div className="p-4 flex-1 overflow-y-auto">
                   <div className="rounded-lg overflow-hidden border">
                     <video ref={mirrorVideoRef} className="w-full aspect-video object-cover" muted playsInline />
                   </div>

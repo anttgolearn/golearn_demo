@@ -1207,14 +1207,14 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Auth Modal */}
       {showAuthModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-md">
-            <CardHeader className="text-center">
+          <Card className="w-full max-w-md max-h-[90vh] flex flex-col">
+            <CardHeader className="text-center flex-shrink-0">
               <CardTitle className="text-2xl">Bắt đầu học ngay</CardTitle>
               <CardDescription>
                 Tạo tài khoản miễn phí để bắt đầu hành trình học ngôn ngữ ký hiệu
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 overflow-y-auto">
               <Tabs defaultValue="signup" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="signup">Đăng ký</TabsTrigger>
@@ -1282,7 +1282,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                 </TabsContent>
               </Tabs>
             </CardContent>
-            <div className="p-6 pt-0">
+            <div className="p-6 pt-0 flex-shrink-0">
               <Button 
                 variant="ghost" 
                 className="w-full" 
