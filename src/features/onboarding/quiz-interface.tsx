@@ -664,17 +664,51 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
 
           {/* Mirror modal */}
           {showMirror && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-              <div className="bg-card rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] border border-border overflow-hidden flex flex-col">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0">
-                  <div className="font-medium">Mirror practice</div>
-                  <Button variant="ghost" size="sm" onClick={() => setShowMirror(false)}>Đóng</Button>
+            <div 
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4 animate-fade-in"
+              onClick={() => setShowMirror(false)}
+            >
+              <div 
+                className="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] border-2 border-orange-200 overflow-hidden flex flex-col mx-auto animate-slide-up"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-orange-50 to-yellow-50 border-b border-orange-200 flex-shrink-0 rounded-t-lg sm:rounded-t-xl">
+                  <h3 className="font-semibold text-sm sm:text-base text-gray-800">Luyện tập gương</h3>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setShowMirror(false)}
+                    className="h-8 w-8 p-0 hover:bg-orange-200 flex-shrink-0 rounded-full"
+                    aria-label="Đóng"
+                  >
+                    <span className="text-lg text-gray-600">×</span>
+                  </Button>
                 </div>
-                <div className="p-4 flex-1 overflow-y-auto">
-                  <div className="rounded-lg overflow-hidden border">
-                    <video ref={mirrorVideoRef} className="w-full aspect-video object-cover" muted playsInline />
+
+                {/* Content */}
+                <div className="p-3 sm:p-4 md:p-5 space-y-3 sm:space-y-4 flex-1 overflow-y-auto overscroll-contain">
+                  <div className="rounded-lg overflow-hidden border-2 border-gray-200 bg-black">
+                  <video 
+                    ref={mirrorVideoRef} 
+                    className="w-full aspect-video object-cover" 
+                    muted 
+                    playsInline 
+                  />
                   </div>
-                  <div className="text-sm text-muted-foreground mt-2">Hãy làm theo ký hiệu trong video như trước gương.</div>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                    Hãy làm theo ký hiệu trong video như trước gương.
+                  </p>
+                </div>
+
+                {/* Footer */}
+                <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-t border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50 flex-shrink-0 rounded-b-lg sm:rounded-b-xl">
+                  <Button 
+                    onClick={() => setShowMirror(false)}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                  >
+                    Đóng
+                  </Button>
                 </div>
               </div>
             </div>
