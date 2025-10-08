@@ -393,6 +393,75 @@ GET /lessons/{lessonId}/progress
 Authorization: Bearer <jwt_token>
 ```
 
+### 3.6 Get Lesson Vocabulary Sequence (multi-video lessons)
+```http
+GET /lessons/{lessonId}/vocabulary-sequence
+Authorization: Bearer <jwt_token>
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "sequence": [
+      {
+        "id": "w1",
+        "term": "Vui mừng",
+        "translation": "Happiness",
+        "order": 1,
+        "videoUrl": "https://api.golearn.vn/videos/emotions/happy.mp4"
+      },
+      {
+        "id": "w2",
+        "term": "Buồn thảm",
+        "translation": "Sadness",
+        "order": 2,
+        "videoUrl": "https://api.golearn.vn/videos/emotions/sad.mp4"
+      }
+    ]
+  }
+}
+```
+
+### 3.7 Get Lesson Vocabulary Timings (single master video)
+```http
+GET /lessons/{lessonId}/vocabulary-timings
+Authorization: Bearer <jwt_token>
+```
+
+Use this when the lesson has a single master video and each vocabulary corresponds to a time segment.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "videoUrl": "https://api.golearn.vn/videos/lesson_10_master.mp4",
+    "segments": [
+      { "id": "w1", "term": "Xin chào", "start": 12.3, "end": 16.8 },
+      { "id": "w2", "term": "Tạm biệt", "start": 18.0, "end": 21.1 }
+    ]
+  }
+}
+```
+
+### 3.8 Jump Event Telemetry (optional)
+```http
+POST /lessons/{lessonId}/events/jump
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "vocabId": "w2",
+  "fromIndex": 0,
+  "toIndex": 1,
+  "context": {
+    "source": "vocabulary_list"
+  }
+}
+```
+
 ---
 
 ## 4. Practice & Exercises
