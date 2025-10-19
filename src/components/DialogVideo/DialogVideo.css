@@ -1,0 +1,447 @@
+/* Dialog Video Component Styles */
+
+.dialog-video-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dialog-video-container.direction-right {
+  align-items: flex-end;
+}
+
+.dialog-video-container.direction-left {
+  align-items: flex-start;
+}
+
+.dialog-video-container.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dialog-video-container.inactive {
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+/* Video Player */
+.dialog-video-player {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+  background: #000;
+}
+
+.dialog-video-player:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-video-player.playing {
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+}
+
+.dialog-video-player.indigo {
+  border: 2px solid #4f46e5;
+}
+
+.dialog-video-player.purple {
+  border: 2px solid #7c3aed;
+}
+
+.dialog-video {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Loading Overlay */
+.dialog-video-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 10;
+}
+
+.loading-spinner {
+  margin-bottom: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Error Overlay */
+.dialog-video-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 10;
+}
+
+.error-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.error-text {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.retry-button {
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.retry-button:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* Subtitle Overlay */
+.dialog-video-subtitle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  padding: 1rem;
+  z-index: 5;
+}
+
+.subtitle-content {
+  text-align: center;
+  color: white;
+}
+
+.subtitle-person {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle-text {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Video Status Indicator */
+.dialog-video-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 5;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Video Progress Indicator */
+.dialog-video-progress {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 5;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 0.25rem;
+  height: 0.25rem;
+  border-radius: 0.125rem;
+  overflow: hidden;
+}
+
+.progress-segment {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.progress-segment.completed {
+  background: #10b981;
+}
+
+.progress-segment.current {
+  background: #3b82f6;
+  animation: current-segment 1s ease-in-out infinite alternate;
+}
+
+.progress-segment.pending {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes current-segment {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Person Indicator */
+.dialog-person-indicator {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 5;
+}
+
+.person-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
+.dialog-person-indicator.indigo .person-avatar {
+  background: #4f46e5;
+}
+
+.dialog-person-indicator.purple .person-avatar {
+  background: #7c3aed;
+}
+
+.person-label {
+  font-weight: 500;
+}
+
+/* Video Label */
+.dialog-video-label {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  text-align: center;
+}
+
+/* Validation Status */
+.dialog-validation-status {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #10b981;
+  color: white;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 10;
+}
+
+.validation-checkmark {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dialog-video-player {
+    max-width: 100%;
+  }
+  
+  .dialog-video {
+    height: 250px;
+  }
+  
+  .subtitle-text {
+    font-size: 0.875rem;
+  }
+  
+  .dialog-person-indicator {
+    font-size: 0.625rem;
+  }
+  
+  .person-avatar {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .dialog-video {
+    height: 200px;
+  }
+  
+  .subtitle-text {
+    font-size: 0.75rem;
+  }
+  
+  .dialog-video-subtitle {
+    padding: 0.75rem;
+  }
+}
+
+/* Animation Classes */
+.dialog-video-container.animate-in {
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.dialog-video-container.animate-out {
+  animation: slideOutDown 0.4s ease-in forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+/* Hover Effects */
+.dialog-video-container:hover .dialog-video-player {
+  transform: translateY(-4px);
+}
+
+.dialog-video-container:hover .dialog-person-indicator {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Focus States */
+.dialog-video:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .dialog-video-container,
+  .dialog-video-player,
+  .spinner,
+  .status-dot,
+  .progress-segment.current {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .dialog-video-player {
+    border-width: 3px;
+  }
+  
+  .dialog-video-subtitle {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  .subtitle-text {
+    font-weight: 600;
+  }
+}

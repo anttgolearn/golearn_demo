@@ -86,7 +86,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
     // Simulate signin process
     setTimeout(() => {
       alert("Đăng nhập thành công! Chuyển đến dashboard...");
-      onGetStarted?.();
+      onGoToDashboard?.();
       setLoading(false);
     }, 1000);
   };
@@ -169,13 +169,13 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                  <Play className="mr-2 h-5 w-5" />
                  Bắt đầu ngay
                </Button>
-               <Button 
+              <Button 
                  variant="outline" 
                  size="lg" 
                  className="text-lg px-8 py-6"
                  onClick={handleGoToDashboard}
                >
-                 Tôi đã có tài khoản
+                Đã có tài khoản
                </Button>
             </div>
 

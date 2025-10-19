@@ -1,0 +1,110 @@
+/* Quiz Result Screen Animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes score-count-up {
+  from {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes character-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-8px) translateX(5px);
+  }
+  50% {
+    transform: translateY(-12px) translateX(0);
+  }
+  75% {
+    transform: translateY(-6px) translateX(-3px);
+  }
+}
+
+@keyframes climbing {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-8px) rotate(-3deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-score-count {
+  animation: score-count-up 0.8s ease-out forwards;
+}
+
+.animate-character-bounce {
+  animation: character-bounce 2s infinite;
+}
+
+.animate-climbing {
+  animation: climbing 3s infinite ease-in-out;
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .score-display {
+    font-size: 4rem;
+  }
+  
+  .character-area {
+    width: 16rem;
+    height: 12rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .score-display {
+    font-size: 5rem;
+  }
+  
+  .character-area {
+    width: 20rem;
+    height: 15rem;
+  }
+}

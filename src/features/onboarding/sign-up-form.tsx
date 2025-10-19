@@ -29,23 +29,23 @@ export function SignUpForm({ onComplete, onBack: _onBack }: SignUpFormProps) {
     const newErrors: Record<string, string> = {}
 
     if (!formData.email) {
-      newErrors.email = "Email is required"
+      newErrors.email = "Email là bắt buộc"
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email"
+      newErrors.email = "Vui lòng nhập email hợp lệ"
     }
 
     if (!formData.firstName) {
-      newErrors.firstName = "First name is required"
+      newErrors.firstName = "Tên là bắt buộc"
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Mật khẩu là bắt buộc"
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters"
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự"
     }
 
     if (!acceptedTerms) {
-      newErrors.terms = "Please accept the terms and conditions"
+      newErrors.terms = "Vui lòng chấp nhận điều khoản và điều kiện"
     }
 
     setErrors(newErrors)

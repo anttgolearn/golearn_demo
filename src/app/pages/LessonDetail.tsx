@@ -24,6 +24,8 @@ import { cn } from "../../lib/utils";
 
 // Import practice components
 import { QuickReview, SpeedChallenge, MirrorPractice, QuizMix, ConversationPractice, DailyChallenge } from "../../features/practice";
+// Import learning components
+import { IconicLearningWrapper } from "../../features/learning";
 
 interface LessonDetailProps {
   lessonId: string;
@@ -913,6 +915,15 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
             color: 'from-blue-500 to-blue-600', 
             exercises: 15,
             component: 'QuickReview'
+          },
+          { 
+            id: 'iconicLearning', 
+            title: 'Ký hiệu biểu tượng', 
+            description: 'Học các ký hiệu đặc trưng thông qua visual learning', 
+            icon: '⭐', 
+            color: 'from-yellow-500 to-orange-600', 
+            exercises: 5,
+            component: 'IconicLearning'
           },
           { 
             id: 'speedChallenge', 
@@ -2032,6 +2043,15 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
       {activePractice === 'quizMix' && (
         <QuizMix
           onComplete={(score, timeSpent) => handlePracticeComplete('quizMix', score, timeSpent)}
+          onClose={handlePracticeClose}
+        />
+      )}
+      
+      {activePractice === 'iconicLearning' && (
+        <IconicLearningWrapper
+          key={lessonId} // Force re-render when lessonId changes
+          lessonId={lessonId}
+          onComplete={(score, timeSpent) => handlePracticeComplete('iconicLearning', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}

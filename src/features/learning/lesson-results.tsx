@@ -23,7 +23,7 @@ export function LessonResults({ results, onNext, onBack }: LessonResultsProps) {
         <Card className="w-full max-w-md mx-auto bg-card/80 backdrop-blur-sm border-border/50 shadow-xl">
           <div className="p-8 text-center space-y-8">
             <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-muted-foreground">Loading results...</p>
+            <p className="text-muted-foreground">Đang tải kết quả...</p>
           </div>
         </Card>
       </div>
@@ -36,10 +36,10 @@ export function LessonResults({ results, onNext, onBack }: LessonResultsProps) {
   const isPassing = percentage >= 50
 
   const getPerformanceMessage = () => {
-    if (isExcellent) return "Excellent work! You're mastering sign language!"
-    if (isGood) return "Great job! You're making excellent progress!"
-    if (isPassing) return "Good effort! Keep practicing to improve!"
-    return "Don't give up! Practice makes perfect!"
+    if (isExcellent) return "Xuất sắc! Bạn đang thành thạo ngôn ngữ ký hiệu!"
+    if (isGood) return "Tuyệt vời! Bạn đang tiến bộ rất tốt!"
+    if (isPassing) return "Tốt lắm! Hãy tiếp tục luyện tập để cải thiện!"
+    return "Đừng bỏ cuộc! Luyện tập sẽ làm nên hoàn hảo!"
   }
 
   const getPerformanceColor = () => {
@@ -58,102 +58,89 @@ export function LessonResults({ results, onNext, onBack }: LessonResultsProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-card to-muted flex items-center justify-center p-4">
-      <Card className="w-full max-w-md mx-auto bg-card/80 backdrop-blur-sm border-border/50 shadow-xl">
-        <div className="p-8 space-y-8">
+      <Card className="w-full max-w-lg mx-auto bg-card/90 backdrop-blur-sm border-border/50 shadow-2xl">
+        <div className="p-6 space-y-6">
           {onBack && (
-            <div className="flex items-center">
-              <Button variant="ghost" size="sm" onClick={onBack}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-            </div>
+            <Button variant="ghost" size="sm" onClick={onBack} className="mb-2">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Quay lại
+            </Button>
           )}
 
           {/* Results Header */}
           <div className="text-center space-y-4">
-            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center">
-              <div className="text-4xl">{getPerformanceIcon()}</div>
+            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center shadow-lg">
+              <div className="text-5xl">{getPerformanceIcon()}</div>
             </div>
             
-            <h1 className="text-2xl font-bold text-foreground">Lesson Complete!</h1>
-            <div className={`text-4xl font-bold ${getPerformanceColor()}`}>{percentage}%</div>
-            <p className="text-muted-foreground">{getPerformanceMessage()}</p>
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold text-foreground">Hoàn thành bài học!</h1>
+              <div className={`text-5xl font-bold ${getPerformanceColor()}`}>{percentage}%</div>
+              <p className="text-muted-foreground text-lg">{getPerformanceMessage()}</p>
+            </div>
           </div>
 
-          {/* Score Breakdown */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-foreground">Your Results</h2>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="p-4 bg-card border-border">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-foreground">{results.score}</div>
-                    <div className="text-sm text-muted-foreground">Points</div>
-                  </div>
+          {/* Score Stats - Simplified */}
+          <div className="bg-muted/30 rounded-2xl p-6 space-y-4">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <Trophy className="w-5 h-5 text-primary" />
+                  <span className="text-sm text-muted-foreground">Điểm</span>
                 </div>
-              </Card>
-
-              <Card className="p-4 bg-card border-border">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
-                    <Target className="w-5 h-5 text-accent" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-foreground">{results.totalQuestions}</div>
-                    <div className="text-sm text-muted-foreground">Questions</div>
-                  </div>
+                <div className="text-3xl font-bold text-foreground">{results.score}</div>
+              </div>
+              
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <Target className="w-5 h-5 text-accent" />
+                  <span className="text-sm text-muted-foreground">Câu hỏi</span>
                 </div>
-              </Card>
+                <div className="text-3xl font-bold text-foreground">{results.totalQuestions}</div>
+              </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Accuracy</span>
-                <span className="text-foreground">{percentage}%</span>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-muted-foreground">Độ chính xác</span>
+                <span className="text-sm font-bold text-foreground">{percentage}%</span>
               </div>
-              <Progress value={percentage} className="h-3" />
+              <Progress value={percentage} className="h-2" />
             </div>
 
             {/* Performance Badge */}
             <div className="flex justify-center">
               <Badge 
-                className={`px-4 py-2 text-sm ${
-                  isExcellent ? "bg-green-100 text-green-800" :
-                  isGood ? "bg-blue-100 text-blue-800" :
-                  isPassing ? "bg-yellow-100 text-yellow-800" :
-                  "bg-red-100 text-red-800"
+                className={`px-6 py-2 text-base font-medium ${
+                  isExcellent ? "bg-green-100 text-green-800 border-green-200" :
+                  isGood ? "bg-blue-100 text-blue-800 border-blue-200" :
+                  isPassing ? "bg-yellow-100 text-yellow-800 border-yellow-200" :
+                  "bg-red-100 text-red-800 border-red-200"
                 }`}
               >
-                {isExcellent ? "Excellent" : isGood ? "Good" : isPassing ? "Passing" : "Keep Trying"}
+                {isExcellent ? "🏆 Xuất sắc" : isGood ? "⭐ Tốt" : isPassing ? "👍 Đạt" : "💪 Tiếp tục cố gắng"}
               </Badge>
             </div>
           </div>
 
-          {/* Category Info */}
+          {/* Category Info - Simplified */}
           {results.category && (
-            <Card className="p-4 bg-muted/50 border-border">
-              <div className="text-center space-y-2">
-                <h3 className="font-semibold text-foreground">Category</h3>
-                <Badge variant="outline" className="text-sm">
-                  {results.category.charAt(0).toUpperCase() + results.category.slice(1)}
-                </Badge>
-              </div>
-            </Card>
+            <div className="text-center">
+              <Badge variant="outline" className="text-sm px-4 py-2">
+                📚 {results.category.charAt(0).toUpperCase() + results.category.slice(1)}
+              </Badge>
+            </div>
           )}
 
           {/* Action Buttons */}
           <div className="space-y-3">
             <Button
               onClick={onNext}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-4 px-6 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 text-lg"
               size="lg"
             >
-              Continue Learning
+              Tiếp tục học
               <ChevronRight className="w-5 h-5 ml-2" />
             </Button>
 
@@ -161,21 +148,22 @@ export function LessonResults({ results, onNext, onBack }: LessonResultsProps) {
               <Button
                 onClick={onNext}
                 variant="outline"
-                className="w-full border-primary/20 hover:bg-primary/5"
+                className="w-full border-primary/30 hover:bg-primary/5 py-3"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Practice More
+                Luyện tập thêm
               </Button>
             )}
           </div>
 
-          {/* Encouragement Message */}
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 mx-auto bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center">
-              <div className="text-xl">🦜</div>
+          {/* Encouragement Message - Simplified */}
+          <div className="text-center space-y-3 pt-2">
+            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center shadow-md">
+              <div className="text-2xl">🦜</div>
             </div>
-            <p className="text-sm text-muted-foreground italic">
-              "Every sign you learn brings you closer to fluency!" - Mano
+            <p className="text-sm text-muted-foreground italic leading-relaxed">
+              "Mỗi ký hiệu bạn học sẽ đưa bạn đến gần hơn với sự thành thạo!"<br />
+              <span className="text-xs">- Mano</span>
             </p>
           </div>
         </div>

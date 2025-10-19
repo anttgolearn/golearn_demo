@@ -102,7 +102,7 @@ export const quizQuestions: QuizQuestion[] = [
     explanation: 'Ký hiệu vui mừng thường có nụ cười và động tác tích cực.',
     category: 'emotions',
     difficulty: 'easy',
-    signVideo: '/resources/videos/vui mừng - nam.mp4',
+    signVideo: '/resources/videos/vui mừng.mp4',
     points: 10,
   },
   {

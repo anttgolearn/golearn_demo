@@ -1,0 +1,483 @@
+/* Dialog Lesson Screen Styles */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(147, 51, 234, 0.1);
+  }
+}
+
+@keyframes dialog-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes video-progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+.animate-dialog-bounce {
+  animation: dialog-bounce 0.6s ease-out;
+}
+
+/* Dialog container styles */
+.dialog-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dialog-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Video player styles */
+.dialog-video-player {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+.dialog-video-player:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Subtitle overlay styles */
+.subtitle-overlay {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease-in-out;
+}
+
+.subtitle-overlay:hover {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+/* Person indicator styles */
+.person-indicator {
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.person-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.person-indicator:hover::before {
+  left: 100%;
+}
+
+.person-indicator.active {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+}
+
+/* Video progress indicator */
+.video-progress {
+  display: flex;
+  gap: 0.25rem;
+  height: 0.25rem;
+  border-radius: 0.125rem;
+  overflow: hidden;
+}
+
+.video-progress-bar {
+  flex: 1;
+  background: #e5e7eb;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-progress-bar.active {
+  background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%);
+  animation: video-progress 0.5s ease-out;
+}
+
+.video-progress-bar.completed {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+/* Answer option styles */
+.dialog-answer-option {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.dialog-answer-option::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.dialog-answer-option:hover::before {
+  left: 100%;
+}
+
+.dialog-answer-option:hover {
+  transform: scale(1.02);
+}
+
+.dialog-answer-option:active {
+  transform: scale(0.98);
+}
+
+.dialog-answer-option.selected {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+}
+
+.dialog-answer-option.correct {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+  border-color: #10b981;
+}
+
+.dialog-answer-option.incorrect {
+  background: linear-gradient(135deg, #fef2f2 0%, #fef7f7 100%);
+  border-color: #ef4444;
+}
+
+/* Selection indicator styles */
+.dialog-selection-indicator {
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.dialog-selection-indicator.selected {
+  transform: scale(1.1);
+}
+
+.dialog-selection-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease-out;
+}
+
+.dialog-selection-indicator.selected::after {
+  width: 40px;
+  height: 40px;
+}
+
+/* Progress bar styles */
+.dialog-progress-bar {
+  background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
+  transition: width 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.dialog-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Button styles */
+.btn-dialog-primary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-dialog-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-dialog-primary:hover::before {
+  left: 100%;
+}
+
+.btn-dialog-primary:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
+}
+
+.btn-dialog-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-dialog-success:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Next video indicator */
+.next-video-indicator {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.next-video-indicator:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2);
+}
+
+/* Result indicator styles */
+.result-indicator {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+/* Timer and score styles */
+.dialog-timer {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: #374151;
+}
+
+.dialog-score {
+  font-weight: bold;
+  color: #8b5cf6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dialog-container {
+    padding: 1.5rem;
+  }
+  
+  .dialog-answer-option {
+    padding: 1rem;
+  }
+  
+  .dialog-video-player {
+    height: 16rem;
+  }
+  
+  .person-indicator {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .dialog-container {
+    padding: 1rem;
+  }
+  
+  .dialog-answer-option {
+    padding: 0.75rem;
+  }
+  
+  .dialog-video-player {
+    height: 12rem;
+  }
+  
+  .person-indicator {
+    padding: 0.5rem;
+  }
+  
+  .person-indicator .w-12 {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Accessibility improvements */
+.dialog-answer-option:focus {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+button:focus {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.dialog-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.dialog-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #8b5cf6;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Smooth transitions for all interactive elements */
+button, .dialog-answer-option, .dialog-container, .person-indicator {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for long content */
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dialog-specific animations */
+.dialog-fade-in {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.dialog-slide-in {
+  animation: slide-in-right 0.6s ease-out forwards;
+}
+
+.dialog-bounce-in {
+  animation: dialog-bounce 0.8s ease-out forwards;
+}
+
+/* Video transition effects */
+.video-transition-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.video-transition-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.3s ease-out;
+}
+
+.video-transition-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.video-transition-exit-active {
+  opacity: 0;
+  transform: scale(1.05);
+  transition: all 0.3s ease-in;
+}

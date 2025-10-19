@@ -1,0 +1,503 @@
+/* Review Vocab Screen Styles */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-up-from-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(249, 115, 22, 0.1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-from-bottom {
+  animation: slide-up-from-bottom 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Vocabulary card hover effects */
+.vocab-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vocab-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* New vertical list styling */
+.vocab-list-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vocab-list-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.vocab-list-item:active {
+  transform: scale(0.98);
+}
+
+/* Correct answer styling */
+.vocab-card.correct {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+}
+
+.vocab-card.correct:hover {
+  background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+}
+
+/* Incorrect answer styling */
+.vocab-card.incorrect {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #fef7f7 100%);
+}
+
+.vocab-card.incorrect:hover {
+  background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+}
+
+/* Video modal animations */
+.video-modal {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+.video-modal-content {
+  animation: slide-in-right 0.4s ease-out;
+}
+
+/* Center Modal Styling */
+.center-modal {
+  animation: fade-in-up 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.center-modal .modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Modal header styling */
+.modal-header {
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(to right, #fed7aa, #ffffff);
+  border-radius: 1.5rem 1.5rem 0 0;
+}
+
+/* Close button hover effect */
+.close-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.close-button:hover {
+  background-color: #fed7aa;
+  transform: scale(1.1);
+}
+
+/* Video player styling */
+.video-player {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Cloud icon styling */
+.cloud-icon {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.cloud-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(249, 115, 22, 0.4);
+}
+
+/* Video container styling */
+.video-container {
+  position: relative;
+  background: #f3f4f6;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+/* Video player styling for center modal */
+.center-modal .video-container video {
+  width: 100%;
+  height: 20rem;
+  object-fit: cover;
+  background: #f3f4f6;
+}
+
+/* Video overlay effects */
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
+}
+
+/* Info section styling */
+.info-section {
+  text-align: left;
+}
+
+.info-section h4 {
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.info-section p {
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Status indicators */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Bottom sheet specific animations */
+@keyframes slide-up-from-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-slide-up-from-bottom {
+  animation: slide-up-from-bottom 0.3s ease-out forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .center-modal {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+  
+  .video-container {
+    height: 16rem;
+  }
+}
+
+/* Video error fallback styling */
+.video-error-fallback {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f3f4f6;
+  color: #6b7280;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.video-error-fallback.show {
+  display: flex;
+}
+
+/* Speed control button styling */
+.speed-control-button {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.speed-control-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+.speed-control-button:active {
+  transform: scale(0.95);
+}
+
+/* Speed overlay styling */
+.speed-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.3s ease-out;
+}
+
+.speed-overlay-content {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: slide-up 0.3s ease-out;
+}
+
+.speed-overlay-icon {
+  width: 2rem;
+  height: 2rem;
+  background: #f97316;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.speed-overlay-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Speed overlay animations */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Video controls enhancement */
+.video-container video {
+  transition: all 0.3s ease-in-out;
+}
+
+.video-container:hover .speed-control-button {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.speed-control-button {
+  opacity: 0.8;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Mobile responsive for speed controls */
+@media (max-width: 640px) {
+  .speed-control-button {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .speed-overlay-content {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .speed-overlay-text {
+    font-size: 1rem;
+  }
+}
+
+/* Difficulty badges */
+.difficulty-easy {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
+}
+
+.difficulty-medium {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.difficulty-hard {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+/* Play button animation */
+.play-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+  color: #ea580c;
+}
+
+/* Loading animation */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .vocab-card {
+    padding: 1rem;
+  }
+  
+  .vocab-card h3 {
+    font-size: 1.125rem;
+  }
+  
+  .vocab-card p {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .vocab-card {
+    padding: 0.75rem;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* Accessibility improvements */
+.vocab-card:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+button:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for all interactive elements */
+button, .vocab-card {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for modal content */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

@@ -193,10 +193,11 @@ interface Unit {
 interface DashboardProps {
   onGoToSettings?: () => void;
   onGoToLessonDetail?: (lessonId: string) => void;
+  onGoToChapterOverview?: (chapterId: string) => void;
   onLogout?: () => void;
 }
 
-const Dashboard = ({ onGoToLessonDetail, onLogout }: DashboardProps) => {
+const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: DashboardProps) => {
   const [currentChapter] = useState(1);
   const [activeTab, setActiveTab] = useState<'home' | 'practice' | 'dictionary' | 'profile'>('home');
   const [expandedUnits, setExpandedUnits] = useState<Record<string, boolean>>({ 
@@ -466,7 +467,10 @@ const Dashboard = ({ onGoToLessonDetail, onLogout }: DashboardProps) => {
   ];
 
   const handleChapterStart = (chapterId: string) => {
-    if (onGoToLessonDetail) {
+    if (onGoToChapterOverview) {
+      onGoToChapterOverview(chapterId);
+    } else if (onGoToLessonDetail) {
+      // fallback to old behavior
       onGoToLessonDetail(chapterId);
     }
   };
