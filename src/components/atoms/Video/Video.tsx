@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface VideoProps {
   source: string;
@@ -19,108 +18,38 @@ const Video: React.FC<VideoProps> = ({
   style
 }) => {
   return (
-    <View style={[styles.container, style]} testID={testID}>
-      {/* Video Placeholder */}
-      <View style={styles.videoContainer}>
-        <View style={styles.videoPlaceholder}>
-          <Text style={styles.videoText}>Video Player</Text>
-          <Text style={styles.videoSource}>{source}</Text>
-        </View>
+    <div className="rounded-xl overflow-hidden bg-white border border-gray-200" data-testid={testID} style={style}>
+      {/* Video Container */}
+      <div className="relative aspect-video">
+        <div className="flex-1 bg-gray-100 flex justify-center items-center">
+          <div className="text-center">
+            <div className="text-lg font-semibold text-gray-600 mb-1">Video Player</div>
+            <div className="text-sm text-gray-400">{source}</div>
+          </div>
+        </div>
         
         {/* Mirror Button */}
         {onMirrorPress && (
-          <TouchableOpacity
-            style={styles.mirrorButton}
-            onPress={onMirrorPress}
-            testID="mirror-button"
-            accessibilityLabel={accessibilityLabel || 'Open sign mirror'}
-            accessibilityRole="button"
+          <button
+            className="absolute bottom-3 left-3 w-10 h-10 rounded-full bg-white flex justify-center items-center shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            onClick={onMirrorPress}
+            data-testid="mirror-button"
+            aria-label={accessibilityLabel || 'Open sign mirror'}
           >
-            <View style={styles.mirrorIcon}>
-              <Text style={styles.mirrorIconText}>🪞</Text>
-            </View>
-          </TouchableOpacity>
+            <span className="text-xl">🪞</span>
+          </button>
         )}
-      </View>
+      </div>
       
       {/* Video Label */}
       {label && (
-        <View style={styles.labelContainer}>
-          <Text style={styles.labelText}>{label}</Text>
-        </View>
+        <div className="p-4 bg-white">
+          <div className="text-base font-semibold text-gray-800 text-center">{label}</div>
+        </div>
       )}
-    </View>
+    </div>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  videoContainer: {
-    position: 'relative',
-    aspectRatio: 16 / 10,
-  },
-  videoPlaceholder: {
-    flex: 1,
-    backgroundColor: '#F3F4F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  videoText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#6B7280',
-    marginBottom: 4,
-  },
-  videoSource: {
-    fontSize: 14,
-    color: '#9CA3AF',
-  },
-  mirrorButton: {
-    position: 'absolute',
-    bottom: 12,
-    left: 12,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#FFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  mirrorIcon: {
-    width: 24,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mirrorIconText: {
-    fontSize: 20,
-  },
-  labelContainer: {
-    padding: 16,
-    backgroundColor: '#FFF',
-  },
-  labelText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#292F32',
-    textAlign: 'center',
-  },
-});
 
 export default Video;

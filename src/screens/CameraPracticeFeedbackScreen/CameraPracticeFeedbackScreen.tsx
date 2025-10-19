@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button } from '../../shared/ui/button';
 import { Card } from '../../shared/ui/card';
 
@@ -54,59 +53,59 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Button onPress={onBack} variant="ghost" style={styles.backButton}>
+    <div className="flex-1 bg-orange-50 p-5">
+      <div className="flex flex-row items-center justify-between mb-5">
+        <Button onClick={onBack} variant="ghost" className="p-2">
           ← Quay lại
         </Button>
-        <Text style={styles.title}>Hoàn thành thực hành!</Text>
-        <View style={styles.placeholder} />
-      </View>
+        <h1 className="text-2xl font-bold text-gray-800">Hoàn thành thực hành!</h1>
+        <div className="w-15" />
+      </div>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <div className="flex-1 overflow-y-auto">
         {/* Results Summary */}
         <Card className="mb-6">
-          <View style={styles.resultsContainer}>
-            <Text style={styles.resultsTitle}>Kết quả của bạn</Text>
+          <div className="flex flex-col items-center p-5">
+            <h2 className="text-xl font-bold text-gray-800 mb-5">Kết quả của bạn</h2>
             
-            <View style={styles.scoreContainer}>
-              <Text style={[styles.score, { color: getScoreColor(result.score) }]}>
+            <div className="flex flex-col items-center mb-6">
+              <div className="text-5xl font-bold" style={{ color: getScoreColor(result.score) }}>
                 {result.score}%
-              </Text>
-              <Text style={styles.scoreLabel}>Tổng điểm</Text>
-            </View>
+              </div>
+              <div className="text-base text-gray-600 mt-1">Tổng điểm</div>
+            </div>
             
-            <View style={styles.statsContainer}>
-              <View style={styles.statItem}>
-                <Text style={styles.statValue}>{result.accuracy}%</Text>
-                <Text style={styles.statLabel}>Độ chính xác</Text>
-              </View>
-              <View style={styles.statItem}>
-                <Text style={styles.statValue}>
+            <div className="flex flex-row justify-around w-full mb-5">
+              <div className="flex flex-col items-center">
+                <div className="text-2xl font-bold text-gray-800">{result.accuracy}%</div>
+                <div className="text-sm text-gray-600 mt-1">Độ chính xác</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-2xl font-bold text-gray-800">
                   {Math.floor(result.timeSpent / 60)}:{(result.timeSpent % 60).toString().padStart(2, '0')}
-                </Text>
-                <Text style={styles.statLabel}>Thời gian</Text>
-              </View>
-              <View style={styles.statItem}>
-                <Text style={styles.statValue}>{result.signsPracticed.length}</Text>
-                <Text style={styles.statLabel}>Ký hiệu đã thực hành</Text>
-              </View>
-            </View>
+                </div>
+                <div className="text-sm text-gray-600 mt-1">Thời gian</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-2xl font-bold text-gray-800">{result.signsPracticed.length}</div>
+                <div className="text-sm text-gray-600 mt-1">Ký hiệu đã thực hành</div>
+              </div>
+            </div>
             
-            <Text style={[styles.encouragement, { color: getScoreColor(result.score) }]}>
+            <div className="text-lg font-semibold" style={{ color: getScoreColor(result.score) }}>
               {getScoreText(result.score)}
-            </Text>
-          </View>
+            </div>
+          </div>
         </Card>
 
         {/* Feedback Form */}
         <Card className="mb-6">
-          <Text style={styles.feedbackTitle}>Trải nghiệm của bạn như thế nào?</Text>
+          <h2 className="text-xl font-bold text-gray-800 mb-5">Trải nghiệm của bạn như thế nào?</h2>
           
           {/* Overall Experience */}
-          <View style={styles.questionContainer}>
-            <Text style={styles.questionText}>Bạn đánh giá trải nghiệm tổng thể như thế nào?</Text>
-            <View style={styles.optionContainer}>
+          <div className="mb-6">
+            <div className="text-base font-semibold text-gray-800 mb-3">Bạn đánh giá trải nghiệm tổng thể như thế nào?</div>
+            <div className="flex flex-row flex-wrap gap-2">
               {[
                 { value: 'good', label: 'Tốt', emoji: '😊' },
                 { value: 'okay', label: 'Bình thường', emoji: '😐' },
@@ -115,23 +114,22 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
                 <Button
                   key={option.value}
                   variant={feedback.overallExperience === option.value ? 'default' : 'outline'}
-                  onPress={() => setFeedback(prev => ({ ...prev, overallExperience: option.value as any }))}
-                  style={[
-                    styles.optionButton,
-                    feedback.overallExperience === option.value && styles.selectedOption
-                  ]}
+                  onClick={() => setFeedback(prev => ({ ...prev, overallExperience: option.value as any }))}
+                  className={`flex flex-row items-center py-2 px-3 rounded-full min-w-25 justify-center ${
+                    feedback.overallExperience === option.value ? 'bg-orange-500' : ''
+                  }`}
                 >
-                  <Text style={styles.optionEmoji}>{option.emoji}</Text>
-                  <Text style={styles.optionLabel}>{option.label}</Text>
+                  <span className="text-base mr-1.5">{option.emoji}</span>
+                  <span className="text-sm font-medium">{option.label}</span>
                 </Button>
               ))}
-            </View>
-          </View>
+            </div>
+          </div>
 
           {/* Difficulty Level */}
-          <View style={styles.questionContainer}>
-            <Text style={styles.questionText}>Mức độ khó như thế nào?</Text>
-            <View style={styles.optionContainer}>
+          <div className="mb-6">
+            <div className="text-base font-semibold text-gray-800 mb-3">Mức độ khó như thế nào?</div>
+            <div className="flex flex-row flex-wrap gap-2">
               {[
                 { value: 'too_easy', label: 'Quá dễ', emoji: '😴' },
                 { value: 'just_right', label: 'Vừa phải', emoji: '👍' },
@@ -140,23 +138,22 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
                 <Button
                   key={option.value}
                   variant={feedback.difficulty === option.value ? 'default' : 'outline'}
-                  onPress={() => setFeedback(prev => ({ ...prev, difficulty: option.value as any }))}
-                  style={[
-                    styles.optionButton,
-                    feedback.difficulty === option.value && styles.selectedOption
-                  ]}
+                  onClick={() => setFeedback(prev => ({ ...prev, difficulty: option.value as any }))}
+                  className={`flex flex-row items-center py-2 px-3 rounded-full min-w-25 justify-center ${
+                    feedback.difficulty === option.value ? 'bg-orange-500' : ''
+                  }`}
                 >
-                  <Text style={styles.optionEmoji}>{option.emoji}</Text>
-                  <Text style={styles.optionLabel}>{option.label}</Text>
+                  <span className="text-base mr-1.5">{option.emoji}</span>
+                  <span className="text-sm font-medium">{option.label}</span>
                 </Button>
               ))}
-            </View>
-          </View>
+            </div>
+          </div>
 
           {/* Camera Quality */}
-          <View style={styles.questionContainer}>
-            <Text style={styles.questionText}>Chất lượng camera như thế nào?</Text>
-            <View style={styles.optionContainer}>
+          <div className="mb-6">
+            <div className="text-base font-semibold text-gray-800 mb-3">Chất lượng camera như thế nào?</div>
+            <div className="flex flex-row flex-wrap gap-2">
               {[
                 { value: 'excellent', label: 'Xuất sắc', emoji: '⭐' },
                 { value: 'good', label: 'Tốt', emoji: '👍' },
@@ -166,174 +163,38 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
                 <Button
                   key={option.value}
                   variant={feedback.cameraQuality === option.value ? 'default' : 'outline'}
-                  onPress={() => setFeedback(prev => ({ ...prev, cameraQuality: option.value as any }))}
-                  style={[
-                    styles.optionButton,
-                    feedback.cameraQuality === option.value && styles.selectedOption
-                  ]}
+                  onClick={() => setFeedback(prev => ({ ...prev, cameraQuality: option.value as any }))}
+                  className={`flex flex-row items-center py-2 px-3 rounded-full min-w-25 justify-center ${
+                    feedback.cameraQuality === option.value ? 'bg-orange-500' : ''
+                  }`}
                 >
-                  <Text style={styles.optionEmoji}>{option.emoji}</Text>
-                  <Text style={styles.optionLabel}>{option.label}</Text>
+                  <span className="text-base mr-1.5">{option.emoji}</span>
+                  <span className="text-sm font-medium">{option.label}</span>
                 </Button>
               ))}
-            </View>
-          </View>
+            </div>
+          </div>
 
           {/* Additional Feedback */}
-          <View style={styles.questionContainer}>
-            <Text style={styles.questionText}>Có phản hồi thêm nào không? (Tùy chọn)</Text>
-            <View style={styles.textInputContainer}>
-              <Text style={styles.textInput}>
+          <div className="mb-6">
+            <div className="text-base font-semibold text-gray-800 mb-3">Có phản hồi thêm nào không? (Tùy chọn)</div>
+            <div className="border border-gray-300 rounded-lg p-3 min-h-20 bg-gray-50">
+              <div className="text-base text-gray-600 leading-relaxed">
                 {feedback.feedback || 'Chia sẻ suy nghĩ của bạn về buổi thực hành...'}
-              </Text>
-            </View>
-          </View>
+              </div>
+            </div>
+          </div>
         </Card>
-      </ScrollView>
+      </div>
 
-      <View style={styles.controls}>
-        <Button onPress={handleSubmit} style={styles.primaryButton}>
+      <div className="pt-5">
+        <Button onClick={handleSubmit} className="bg-orange-500 py-4 px-8 rounded-lg">
           Tiếp tục
         </Button>
-      </View>
-    </View>
+      </div>
+    </div>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF8F3',
-    padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  backButton: {
-    padding: 8,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#292F32',
-  },
-  placeholder: {
-    width: 60,
-  },
-  content: {
-    flex: 1,
-  },
-  resultsContainer: {
-    alignItems: 'center',
-    padding: 20,
-  },
-  resultsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#292F32',
-    marginBottom: 20,
-  },
-  scoreContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  score: {
-    fontSize: 48,
-    fontWeight: 'bold',
-  },
-  scoreLabel: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 4,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginBottom: 20,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#292F32',
-  },
-  statLabel: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 4,
-  },
-  encouragement: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  feedbackTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#292F32',
-    marginBottom: 20,
-  },
-  questionContainer: {
-    marginBottom: 24,
-  },
-  questionText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#292F32',
-    marginBottom: 12,
-  },
-  optionContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  optionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    minWidth: 100,
-    justifyContent: 'center',
-  },
-  selectedOption: {
-    backgroundColor: '#EB6837',
-  },
-  optionEmoji: {
-    fontSize: 16,
-    marginRight: 6,
-  },
-  optionLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  textInputContainer: {
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 8,
-    padding: 12,
-    minHeight: 80,
-    backgroundColor: '#F9FAFB',
-  },
-  textInput: {
-    fontSize: 16,
-    color: '#666',
-    lineHeight: 22,
-  },
-  controls: {
-    paddingTop: 20,
-  },
-  primaryButton: {
-    backgroundColor: '#EB6837',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-  },
-});
 
 export default CameraPracticeFeedbackScreen;

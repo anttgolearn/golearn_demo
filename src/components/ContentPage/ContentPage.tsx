@@ -70,14 +70,13 @@ export const ContentPage: React.FC<ContentPageProps> = ({
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const videoParts = question.questionParts.filter(part => part.type === 'video');
-  const currentVideo = videoParts[currentVideoIndex];
 
   useEffect(() => {
     setCurrentVideoIndex(0);
     setCompletedVideos([]);
   }, [question.id]);
 
-  const handleVideoPlay = (index: number) => {
+  const handleVideoPlay = () => {
     setIsVideoPlaying(true);
   };
 
@@ -190,7 +189,7 @@ export const ContentPage: React.FC<ContentPageProps> = ({
                       src={part.url}
                       playsInline
                       controls
-                      onPlay={() => handleVideoPlay(index)}
+                      onPlay={() => handleVideoPlay()}
                       onPause={handleVideoPause}
                       onEnded={() => handleVideoEnd(index)}
                     />

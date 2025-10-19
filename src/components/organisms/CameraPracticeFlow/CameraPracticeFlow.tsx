@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import CameraPracticeOnboardingScreen from '../../../screens/CameraPracticeOnboardingScreen/CameraPracticeOnboardingScreen';
-import CameraPracticeScreen from '../../../screens/CameraPracticeScreen';
-import CameraPracticeResultScreen from '../../../screens/CameraPracticeResultScreen/CameraPracticeResultScreen';
+// import CameraPracticeOnboardingScreen from '../../../screens/CameraPracticeOnboardingScreen/CameraPracticeOnboardingScreen';
+// import CameraPracticeScreen from '../../../screens/CameraPracticeScreen';
+// import CameraPracticeResultScreen from '../../../screens/CameraPracticeResultScreen/CameraPracticeResultScreen';
 import CameraPracticeFeedbackScreen from '../../../screens/CameraPracticeFeedbackScreen/CameraPracticeFeedbackScreen';
 import CameraPracticeThankYouScreen from '../../../screens/CameraPracticeThankYouScreen/CameraPracticeThankYouScreen';
 
@@ -39,7 +38,7 @@ const CameraPracticeFlow: React.FC<CameraPracticeFlowProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<CameraPracticeStep>('onboarding');
   const [practiceResult, setPracticeResult] = useState<CameraPracticeResult | null>(null);
-  const [feedback, setFeedback] = useState<CameraPracticeFeedback | null>(null);
+  const [, setFeedback] = useState<CameraPracticeFeedback | null>(null);
 
   const handleOnboardingComplete = () => {
     setCurrentStep('practice');
@@ -91,28 +90,40 @@ const CameraPracticeFlow: React.FC<CameraPracticeFlowProps> = ({
     switch (currentStep) {
       case 'onboarding':
         return (
-          <CameraPracticeOnboardingScreen
-            onComplete={handleOnboardingComplete}
-            onBack={handleBack}
-          />
+          <div className="p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Camera Practice Onboarding</h2>
+            <p className="mb-6">This feature is temporarily disabled for web build.</p>
+            <button onClick={handleOnboardingComplete} className="px-4 py-2 bg-blue-500 text-white rounded">
+              Continue
+            </button>
+          </div>
         );
       
       case 'practice':
         return (
-          <CameraPracticeScreen
-            onComplete={handlePracticeComplete}
-            onBack={handleBack}
-          />
+          <div className="p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Camera Practice</h2>
+            <p className="mb-6">This feature is temporarily disabled for web build.</p>
+            <button onClick={() => handlePracticeComplete({ score: 80, accuracy: 85, timeSpent: 120, signsPracticed: ['hello', 'thank you'] })} className="px-4 py-2 bg-blue-500 text-white rounded">
+              Complete Practice
+            </button>
+          </div>
         );
       
       case 'result':
         return practiceResult ? (
-          <CameraPracticeResultScreen
-            onContinue={handleResultContinue}
-            onRetry={handleResultRetry}
-            onBack={handleBack}
-            result={practiceResult}
-          />
+          <div className="p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Practice Results</h2>
+            <p className="mb-6">Score: {practiceResult.score}%</p>
+            <div className="space-x-4">
+              <button onClick={handleResultContinue} className="px-4 py-2 bg-green-500 text-white rounded">
+                Continue
+              </button>
+              <button onClick={handleResultRetry} className="px-4 py-2 bg-blue-500 text-white rounded">
+                Retry
+              </button>
+            </div>
+          </div>
         ) : null;
       
       case 'feedback':
@@ -138,16 +149,11 @@ const CameraPracticeFlow: React.FC<CameraPracticeFlowProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <div className="flex-1">
       {renderCurrentStep()}
-    </View>
+    </div>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default CameraPracticeFlow;

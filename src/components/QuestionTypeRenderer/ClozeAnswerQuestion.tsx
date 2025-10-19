@@ -7,7 +7,6 @@ interface ClozeAnswerQuestionProps extends Omit<QuestionTypeRendererProps, 'ques
 
 export const ClozeAnswerQuestion: React.FC<ClozeAnswerQuestionProps> = ({
   question,
-  selectedAnswers,
   showResult,
   onAnswerSelect,
   onSubmitAnswer,

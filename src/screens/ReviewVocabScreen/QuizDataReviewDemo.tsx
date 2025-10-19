@@ -52,6 +52,7 @@ export const QuizDataReviewDemo: React.FC = () => {
 
   return (
     <ReviewVocabScreen
+      lessonId="01_01_1-discover"
       onContinue={handleContinue}
       onBack={handleBack}
     />

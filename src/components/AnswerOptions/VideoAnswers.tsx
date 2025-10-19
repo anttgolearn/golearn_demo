@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { AnswerOption, AnswerOptionsProps } from "./AnswerOptions";
 
 interface VideoAnswersProps extends Omit<AnswerOptionsProps, 'options'> {

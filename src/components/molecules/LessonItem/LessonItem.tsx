@@ -23,7 +23,7 @@ export const LessonItem: React.FC<LessonItemProps> = ({
   isActiveLesson, 
   onPress 
 }) => {
-  const { type, locked, description, estimatedTime } = lesson;
+  const { type, locked, description } = lesson;
   
   // Map lesson type to Vietnamese display names
   const getTypeDisplayName = (type: string, index: number) => {

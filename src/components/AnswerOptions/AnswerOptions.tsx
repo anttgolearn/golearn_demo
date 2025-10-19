@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import TextAnswers from "./TextAnswers";
 import ImageAnswers from "./ImageAnswers";
 import VideoAnswers from "./VideoAnswers";
 import "./AnswerOptions.css";
@@ -112,7 +111,6 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
   const themeClasses = getThemeClasses(theme);
 
   // Group options by media type
-  const textOptions = options.filter(option => !option.media);
   const imageOptions = options.filter(option => option.media?.type === 'image');
   const videoOptions = options.filter(option => option.media?.type === 'video');
 

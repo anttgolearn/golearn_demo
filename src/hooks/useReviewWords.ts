@@ -1,24 +1,24 @@
 import { useMemo } from 'react';
-import { HARDCODED_QUIZZES, MockQuizPayload, MockQuestion } from '../lib/mock-lessons';
+import { HARDCODED_QUIZZES, MockQuestion } from '../lib/mock-lessons';
 
-// Question categories enum
-export enum QuestionCategories {
-  CONTENT = {
+// Question categories constants
+export const QuestionCategories = {
+  CONTENT: {
     CAT_1A: '1a',
     CAT_2A: '2a', 
     CAT_3A: '3a',
   },
-  PRACTICE = {
+  PRACTICE: {
     CAT_1B: '1b',
     CAT_2B: '2b',
     CAT_3B: '3b',
   },
-  DIALOG = {
+  DIALOG: {
     CAT_1C: '1c',
     CAT_2C: '2c',
     CAT_3C: '3c',
   }
-}
+} as const;
 
 // Interfaces
 export interface VocabVideo {

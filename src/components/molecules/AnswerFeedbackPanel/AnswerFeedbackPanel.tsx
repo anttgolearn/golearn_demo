@@ -1,7 +1,6 @@
 import React from 'react';
 import CorrectIcon from '../../atoms/Icon/CorrectIcon';
 import IncorrectIcon from '../../atoms/Icon/IncorrectIcon';
-import QuizButton from '../../atoms/Button/QuizButton';
 
 interface AnswerFeedbackPanelProps {
   isCorrect: boolean;

@@ -183,7 +183,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
   isLabelShown = false,
   question,
 }) => {
-  const [mirrorVideo, setMirrorVideo] = React.useState<string | null>(null); // For future mirror functionality
+  const [, setMirrorVideo] = React.useState<string | null>(null); // For future mirror functionality
   const _hasMirror = !!onMirrorClick;
 
   const renderVideo = (src: string, isPartialWidth = false) => (
