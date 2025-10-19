@@ -3,11 +3,10 @@ import { OnboardingFlow } from "./features/onboarding/onboarding-flow"
 import { LearningFlow } from "./features/learning/learning-flow"
 import Landing from "./app/pages/Landing"
 import Dashboard from "./app/pages/Dashboard"
-import Profile from "./app/pages/Profile"
 import Settings from "./app/pages/Settings"
 import LessonDetail from "./app/pages/LessonDetail"
 
-type AppState = "landing" | "onboarding" | "dashboard" | "learning" | "profile" | "settings" | "lesson-detail"
+type AppState = "landing" | "onboarding" | "dashboard" | "learning" | "settings" | "lesson-detail"
 
 function App() {
   const [appState, setAppState] = useState<AppState>("landing")
@@ -17,7 +16,6 @@ function App() {
     onboarding: "#/onboarding",
     dashboard: "#/dashboard",
     learning: "#/learning",
-    profile: "#/profile",
     settings: "#/settings",
     "lesson-detail": `#/lesson/${currentLessonId}`
   }), [currentLessonId])
@@ -26,7 +24,6 @@ function App() {
     const hash = window.location.hash.replace(/^#/, "") || "/"
     if (hash.startsWith("/onboarding")) return "onboarding"
     if (hash.startsWith("/dashboard")) return "dashboard"
-    if (hash.startsWith("/profile")) return "profile"
     if (hash.startsWith("/settings")) return "settings"
     if (hash.startsWith("/lesson")) {
       // Extract lesson ID from URL like /lesson/4
@@ -79,8 +76,6 @@ function App() {
 
   const handleBackToDashboard = () => navigate("dashboard")
 
-  const handleGoToProfile = () => navigate("profile")
-
   const handleGoToSettings = () => navigate("settings")
 
   const handleGoToLessonDetail = (lessonId: string) => navigate("lesson-detail", lessonId)
@@ -96,11 +91,7 @@ function App() {
   }
 
   if (appState === "dashboard") {
-    return <Dashboard onGoToProfile={handleGoToProfile} onGoToSettings={handleGoToSettings} onGoToLessonDetail={handleGoToLessonDetail} onLogout={handleLogout} />
-  }
-
-  if (appState === "profile") {
-    return <Profile onBackToDashboard={handleBackToDashboard} />
+    return <Dashboard onGoToSettings={handleGoToSettings} onGoToLessonDetail={handleGoToLessonDetail} onLogout={handleLogout} />
   }
 
   if (appState === "settings") {

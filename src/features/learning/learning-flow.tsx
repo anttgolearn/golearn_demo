@@ -219,9 +219,7 @@ export function LearningFlow({ userPreferences, onComplete, startAt = "dashboard
 
     case "dictionary":
       return (
-        <Dictionary
-          onBack={handleBack}
-        />
+        <Dictionary />
       )
 
     case "profile":

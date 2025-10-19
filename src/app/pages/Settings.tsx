@@ -17,8 +17,6 @@ import {
   Save,
   ArrowLeft
 } from "lucide-react";
-import Header from "../../shared/components/Header";
-
 interface SettingsProps {
   onBackToDashboard?: () => void;
 }
@@ -106,9 +104,7 @@ const Settings = ({ onBackToDashboard }: SettingsProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
+    <div className="min-h-screen bg-background pb-24">
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}

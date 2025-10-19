@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../../../shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/ui/card';
-import { Play, RotateCcw, CheckCircle, X, Clock, Star, Volume2, Shuffle, RotateCcw as Restart, Eye, EyeOff, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
+import { Play, RotateCcw, CheckCircle, X, Clock, Star, Volume2, Shuffle, RotateCcw as Restart, ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
 import './Flashcard.css';
 
 interface QuickReviewProps {
@@ -19,6 +19,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [studyMode, setStudyMode] = useState<'normal' | 'shuffle' | 'repeat'>('normal');
   const [isMuted, setIsMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Sample vocabulary for flashcard review
   const vocabulary = [
@@ -71,6 +72,14 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
     return () => clearInterval(interval);
   }, [isPlaying]);
 
+  // Reset video state when current word changes
+  useEffect(() => {
+    setIsFlipped(false);
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [currentIndex]);
+
   const handleAnswer = (isCorrect: boolean) => {
     const newAnswers = [...userAnswers, isCorrect];
     setUserAnswers(newAnswers);
@@ -83,7 +92,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
     setTimeout(() => {
       if (currentIndex < vocabulary.length - 1) {
         setCurrentIndex(prev => prev + 1);
-        setIsFlipped(false);
+        // Don't auto-flip card - let user control when to flip
       } else {
         setIsPlaying(false);
         setShowResult(true);
@@ -93,12 +102,22 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
+    
+    // Start video when flipping to back side
+    if (!isFlipped && videoRef.current) {
+      setTimeout(() => {
+        videoRef.current?.play().catch(error => {
+          console.log('Video autoplay prevented:', error);
+          // This is expected behavior in many browsers
+        });
+      }, 700); // Wait for flip animation to complete
+    }
   };
 
   const handleNext = () => {
     if (currentIndex < vocabulary.length - 1) {
       setCurrentIndex(prev => prev + 1);
-      setIsFlipped(false);
+      setIsFlipped(false); // Reset flip state
     } else {
       setIsPlaying(false);
       setShowResult(true);
@@ -108,7 +127,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1);
-      setIsFlipped(false);
+      setIsFlipped(false); // Reset flip state
     }
   };
 
@@ -116,7 +135,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
     setStudyMode('shuffle');
     // Reset to first card
     setCurrentIndex(0);
-    setIsFlipped(false);
+    // Don't auto-flip card - let user control when to flip
   };
 
   const handleRestart = () => {
@@ -155,22 +174,22 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                 <div className="text-sm text-muted-foreground">Điểm số</div>
               </div>
               <div className="text-center p-4 bg-white rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">{accuracy}%</div>
+                <div className="text-2xl font-bold text-indigo-600">{accuracy}%</div>
                 <div className="text-sm text-muted-foreground">Độ chính xác</div>
               </div>
             </div>
             
             <div className="text-center p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-orange-600">{formatTime(timeSpent)}</div>
+              <div className="text-2xl font-bold text-blue-600">{formatTime(timeSpent)}</div>
               <div className="text-sm text-muted-foreground">Thời gian</div>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Star className="w-5 h-5 text-yellow-500" />
-                <span className="text-lg font-semibold text-orange-700">+{xpEarned} XP</span>
+                <Star className="w-5 h-5 text-blue-500" />
+                <span className="text-lg font-semibold text-blue-700">+{xpEarned} XP</span>
               </div>
-              <div className="text-sm text-orange-600">Điểm kinh nghiệm kiếm được</div>
+              <div className="text-sm text-blue-600">Điểm kinh nghiệm kiếm được</div>
             </div>
 
             <div className="flex gap-3">
@@ -178,7 +197,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Làm lại
               </Button>
-              <Button onClick={() => onComplete(score, timeSpent)} className="flex-1 bg-green-600 hover:bg-green-700">
+              <Button onClick={() => onComplete(score, timeSpent)} className="flex-1 bg-green-600">
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Hoàn thành
               </Button>
@@ -192,7 +211,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-4xl bg-white max-h-[90vh] flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 flex-shrink-0">
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl flex items-center gap-2">
@@ -251,8 +270,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
             {/* Flashcard */}
             <div className="flex justify-center">
               <div 
-                className="relative w-full max-w-2xl h-96 cursor-pointer perspective-1000 flashcard-container"
-                onClick={handleFlip}
+                className="relative w-full max-w-2xl h-96 flashcard-container"
               >
                 <div 
                   className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d flip-card ${
@@ -260,8 +278,11 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                   }`}
                 >
                   {/* Front of card */}
-                  <div className="absolute inset-0 w-full h-full backface-hidden">
-                    <Card className="w-full h-full bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 flashcard-front">
+                  <div 
+                    className="absolute inset-0 w-full h-full backface-hidden cursor-pointer"
+                    onClick={!isFlipped ? handleFlip : undefined}
+                  >
+                    <Card className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 flashcard-front">
                       <CardContent className="p-8 h-full flex flex-col items-center justify-center text-center">
                         <div className="space-y-6">
                           <div className="text-4xl font-bold text-blue-800">
@@ -271,7 +292,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                             {currentWord.difficulty}
                           </div>
                           <div className="text-sm text-muted-foreground">
-                            Nhấn để xem video ký hiệu
+                            Click để xem video ký hiệu
                           </div>
                         </div>
                       </CardContent>
@@ -286,18 +307,51 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                           <div className="text-2xl font-bold text-green-800 mb-4">
                             {currentWord.word}
                           </div>
-                          <div className="bg-black rounded-lg p-2 w-full max-w-md">
+                          <div 
+                            className="bg-black rounded-lg p-2 w-full max-w-md mx-auto"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <video 
-                              className="w-full rounded-lg"
+                              ref={videoRef}
+                              className="w-full h-64 rounded-lg object-contain"
                               src={currentWord.video}
                               controls
                               playsInline
                               autoPlay
+                              loop
                               muted={isMuted}
-                            />
+                              style={{ display: 'block' }}
+                              onClick={(e) => e.stopPropagation()}
+                              onError={(e) => {
+                                console.error('Video load error:', currentWord.video);
+                                console.error('Full error:', e);
+                              }}
+                              onLoadStart={() => {
+                                console.log('Loading video:', currentWord.video);
+                              }}
+                              onCanPlay={() => {
+                                console.log('Video can play:', currentWord.video);
+                              }}
+                            >
+                              <source src={currentWord.video} type="video/mp4" />
+                              Video của bạn không thể phát. Trình duyệt không hỗ trợ định dạng video này.
+                            </video>
                           </div>
                           <div className="text-sm text-gray-600">
                             Video ký hiệu cho từ "{currentWord.word}"
+                          </div>
+                          <div className="mt-4">
+                            <Button
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent card flip
+                                setIsFlipped(false);
+                              }}
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                            >
+                              Quay lại mặt trước
+                            </Button>
                           </div>
                         </div>
                       </CardContent>
@@ -327,14 +381,6 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                 >
                   {isMuted ? <Volume2 className="w-4 h-4" /> : <X className="w-4 h-4" />}
                 </Button>
-                <Button
-                  onClick={handleFlip}
-                  variant="outline"
-                  size="sm"
-                >
-                  {isFlipped ? <EyeOff className="w-4 h-4 mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
-                  {isFlipped ? 'Ẩn video' : 'Xem video'}
-                </Button>
               </div>
 
               <Button
@@ -353,7 +399,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
               <div className="flex justify-center gap-4">
                 <Button 
                   onClick={() => handleAnswer(true)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3"
+                  className="bg-green-600 text-white px-8 py-3"
                 >
                   <CheckCircle className="w-5 h-5 mr-2" />
                   Đã nhớ ký hiệu
@@ -361,7 +407,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
                 <Button 
                   onClick={() => handleAnswer(false)}
                   variant="outline"
-                  className="border-red-300 text-red-600 hover:bg-red-50 px-8 py-3"
+                  className="border-red-300 text-red-600 px-8 py-3"
                 >
                   <X className="w-5 h-5 mr-2" />
                   Chưa nhớ ký hiệu
@@ -372,7 +418,7 @@ const QuickReview: React.FC<QuickReviewProps> = ({ onComplete, onClose }) => {
             {/* Progress Bar */}
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-blue-600 h-2 rounded-full progress-bar"
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full progress-bar"
                 style={{ width: `${((currentIndex + 1) / vocabulary.length) * 100}%` }}
               />
             </div>

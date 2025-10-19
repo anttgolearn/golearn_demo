@@ -1,534 +1,496 @@
 import { Button } from "../../shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../shared/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../shared/ui/tabs";
+import { Card } from "../../shared/ui/card";
 import { Badge } from "../../shared/ui/badge";
-import { BookOpen, Users, Trophy, Play, CheckCircle, Lock, X, ChevronLeft, ChevronRight, Star, Target, Clock, BarChart3 } from "lucide-react";
-import { Dictionary } from "../../shared/components/dictionary";
-import React, { useMemo, useState } from "react";
+import { Play, Home, BookOpen, BookText, User, ChevronDown, Trophy, Target } from "lucide-react";
+import { useState } from "react";
 import { cn } from "../../lib/utils";
-import Header from "../../shared/components/Header";
-import { 
-  QuickReview, 
-  SpeedChallenge, 
-  MirrorPractice, 
-  QuizMix, 
-  ConversationPractice, 
-  DailyChallenge 
-} from "../../features/practice";
-// Dictionary UI is rendered via shared/components/dictionary
+import { Dictionary } from "../../shared/components/dictionary";
+import { ProfileTab } from "../../shared/components/profile-tab";
 
-// Images will be loaded from API
+// Import practice components
+import { QuickReview, SpeedChallenge, MirrorPractice, QuizMix, ConversationPractice, DailyChallenge } from "../../features/practice";
 
-
-// Demo thumbnails (no APIIsssssssssssssa)
-const lessonFamily = "/images/lesson-family-Be3SmyDt.jpg";
-
-const lessonGreetings = "/images/lesson-greetings-BdV20h0N.jpg";
-const lessonNumbers = "/images/lesson-numbers-DJNsYzix.jpg";
-const lessonEmotions = "/images/lesson-emotions-CLtOmn_z.jpg";
-
-// Progress Stats Component
-const ProgressStats = () => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <Card className="bg-gradient-to-br from-blue-100 to-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">XP hiện tại</p>
-              <p className="text-2xl font-bold text-blue-600">1,250</p>
-            </div>
-            <Trophy className="w-8 h-8 text-blue-600" />
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-gradient-to-br from-blue-100 to-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Chuỗi ngày</p>
-              <p className="text-2xl font-bold text-blue-600">7</p>
-            </div>
-            <div className="text-2xl">🔥</div>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-gradient-to-br from-blue-100 to-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Bài học hoàn thành</p>
-              <p className="text-2xl font-bold text-blue-600">12</p>
-            </div>
-            <BookOpen className="w-8 h-8 text-blue-600" />
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-gradient-to-br from-blue-100 to-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Thứ hạng</p>
-              <p className="text-2xl font-bold text-blue-600">#3</p>
-            </div>
-            <Users className="w-8 h-8 text-blue-600" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-
-// Lesson Card Component
-interface LessonCardProps {
-  id: string;
+// Chapter Card Component
+interface ChapterCardProps {
+  chapterNumber: number;
   title: string;
-  description: string;
-  thumbnail: string;
-  difficulty: "Cơ bản" | "Trung cấp" | "Nâng cao";
-  duration: string;
-  xp: number;
-  completed: boolean;
-  locked: boolean;
-  progress?: number;
-  onGoToLessonDetail?: (lessonId: string) => void;
+  lessonsCompleted: number;
+  totalLessons: number;
+  isActive?: boolean;
+  isLocked?: boolean;
+  thumbnail?: string;
+  onStart?: () => void;
 }
 
-const LessonCard = ({
-  id,
+const ChapterCard = ({
+  chapterNumber,
   title,
-  description,
+  lessonsCompleted,
+  totalLessons,
+  isActive = false,
+  isLocked = false,
   thumbnail,
-  difficulty,
-  duration,
-  xp,
-  completed,
-  locked,
-  progress = 0,
-  onGoToLessonDetail
-}: LessonCardProps) => {
-  const getDifficultyColor = (level: string) => {
-    switch (level) {
-      case "Cơ bản":
-        return "bg-green-100 text-green-800";
-      case "Trung cấp":
-        return "bg-yellow-100 text-yellow-800";
-      case "Nâng cao":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  onStart
+}: ChapterCardProps) => {
+  const progress = (lessonsCompleted / totalLessons) * 100;
+  const isCompleted = lessonsCompleted === totalLessons;
+  const [isHovered, setIsHovered] = useState(false);
 
-  return (
-    <Card className={cn(
-      "overflow-hidden transition-all duration-300 hover:shadow-lg",
-      completed && "ring-2 ring-green-500",
-      locked && "opacity-60"
-    )}>
-      <div className="relative">
-        <img 
-          src={thumbnail} 
-          alt={title}
-          className="w-full h-48 object-cover"
-        />
-        {completed && (
-          <div className="absolute top-2 right-2">
-            <CheckCircle className="w-6 h-6 text-green-500 bg-background rounded-full" />
-          </div>
-        )}
-        {locked && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <Lock className="w-8 h-8 text-white" />
-          </div>
-        )}
-        {!locked && !completed && progress > 0 && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
-            <div 
-              className="h-full bg-primary transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        )}
-      </div>
+      return (
+        <Card 
+          className={cn(
+            "relative overflow-hidden transition-all duration-500 cursor-pointer",
+            "hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-1",
+            "transform-gpu will-change-transform",
+            isActive ? "border-2 border-blue-500 shadow-lg animate-glow" : "border-gray-200 hover:border-blue-400",
+            isLocked && "opacity-60 cursor-not-allowed hover:scale-100 hover:translate-y-0 hover:shadow-none"
+          )}
+          onMouseEnter={() => !isLocked && setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={() => !isLocked && onStart?.()}
+        >
+      {/* Active Indicator */}
+      {isActive && (
+        <div className="absolute -left-1 top-6 bottom-6 w-1 bg-blue-500 rounded-r-full z-10" />
+      )}
       
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="font-semibold text-lg">{title}</h3>
-          <Badge className={getDifficultyColor(difficulty)}>
-            {difficulty}
-          </Badge>
-        </div>
+      <div className="flex items-stretch">
+            {/* Thumbnail Image */}
+            {thumbnail && (
+              <div className="relative w-40 flex-shrink-0 overflow-hidden group/thumb">
+                <img 
+                  src={thumbnail} 
+                  alt={title}
+                  className={cn(
+                    "w-full h-full object-cover transition-all duration-500",
+                    "group-hover/thumb:scale-110 group-hover/thumb:rotate-1",
+                    isLocked ? "grayscale brightness-75" : "brightness-100",
+                    isActive && "brightness-110 contrast-110"
+                  )}
+                />
+                {/* Animated shine effect on hover */}
+                {!isLocked && (
+                  <div className={cn(
+                    "absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent",
+                    "transition-all duration-700 -translate-x-full",
+                    isHovered && "translate-x-full"
+                  )} />
+                )}
+                {isLocked && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[2px]">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-xl animate-pulse">
+                      <span className="text-2xl">🔒</span>
+                    </div>
+                  </div>
+                )}
+                {/* Dynamic overlay gradient */}
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-r from-transparent via-background/60 to-background/90 transition-all duration-300",
+                  isHovered && !isLocked && "from-blue-500/10 via-background/50 to-background/80"
+                )} />
+                {/* Corner accent */}
+                {isActive && (
+                  <div className="absolute top-0 left-0 w-0 h-0 border-t-[40px] border-t-blue-500 border-r-[40px] border-r-transparent" />
+                )}
+              </div>
+            )}
         
-        <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-          {description}
-        </p>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>⏱️ {duration}</span>
-            <span className="text-accent font-medium">+{xp} XP</span>
+        <div className="flex-1 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex-1">
+              <Badge className={cn(
+                "mb-2 transition-colors",
+                isActive || isHovered 
+                  ? "bg-blue-600 text-white" 
+                  : "bg-blue-100 text-blue-800"
+              )}>
+                CHAPTER {chapterNumber}
+              </Badge>
+              <h3 className={cn(
+                "text-xl font-semibold transition-colors",
+                isActive ? "text-blue-700" : "text-gray-800"
+              )}>
+                {title}
+              </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {lessonsCompleted} trên {totalLessons} bài học đã hoàn thành
+                </p>
+            </div>
+            
+                <Button
+                  size="lg"
+                  disabled={isLocked}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onStart?.();
+                  }}
+                  className={cn(
+                    "rounded-full w-16 h-16 p-0 transition-all duration-300",
+                    "shadow-lg hover:shadow-2xl hover:scale-125 hover:rotate-6",
+                    "transform-gpu will-change-transform",
+                    isActive 
+                      ? "bg-blue-500 hover:bg-blue-600 animate-breath" 
+                      : isHovered
+                        ? "bg-blue-400 hover:bg-blue-500 animate-pulse"
+                        : "bg-blue-300 hover:bg-blue-400",
+                    isLocked && "opacity-50 cursor-not-allowed hover:scale-100 hover:rotate-0"
+                  )}
+                >
+                  <Play className="w-8 h-8 text-white ml-1 transition-transform duration-300" fill="white" />
+                </Button>
           </div>
           
-          <Button 
-            size="sm" 
-            disabled={locked}
-            className="gap-2"
-            onClick={() => !locked && onGoToLessonDetail?.(id)}
-          >
-            <Play className="w-4 h-4" />
-            {completed ? "Ôn tập" : "Bắt đầu"}
-          </Button>
+          {/* Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden relative">
+                <div 
+                  className={cn(
+                    "h-full rounded-full transition-all duration-700 ease-out relative overflow-hidden",
+                    isCompleted ? "bg-blue-500" : "bg-blue-400",
+                    isHovered && "bg-blue-500"
+                  )}
+                  style={{ width: `${progress}%` }}
+                >
+                  {/* Shimmer effect on progress bar */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" 
+                       style={{ backgroundSize: '200% 100%' }} />
+                </div>
+              </div>
         </div>
-      </CardContent>
+      </div>
+      
+          {/* Completion Badge */}
+          {isCompleted && (
+            <div className="absolute top-4 right-4 z-10 animate-bounce-slow">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-glow">
+                <span className="inline-block animate-wiggle">✓</span> Hoàn thành
+              </div>
+            </div>
+          )}
     </Card>
   );
 };
 
+interface Unit {
+  id: string;
+  unitNumber: number;
+  title: string;
+  totalChapters: number;
+  icon: string;
+  thumbnail?: string;
+  gradient: string;
+  chapters: Array<{
+    id: string;
+    chapterNumber: number;
+    title: string;
+    lessonsCompleted: number;
+    totalLessons: number;
+    isActive: boolean;
+    isLocked: boolean;
+    thumbnail?: string;
+  }>;
+}
+
 interface DashboardProps {
-  onGoToProfile?: () => void;
   onGoToSettings?: () => void;
   onGoToLessonDetail?: (lessonId: string) => void;
   onLogout?: () => void;
 }
 
-const Dashboard = ({ onGoToProfile, onGoToSettings, onGoToLessonDetail, onLogout }: DashboardProps) => {
-  const lessons = [
+const Dashboard = ({ onGoToLessonDetail, onLogout }: DashboardProps) => {
+  const [currentChapter] = useState(1);
+  const [activeTab, setActiveTab] = useState<'home' | 'practice' | 'dictionary' | 'profile'>('home');
+  const [expandedUnits, setExpandedUnits] = useState<Record<string, boolean>>({ 
+    'unit-1': true,
+    'unit-4': true 
+  });
+
+  // Practice activity states
+  const [activePractice, setActivePractice] = useState<string | null>(null);
+  const [practiceScores, setPracticeScores] = useState<{[key: string]: {score: number, timeSpent: number}}>({});
+
+  const units: Unit[] = [
     {
-      id: "1",
-      title: "Chào hỏi cơ bản",
-      description: "Học cách chào hỏi và giới thiệu bản thân bằng ngôn ngữ ký hiệu Việt Nam",
-      thumbnail: lessonGreetings,
-      difficulty: "Cơ bản" as const,
-      duration: "10 phút",
-      xp: 50,
-      completed: true,
-      locked: false,
-      progress: 100
+      id: "unit-1",
+      unitNumber: 1,
+      title: "Giới thiệu",
+      totalChapters: 12,
+      icon: "👋",
+      thumbnail: "/images/lesson-greetings-BdV20h0N.jpg",
+      gradient: "from-blue-200 via-blue-100 to-blue-50",
+      chapters: [
+        {
+          id: "1",
+          chapterNumber: 1,
+          title: "Xin chào và chào mừng",
+          lessonsCompleted: 1,
+          totalLessons: 6,
+          isActive: true,
+          isLocked: false,
+          thumbnail: "/images/lesson-greetings-BdV20h0N.jpg"
+        },
+        {
+          id: "2",
+          chapterNumber: 2,
+          title: "Bắt đầu cuộc trò chuyện",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/hello-sign-demo.png"
+        },
+        {
+          id: "3",
+          chapterNumber: 3,
+          title: "Chào hỏi và tạm biệt",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: true,
+          thumbnail: "/images/lesson-greetings-BdV20h0N.jpg"
+        }
+      ]
     },
     {
-      id: "2", 
-      title: "Gia đình",
-      description: "Từ vựng về các thành viên trong gia đình và mối quan hệ",
-      thumbnail: lessonFamily,
-      difficulty: "Cơ bản" as const,
-      duration: "15 phút",
-      xp: 75,
-      completed: true,
-      locked: false,
-      progress: 100
+      id: "unit-2",
+      unitNumber: 2,
+      title: "Gia đình và Mối quan hệ",
+      totalChapters: 8,
+      icon: "👨‍👩‍👧",
+      thumbnail: "/images/lesson-family-Be3SmyDt.jpg",
+      gradient: "from-indigo-200 via-indigo-100 to-indigo-50",
+      chapters: [
+        {
+          id: "2",
+          chapterNumber: 1,
+          title: "Thành viên gia đình",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-family-Be3SmyDt.jpg"
+        },
+        {
+          id: "5",
+          chapterNumber: 2,
+          title: "Mối quan hệ gia đình",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-family-Be3SmyDt.jpg"
+        },
+        {
+          id: "13",
+          chapterNumber: 3,
+          title: "Gia đình mở rộng",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-family-Be3SmyDt.jpg"
+        },
+        {
+          id: "14",
+          chapterNumber: 4,
+          title: "Tuổi tác và thế hệ",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-family-Be3SmyDt.jpg"
+        },
+        {
+          id: "15",
+          chapterNumber: 5,
+          title: "Tình cảm gia đình",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-family-Be3SmyDt.jpg"
+        },
+        {
+          id: "16",
+          chapterNumber: 6,
+          title: "Thực hành gia đình",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: true,
+          thumbnail: "/images/lesson-family-Be3SmyDt.jpg"
+        }
+      ]
     },
     {
-      id: "3",
-      title: "Số đếm 1-20",
-      description: "Học cách biểu đạt các con số từ 1 đến 20 bằng tay",
-      thumbnail: lessonNumbers,
-      difficulty: "Cơ bản" as const,
-      duration: "12 phút", 
-      xp: 60,
-      completed: true, // Mở khóa luyện tập
-      locked: false,
-      progress: 100
+      id: "unit-3",
+      unitNumber: 3,
+      title: "Số đếm và Thời gian",
+      totalChapters: 10,
+      icon: "🔢",
+      thumbnail: "/images/lesson-numbers-DJNsYzix.jpg",
+      gradient: "from-green-200 via-green-100 to-green-50",
+      chapters: [
+        {
+          id: "3",
+          chapterNumber: 1,
+          title: "Số từ 1-20",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "17",
+          chapterNumber: 2,
+          title: "Số từ 21-100",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "18",
+          chapterNumber: 3,
+          title: "Thời gian trong ngày",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "19",
+          chapterNumber: 4,
+          title: "Ngày trong tuần",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "20",
+          chapterNumber: 5,
+          title: "Tháng và năm",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "21",
+          chapterNumber: 6,
+          title: "Thực hành số đếm",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: true,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        }
+      ]
     },
     {
-      id: "4",
-      title: "Cảm xúc",
-      description: "Học cách biểu đạt 20 loại cảm xúc khác nhau từ cơ bản đến phức tạp",
-      thumbnail: lessonEmotions,
-      difficulty: "Trung cấp" as const,
-      duration: "20 phút",
-      xp: 120,
-      completed: false,
-      locked: false,
-      progress: 0
-    },
-    {
-      id: "5",
-      title: "Động vật",
-      description: "Từ vựng về các loài động vật thường gặp",
-      thumbnail: lessonGreetings,
-      difficulty: "Trung cấp" as const,
-      duration: "20 phút",
-      xp: 120,
-      completed: false,
-      locked: true,
-      progress: 0
-    },
-    {
-      id: "6",
-      title: "Màu sắc",
-      description: "Học cách biểu đạt các màu sắc khác nhau",
-      thumbnail: lessonFamily,
-      difficulty: "Trung cấp" as const,
-      duration: "14 phút",
-      xp: 80,
-      completed: false,
-      locked: true,
-      progress: 0
+      id: "unit-4",
+      unitNumber: 4,
+      title: "Cảm xúc và Tình cảm",
+      totalChapters: 6,
+      icon: "😊",
+      thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg",
+      gradient: "from-pink-200 via-pink-100 to-pink-50",
+      chapters: [
+        {
+          id: "7",
+          chapterNumber: 1,
+          title: "Cảm xúc cơ bản",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        },
+        {
+          id: "8",
+          chapterNumber: 2,
+          title: "Cảm xúc tích cực",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        },
+        {
+          id: "9",
+          chapterNumber: 3,
+          title: "Cảm xúc tiêu cực",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        },
+        {
+          id: "10",
+          chapterNumber: 4,
+          title: "Cảm xúc phức tạp",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        },
+        {
+          id: "11",
+          chapterNumber: 5,
+          title: "Tình cảm đặc biệt",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        },
+        {
+          id: "12",
+          chapterNumber: 6,
+          title: "Thực hành tổng hợp",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: true,
+          thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        }
+      ]
     }
   ];
 
-  const completedLessons = lessons.filter((lesson) => lesson.completed).length;
-  const practiceUnlockTarget = 3;
-
-  const practiceModules = [
-    {
-      key: "quick-review",
-      title: "Ôn nhanh",
-      desc: "Ôn lại ký hiệu đã học trong 5 phút",
-      duration: "5 phút",
-      xp: 20,
-      difficulty: "Dễ",
-      icon: "⚡",
-      color: "blue",
-      locked: false
-    },
-    {
-      key: "speed-signs",
-      title: "Tốc độ ký hiệu",
-      desc: "Tăng tốc độ nhận diện ký hiệu",
-      duration: "7 phút",
-      xp: 30,
-      difficulty: "Trung bình",
-      icon: "🏃",
-      color: "red",
-      locked: false
-    },
-    {
-      key: "mirror-practice",
-      title: "Luyện gương",
-      desc: "Luyện tập trước gương theo hướng dẫn",
-      duration: "10 phút",
-      xp: 40,
-      difficulty: "Trung bình",
-      icon: "🪞",
-      color: "purple",
-      locked: false
-    },
-    {
-      key: "quiz-mix",
-      title: "Quiz tổng hợp",
-      desc: "Trắc nghiệm kết hợp nhiều dạng bài",
-      duration: "8 phút",
-      xp: 35,
-      difficulty: "Khó",
-      icon: "🧠",
-      color: "green",
-      locked: false
-    },
-    {
-      key: "conversation-practice",
-      title: "Luyện hội thoại",
-      desc: "Thực hành giao tiếp thực tế",
-      duration: "15 phút",
-      xp: 60,
-      difficulty: "Khó",
-      icon: "💬",
-      color: "orange",
-      locked: false
-    },
-    {
-      key: "daily-challenge",
-      title: "Thử thách hàng ngày",
-      desc: "Bài tập đặc biệt mỗi ngày",
-      duration: "20 phút",
-      xp: 100,
-      difficulty: "Khó",
-      icon: "⭐",
-      color: "yellow",
-      locked: false
-    }
-  ] as const;
-
-  const storyItems = [
-    {
-      id: "s1",
-      title: "Lần đầu gặp gỡ",
-      type: "Hội thoại",
-      difficulty: "Cơ bản",
-      duration: "6 phút",
-      xp: 40,
-      locked: false
-    },
-    {
-      id: "s2",
-      title: "Thăm hỏi gia đình",
-      type: "Hội thoại",
-      difficulty: "Cơ bản",
-      duration: "9 phút",
-      xp: 55,
-      locked: false
-    },
-    {
-      id: "s3",
-      title: "Một ngày ở trường",
-      type: "Bài đọc",
-      difficulty: "Trung cấp",
-      duration: "12 phút",
-      xp: 80,
-      locked: true
-    },
-    {
-      id: "s4",
-      title: "Chia sẻ cảm xúc",
-      type: "Hội thoại",
-      difficulty: "Trung cấp",
-      duration: "10 phút",
-      xp: 70,
-      locked: false
-    }
-  ] as const;
-
-  const [activeStoryId, setActiveStoryId] = useState<string | null>(null);
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [restartCounter, setRestartCounter] = useState(0);
-  
-  // Vocabulary modal state
-  const [selectedWordId, setSelectedWordId] = useState<string | null>(null);
-  const [selectedWordData, setSelectedWordData] = useState<{term: string, videoUrl: string, vi: string, category: string, color: string} | null>(null);
-
-  // Practice components state
-  const [activePractice, setActivePractice] = useState<string | null>(null);
-  const [practiceStats, setPracticeStats] = useState({
-    completed: 0,
-    xpEarned: 0,
-    streak: 0,
-    accuracy: 0
-  });
-
-  // Dictionary UI is handled by shared/components/Dictionary in the Dictionary tab.
-
-  // Comprehensive vocabulary data for stories
-  const storyVocabulary = {
-    "s1": [ // Lần đầu gặp gỡ - Chào hỏi
-      { id: "w1", term: "Xin chào", videoUrl: "/resources/videos/Chào.mp4", vi: "Lời chào cơ bản", category: "greetings", color: "blue" },
-      { id: "w2", term: "Minh", videoUrl: "/resources/videos/Chào.mp4", vi: "Tên riêng", category: "greetings", color: "blue" },
-      { id: "w3", term: "Lan", videoUrl: "/resources/videos/Chào.mp4", vi: "Tên riêng", category: "greetings", color: "blue" },
-      { id: "w4", term: "Vui", videoUrl: "/resources/videos/vui mừng - nam.mp4", vi: "Cảm xúc vui vẻ", category: "emotions", color: "purple" },
-      { id: "w5", term: "Gặp", videoUrl: "/resources/videos/Chào.mp4", vi: "Hành động gặp gỡ", category: "greetings", color: "blue" },
-      { id: "w6", term: "Bạn", videoUrl: "/resources/videos/Chào.mp4", vi: "Người bạn", category: "greetings", color: "blue" },
-      { id: "w7", term: "Học", videoUrl: "/resources/videos/Chào.mp4", vi: "Hành động học tập", category: "education", color: "green" },
-      { id: "w8", term: "Ngôn ngữ", videoUrl: "/resources/videos/Chào.mp4", vi: "Hệ thống giao tiếp", category: "education", color: "green" },
-      { id: "w9", term: "Ký hiệu", videoUrl: "/resources/videos/Chào.mp4", vi: "Dấu hiệu giao tiếp", category: "education", color: "green" },
-      { id: "w10", term: "Bắt đầu", videoUrl: "/resources/videos/Chào.mp4", vi: "Khởi đầu", category: "education", color: "green" }
-    ],
-    "s2": [ // Thăm hỏi gia đình - Gia đình & Số đếm
-      { id: "w1", term: "Gia đình", videoUrl: "/resources/videos/bố mẹ.mp4", vi: "Thành viên trong nhà", category: "family", color: "red" },
-      { id: "w2", term: "Mấy", videoUrl: "/resources/videos/1.mp4", vi: "Câu hỏi số lượng", category: "numbers", color: "orange" },
-      { id: "w3", term: "Người", videoUrl: "/resources/videos/bố mẹ.mp4", vi: "Đơn vị đếm người", category: "family", color: "red" },
-      { id: "w4", term: "Nhà", videoUrl: "/resources/videos/bố mẹ.mp4", vi: "Nơi ở", category: "family", color: "red" },
-      { id: "w5", term: "Bốn", videoUrl: "/resources/videos/1.mp4", vi: "Số đếm 4", category: "numbers", color: "orange" },
-      { id: "w6", term: "Anh chị em", videoUrl: "/resources/videos/bố mẹ.mp4", vi: "Thành viên gia đình", category: "family", color: "red" },
-      { id: "w7", term: "Một", videoUrl: "/resources/videos/1.mp4", vi: "Số đếm 1", category: "numbers", color: "orange" },
-      { id: "w8", term: "Em trai", videoUrl: "/resources/videos/bố mẹ.mp4", vi: "Anh em trai", category: "family", color: "red" }
-    ],
-    "s4": [ // Chia sẻ cảm xúc - Cảm xúc & Câu hỏi
-      { id: "w1", term: "Hôm nay", videoUrl: "/resources/videos/Chào.mp4", vi: "Ngày hôm nay", category: "time", color: "teal" },
-      { id: "w2", term: "Cảm thấy", videoUrl: "/resources/videos/vui mừng - nam.mp4", vi: "Trạng thái cảm xúc", category: "emotions", color: "purple" },
-      { id: "w3", term: "Thế nào", videoUrl: "/resources/videos/Chào.mp4", vi: "Câu hỏi trạng thái", category: "questions", color: "indigo" },
-      { id: "w4", term: "Vui mừng", videoUrl: "/resources/videos/vui mừng - nam.mp4", vi: "Cảm xúc tích cực", category: "emotions", color: "purple" },
-      { id: "w5", term: "Vì", videoUrl: "/resources/videos/Chào.mp4", vi: "Lý do", category: "questions", color: "indigo" },
-      { id: "w6", term: "Buồn thảm", videoUrl: "/resources/videos/buồn thảm.mp4", vi: "Cảm xúc tiêu cực", category: "emotions", color: "purple" },
-      { id: "w7", term: "Tại sao", videoUrl: "/resources/videos/Chào.mp4", vi: "Câu hỏi lý do", category: "questions", color: "indigo" },
-      { id: "w8", term: "Lo sợ", videoUrl: "/resources/videos/lo_sợ.mp4", vi: "Cảm xúc lo lắng", category: "emotions", color: "purple" },
-      { id: "w9", term: "Kiểm tra", videoUrl: "/resources/videos/Chào.mp4", vi: "Bài thi", category: "education", color: "green" },
-      { id: "w10", term: "Ngày mai", videoUrl: "/resources/videos/Chào.mp4", vi: "Ngày tiếp theo", category: "time", color: "teal" },
-      { id: "w11", term: "Hoảng sợ", videoUrl: "/resources/videos/hoảng_sợ.mp4", vi: "Cảm xúc sợ hãi", category: "emotions", color: "purple" },
-      { id: "w12", term: "Tốt", videoUrl: "/resources/videos/Chào.mp4", vi: "Tích cực", category: "emotions", color: "purple" },
-      { id: "w13", term: "Tự tin", videoUrl: "/resources/videos/tự_tin.mp4", vi: "Cảm xúc tin tưởng", category: "emotions", color: "purple" },
-      { id: "w14", term: "Cảm ơn", videoUrl: "/resources/videos/xin lỗi.mp4", vi: "Lời cảm ơn", category: "greetings", color: "blue" },
-      { id: "w15", term: "Thích thú", videoUrl: "/resources/videos/thích_thú.mp4", vi: "Cảm xúc hứng thú", category: "emotions", color: "purple" },
-      { id: "w16", term: "Việc học", videoUrl: "/resources/videos/Chào.mp4", vi: "Hoạt động học tập", category: "education", color: "green" },
-      { id: "w17", term: "Hồi hộp", videoUrl: "/resources/videos/hồi_hộp.mp4", vi: "Cảm xúc bồn chồn", category: "emotions", color: "purple" },
-      { id: "w18", term: "Có", videoUrl: "/resources/videos/Chào.mp4", vi: "Câu hỏi có/không", category: "questions", color: "indigo" }
-    ]
-  };
-
-  const activeStory = useMemo(() => storyItems.find((s) => s.id === activeStoryId) || null, [activeStoryId, storyItems]);
-
-  type StoryStep = { speaker: string; text: string; hint?: string; mediaType?: "video" | "gif"; mediaUrl?: string };
-  const storySteps = useMemo(() => {
-    if (!activeStory) return [] as StoryStep[];
-    if (activeStory.id === "s1") {
-      return [
-        { speaker: "A", text: "Xin chào! Mình là Minh.", hint: "Chào hỏi + giới thiệu tên", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" },
-        { speaker: "B", text: "Rất vui được gặp bạn, mình là Lan.", hint: "Đáp lại + giới thiệu", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" },
-        { speaker: "A", text: "Bạn có học Ngôn ngữ ký hiệu không?", hint: "Câu hỏi đơn giản", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" },
-        { speaker: "B", text: "Mình mới bắt đầu học.", hint: "Trả lời ngắn gọn", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" }
-      ];
-    }
-    if (activeStory.id === "s2") {
-      return [
-        { speaker: "A", text: "Gia đình bạn có mấy người?", hint: "Từ vựng: gia đình", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" },
-        { speaker: "B", text: "Nhà mình có bốn người.", hint: "Số đếm + danh từ", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" },
-        { speaker: "A", text: "Bạn có anh chị em không?", hint: "Câu hỏi", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" },
-        { speaker: "B", text: "Mình có một em trai.", hint: "Số đếm + thành viên", mediaType: "video", mediaUrl: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4" }
-      ];
-    }
-      if (activeStory.id === "s4") {
-        return [
-         { speaker: "A", text: "Hôm nay bạn cảm thấy thế nào?", hint: "Hỏi về cảm xúc", mediaType: "video", mediaUrl: "/resources/videos/vui mừng - nam.mp4" },
-         { speaker: "B", text: "Mình cảm thấy rất vui mừng vì được gặp bạn.", hint: "Biểu đạt cảm xúc vui mừng", mediaType: "video", mediaUrl: "/resources/videos/vui mừng - nam.mp4" },
-         { speaker: "A", text: "Tại sao bạn lại buồn thảm thế?", hint: "Hỏi về cảm xúc tiêu cực", mediaType: "video", mediaUrl: "/resources/videos/buồn thảm.mp4" },
-         { speaker: "B", text: "Mình lo sợ về bài kiểm tra ngày mai.", hint: "Biểu đạt sự lo sợ", mediaType: "video", mediaUrl: "/resources/videos/lo_sợ.mp4" },
-         { speaker: "A", text: "Đừng hoảng sợ, bạn sẽ làm tốt thôi.", hint: "Động viên, giảm lo âu", mediaType: "video", mediaUrl: "/resources/videos/hoảng_sợ.mp4" },
-         { speaker: "B", text: "Cảm ơn bạn, mình cảm thấy tự tin hơn rồi.", hint: "Cảm ơn + cảm xúc tích cực", mediaType: "video", mediaUrl: "/resources/videos/tự_tin.mp4" },
-         { speaker: "A", text: "Bạn có thích thú với việc học không?", hint: "Hỏi về sự thích thú", mediaType: "video", mediaUrl: "/resources/videos/thích_thú.mp4" },
-         { speaker: "B", text: "Mình rất thích thú và hồi hộp với bài kiểm tra.", hint: "Biểu đạt thích thú và hồi hộp", mediaType: "video", mediaUrl: "/resources/videos/hồi_hộp.mp4" }
-        ];
-      }
-    return [] as StoryStep[];
-  }, [activeStory]);
-
-  const isFirstStep = activeStepIndex === 0;
-  const isLastStep = storySteps.length > 0 && activeStepIndex === storySteps.length - 1;
-
-  const openStory = (id: string) => {
-    setActiveStoryId(id);
-    setActiveStepIndex(0);
-  };
-
-  const closeStory = () => {
-    setActiveStoryId(null);
-    setActiveStepIndex(0);
-  };
-
-  const goPrev = () => {
-    if (!isFirstStep) setActiveStepIndex((i) => i - 1);
-  };
-
-  const goNext = () => {
-    if (!isLastStep) setActiveStepIndex((i) => i + 1);
-  };
-
-  // Handle vocabulary click
-  const handleWordClick = (word: string) => {
-    if (!activeStoryId) return;
-    
-    const vocabulary = storyVocabulary[activeStoryId as keyof typeof storyVocabulary] || [];
-    const wordData = vocabulary.find(v => v.term.toLowerCase().includes(word.toLowerCase()) || word.toLowerCase().includes(v.term.toLowerCase()));
-    
-    if (wordData) {
-      setSelectedWordData(wordData);
-      setSelectedWordId(wordData.id);
+  const handleChapterStart = (chapterId: string) => {
+    if (onGoToLessonDetail) {
+      onGoToLessonDetail(chapterId);
     }
   };
 
-  // Practice handlers
+  const handleTabClick = (tab: typeof activeTab) => {
+    setActiveTab(tab);
+  };
+
+  const toggleUnit = (unitId: string) => {
+    setExpandedUnits(prev => ({
+      ...prev,
+      [unitId]: !prev[unitId]
+    }));
+  };
+
+  // Practice activity handlers
   const handlePracticeStart = (practiceType: string) => {
     setActivePractice(practiceType);
   };
 
-  const handlePracticeComplete = (score: number, timeSpent: number) => {
-    setPracticeStats(prev => ({
+  const handlePracticeComplete = (practiceType: string, score: number, timeSpent: number) => {
+    setPracticeScores(prev => ({
       ...prev,
-      completed: prev.completed + 1,
-      xpEarned: prev.xpEarned + score,
-      accuracy: Math.round((prev.accuracy * prev.completed + score) / (prev.completed + 1)),
-      streak: timeSpent > 0 ? prev.streak + 1 : prev.streak // Update streak based on completion
+      [practiceType]: { score, timeSpent }
     }));
     setActivePractice(null);
   };
@@ -537,671 +499,501 @@ const Dashboard = ({ onGoToProfile, onGoToSettings, onGoToLessonDetail, onLogout
     setActivePractice(null);
   };
 
-  // Create clickable text with vocabulary words and different colors
-  const createClickableText = (text: string) => {
-    if (!activeStoryId) return text;
-    
-    const vocabulary = storyVocabulary[activeStoryId as keyof typeof storyVocabulary] || [];
-    let result = text;
-    
-    // Color mapping for different categories
-    const colorClasses = {
-      blue: "text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100",
-      purple: "text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100", 
-      red: "text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100",
-      orange: "text-orange-600 hover:text-orange-800 bg-orange-50 hover:bg-orange-100",
-      green: "text-green-600 hover:text-green-800 bg-green-50 hover:bg-green-100",
-      teal: "text-teal-600 hover:text-teal-800 bg-teal-50 hover:bg-teal-100",
-      indigo: "text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100"
-    };
-    
-    vocabulary.forEach(vocab => {
-      const regex = new RegExp(`\\b${vocab.term}\\b`, 'gi');
-      const colorClass = colorClasses[vocab.color as keyof typeof colorClasses] || colorClasses.blue;
-      result = result.replace(regex, `<span class="cursor-pointer underline px-1 py-0.5 rounded transition-colors ${colorClass}" data-word="${vocab.term}" data-category="${vocab.category}">${vocab.term}</span>`);
-    });
-    
-    return result;
-  };
+  // Practice categories data - updated with mapping to practice components
+  const practiceCategories = [
+    { 
+      id: 'quickReview', 
+      icon: '⚡', 
+      title: 'Ôn tập nhanh', 
+      description: 'Luyện tập với flashcard', 
+      color: 'from-blue-400 to-blue-500', 
+      exercises: 12,
+      component: 'QuickReview'
+    },
+    { 
+      id: 'speedChallenge', 
+      icon: '🎯', 
+      title: 'Thử thách tốc độ', 
+      description: 'Nhận diện nhanh ký hiệu', 
+      color: 'from-red-400 to-pink-500', 
+      exercises: 8,
+      component: 'SpeedChallenge'
+    },
+    { 
+      id: 'mirrorPractice', 
+      icon: '🪞', 
+      title: 'Luyện gương', 
+      description: 'Thực hành trước gương', 
+      color: 'from-blue-400 to-indigo-500', 
+      exercises: 15,
+      component: 'MirrorPractice'
+    },
+    { 
+      id: 'quizMix', 
+      icon: '📚', 
+      title: 'Quiz tổng hợp', 
+      description: 'Kiểm tra kiến thức', 
+      color: 'from-purple-400 to-pink-500', 
+      exercises: 10,
+      component: 'QuizMix'
+    },
+    { 
+      id: 'conversationPractice', 
+      icon: '💬', 
+      title: 'Luyện hội thoại', 
+      description: 'Thực hành giao tiếp', 
+      color: 'from-green-400 to-emerald-500', 
+      exercises: 6,
+      component: 'ConversationPractice'
+    },
+    { 
+      id: 'dailyChallenge', 
+      icon: '🏆', 
+      title: 'Thử thách hàng ngày', 
+      description: 'Thử thách đặc biệt', 
+      color: 'from-blue-400 to-indigo-500', 
+      exercises: 5,
+      component: 'DailyChallenge'
+    },
+  ];
 
-  // Add click handler to window
-  React.useEffect(() => {
-    (window as any).handleWordClick = handleWordClick;
-    return () => {
-      delete (window as any).handleWordClick;
-    };
-  }, [handleWordClick]);
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header onGoToProfile={onGoToProfile} onGoToSettings={onGoToSettings} onLogout={onLogout} />
-      
-      <main className="container mx-auto px-4 py-8">
-        {/* Progress Stats */}
-        <ProgressStats />
+  // Render Practice Tab Content
+  const renderPracticeContent = () => (
+    <div className="space-y-6 animate-slide-up">
+      {/* Practice Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Trung tâm Luyện tập</h1>
+        <p className="text-gray-600">Củng cố kỹ năng ngôn ngữ ký hiệu với luyện tập tập trung</p>
+      </div>
 
-        {/* Main Content */}
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Lessons */}
-          <div className="lg:col-span-3">
-          <Tabs defaultValue="lessons" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="lessons">Bài học</TabsTrigger>
-              <TabsTrigger value="practice">Luyện tập</TabsTrigger>
-              <TabsTrigger value="stories">Câu chuyện</TabsTrigger>
-              <TabsTrigger value="dictionary">Từ điển</TabsTrigger>
-              <TabsTrigger value="progress">Tiến độ</TabsTrigger>
-            </TabsList>
-              
-              <TabsContent value="lessons" className="space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold mb-6">Hành trình học tập</h2>
-                  {/* Visual Roadmap */}
-                  <div className="relative">
-                    {/* Roadmap Path */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-blue-600 via-blue-400 to-gray-300 h-full"></div>
-                    
-                    <div className="space-y-8">
-                      {lessons.map((lesson, index) => (
-                        <div key={lesson.id} className={`relative flex items-center ${
-                          index % 2 === 0 ? 'justify-start' : 'justify-end'
-                        }`}>
-                          {/* Roadmap Node */}
-                          <div className={`absolute left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full border-4 z-10 ${
-                            lesson.completed 
-                              ? 'bg-blue-600 border-blue-300' 
-                              : lesson.locked 
-                                ? 'bg-gray-300 border-gray-400' 
-                                : 'bg-blue-400 border-blue-200'
-                          }`}></div>
-                          
-                          {/* Lesson Card */}
-                          <div className={`w-full max-w-md ${
-                            index % 2 === 0 ? 'mr-auto pr-8' : 'ml-auto pl-8'
-                          }`}>
-                            <LessonCard {...lesson} onGoToLessonDetail={onGoToLessonDetail} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+      {/* Daily Goal */}
+      <Card className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white overflow-hidden relative group hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] transform-gpu">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-indigo-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="p-6 relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center animate-breath">
+                <Target className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">Mục tiêu hàng ngày</h3>
+                <p className="text-sm text-white/80">
+                  {Object.keys(practiceScores).length} trên 6 bài tập đã hoàn thành
+                </p>
+              </div>
+            </div>
+            <div className="text-4xl animate-float">🎯</div>
+          </div>
+          <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+            <div 
+              className="h-full bg-white rounded-full transition-all duration-700" 
+              style={{ width: `${(Object.keys(practiceScores).length / 6) * 100}%` }}
+            >
+              <div className="h-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Practice Categories Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {practiceCategories.map((category, index) => (
+          <Card 
+            key={category.id}
+            className={cn(
+              "relative overflow-hidden cursor-pointer transition-all duration-500",
+              "hover:shadow-2xl hover:scale-[1.05] hover:-translate-y-2",
+              "transform-gpu will-change-transform animate-slide-up"
+            )}
+            style={{ animationDelay: `${index * 100}ms` }}
+            onClick={() => handlePracticeStart(category.id)}
+          >
+            <div className={cn(
+              "absolute inset-0 bg-gradient-to-br opacity-10",
+              category.color
+            )} />
+            <div className="p-6 relative z-10">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "w-12 h-12 bg-gradient-to-br rounded-xl flex items-center justify-center text-2xl",
+                    "shadow-lg animate-float",
+                    category.color
+                  )}>
+                    {category.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg text-gray-800">{category.title}</h3>
+                    <p className="text-sm text-gray-600">{category.description}</p>
                   </div>
                 </div>
-              </TabsContent>
-              
-              <TabsContent value="practice" className="space-y-6">
-                {/* Welcome Banner */}
-                <Card className="border-green-200 bg-gradient-to-br from-green-50 via-emerald-50 to-background overflow-hidden">
-                  <CardContent className="p-6">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="p-2 bg-green-100 rounded-lg">
-                            <Trophy className="w-6 h-6 text-green-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-2xl font-bold text-green-800">Chế độ luyện tập</h3>
-                            <p className="text-green-600 font-medium">Đã mở khóa! 🎉</p>
-                          </div>
-                        </div>
-                        <p className="text-muted-foreground text-lg mb-4">
-                          Củng cố kiến thức và nâng cao kỹ năng ký hiệu của bạn thông qua các bài tập tương tác
-                        </p>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            <span>Hoàn thành: {completedLessons}/{practiceUnlockTarget} bài học</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Star className="w-4 h-4 text-yellow-500" />
-                            <span>XP có thể kiếm: 500+</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-3">
-                        <Button size="lg" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg">
-                          <Play className="w-5 h-5 mr-2" />
-                          Bắt đầu luyện tập
-                        </Button>
-                        <Button variant="outline" size="sm" className="border-green-200 text-green-700 hover:bg-green-50">
-                          <Target className="w-4 h-4 mr-2" />
-                          Xem thống kê
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <Play className="w-8 h-8 text-blue-500 transition-transform duration-300 group-hover:scale-110" />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <BookOpen className="w-4 h-4" />
+                  <span>{category.exercises} bài tập</span>
+                </div>
+                {practiceScores[category.id] && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-green-600 font-semibold">
+                      ✓ {practiceScores[category.id].score} điểm
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
 
-                {/* Practice Modules Grid */}
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-semibold">Chọn loại luyện tập</h3>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span>Tất cả đã mở khóa</span>
+      {/* Recent Activity */}
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">Hoạt động gần đây</h3>
+        <div className="space-y-3">
+          {[
+            { title: 'Ôn tập Chào hỏi', time: '2 giờ trước', score: 95, icon: '👋' },
+            { title: 'Từ Gia đình', time: 'Hôm qua', score: 88, icon: '👨‍👩‍👧' },
+            { title: 'Luyện tập Số đếm', time: '2 ngày trước', score: 92, icon: '🔢' },
+          ].map((activity, index) => (
+            <Card 
+              key={index}
+              className="p-4 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer animate-fade-in"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl animate-wiggle">{activity.icon}</div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800">{activity.title}</h4>
+                    <p className="text-sm text-gray-600">{activity.time}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className={cn(
+                    "text-lg font-bold",
+                    activity.score >= 90 ? "text-green-600" : "text-blue-600"
+                  )}>
+                    {activity.score}%
+                  </div>
+                  <Trophy className={cn(
+                    "w-5 h-5",
+                    activity.score >= 90 ? "text-yellow-500" : "text-gray-400"
+                  )} />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24">
+      <main className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
+        {/* Render content based on active tab */}
+        {activeTab === 'home' && units.map((unit, unitIndex) => {
+          const isExpanded = expandedUnits[unit.id];
+          
+          return (
+            <div key={unit.id} className="space-y-6">
+              {/* Unit Header */}
+                  <Card 
+                    className={cn(
+                      `bg-gradient-to-r ${unit.gradient} border-blue-300`,
+                      "overflow-hidden relative cursor-pointer transition-all duration-500",
+                      "hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1",
+                      "transform-gpu will-change-transform"
+                    )}
+                    onClick={() => toggleUnit(unit.id)}
+                  >
+                    {/* Background Image with Overlay - Enhanced */}
+                    {unit.thumbnail && (
+                      <div className="absolute inset-0 opacity-30 overflow-hidden">
+                        <img 
+                          src={unit.thumbnail} 
+                          alt={unit.title}
+                          className="w-full h-full object-cover scale-110 blur-sm"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/80" />
+                        {/* Animated overlay pulse */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-200/20 to-transparent animate-pulse" />
+                      </div>
+                    )}
+                
+                {/* Decorative background pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400 rounded-full -translate-y-1/2 translate-x-1/2" />
+                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-300 rounded-full translate-y-1/2 -translate-x-1/2" />
+                </div>
+                
+                <div className="flex items-center justify-between p-6 relative z-10">
+                  <div className="flex items-center gap-4 flex-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleUnit(unit.id);
+                      }}
+                      className={cn(
+                        "bg-blue-300/50 hover:bg-blue-300 transition-all duration-300",
+                        !isExpanded && "bg-blue-400"
+                      )}
+                    >
+                      <ChevronDown className={cn(
+                        "w-6 h-6 text-blue-800 transition-transform duration-300",
+                        isExpanded ? "rotate-0" : "-rotate-90"
+                      )} />
+                    </Button>
+                    
+                    <div className="flex-1">
+                      <h1 className="text-3xl font-bold text-gray-800 mb-1">{unit.title}</h1>
+                      <div className="flex items-center gap-2">
+                            <Badge className="bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                              BÀI {unit.unitNumber}
+                            </Badge>
+                            <span className="text-gray-700 font-medium">{unit.totalChapters} chương</span>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {practiceModules.map((m) => {
-                      const getDifficultyColor = (difficulty: string) => {
-                        switch (difficulty) {
-                          case "Dễ": return "bg-green-100 text-green-700 border-green-200";
-                          case "Trung bình": return "bg-yellow-100 text-yellow-700 border-yellow-200";
-                          case "Khó": return "bg-red-100 text-red-700 border-red-200";
-                          default: return "bg-gray-100 text-gray-700 border-gray-200";
-                        }
-                      };
-
-                      const getColorClasses = (color: string) => {
-                        switch (color) {
-                          case "blue": return "border-blue-200 hover:border-blue-300 bg-gradient-to-br from-blue-50 to-blue-100/50";
-                          case "red": return "border-red-200 hover:border-red-300 bg-gradient-to-br from-red-50 to-red-100/50";
-                          case "purple": return "border-purple-200 hover:border-purple-300 bg-gradient-to-br from-purple-50 to-purple-100/50";
-                          case "green": return "border-green-200 hover:border-green-300 bg-gradient-to-br from-green-50 to-green-100/50";
-                          case "orange": return "border-orange-200 hover:border-orange-300 bg-gradient-to-br from-orange-50 to-orange-100/50";
-                          case "yellow": return "border-yellow-200 hover:border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100/50";
-                          default: return "border-gray-200 hover:border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100/50";
-                        }
-                      };
-
-                      return (
-                        <Card key={m.key} className={`transition-all duration-300 hover:shadow-lg hover:scale-105 ${getColorClasses(m.color)}`}>
-                          <CardHeader className="pb-3">
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="text-3xl">{m.icon}</div>
-                              <div className="flex flex-col items-end gap-1">
-                                <Badge className={`text-xs ${getDifficultyColor(m.difficulty)}`}>
-                                  {m.difficulty}
-                                </Badge>
-                                <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs">
-                                  +{m.xp} XP
-                                </Badge>
-                              </div>
-                            </div>
-                            <CardTitle className="text-lg font-semibold text-gray-800">{m.title}</CardTitle>
-                          </CardHeader>
-                          <CardContent className="pt-0">
-                            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{m.desc}</p>
-                            
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                  <Clock className="w-4 h-4" />
-                                  <span>{m.duration}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-green-600">
-                                  <CheckCircle className="w-4 h-4" />
-                                  <span className="font-medium">Sẵn sàng</span>
-                                </div>
-                              </div>
-                              
-                              <Button 
-                                onClick={() => handlePracticeStart(m.key)}
-                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-md hover:shadow-lg transition-all duration-300"
-                              >
-                                <Play className="w-4 h-4 mr-2" />
-                                Bắt đầu luyện tập
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
+                      <div className="relative group">
+                        {/* Icon with animated background */}
+                        <div className="absolute inset-0 bg-white rounded-full blur-md opacity-75 group-hover:opacity-100 transition-all duration-500 animate-breath" />
+                        <div className="relative bg-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-110 transform-gpu">
+                          <span className="text-4xl inline-block transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 animate-float">
+                            {unit.icon}
+                          </span>
+                        </div>
+                      </div>
                 </div>
-
-                {/* Practice Stats */}
-                <Card className="border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
-                  <CardContent className="p-6">
-                    <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                      <BarChart3 className="w-5 h-5 text-blue-600" />
-                      Thống kê luyện tập
-                    </h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">{practiceStats.completed}</div>
-                        <div className="text-sm text-muted-foreground">Bài đã hoàn thành</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-green-600">{practiceStats.xpEarned}</div>
-                        <div className="text-sm text-muted-foreground">XP đã kiếm</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">{practiceStats.streak}</div>
-                        <div className="text-sm text-muted-foreground">Ngày liên tiếp</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-orange-600">{practiceStats.accuracy}%</div>
-                        <div className="text-sm text-muted-foreground">Độ chính xác</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-            <TabsContent value="stories" className="space-y-6">
-              <Card className="bg-gradient-to-br from-purple-50 to-background border-purple-200">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <Users className="w-10 h-10 text-purple-600" />
-                    <div>
-                      <h3 className="text-xl font-semibold mb-1">Câu chuyện</h3>
-                      <p className="text-muted-foreground">Học thông qua các câu chuyện thú vị và thực tế. Theo dõi hội thoại và thực hành ký hiệu tương ứng.</p>
-                    </div>
-                  </div>
-                </CardContent>
               </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {storyItems.map((s) => (
-                  <Card key={s.id} className={`overflow-hidden transition hover:shadow-md ${s.locked ? "opacity-60" : ""}`}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <span>{s.title}</span>
-                        <Badge variant={s.difficulty === "Cơ bản" ? "default" : "secondary"}>{s.difficulty}</Badge>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-3">{s.type} • ⏱️ {s.duration} • +{s.xp} XP</p>
-                      <div className="flex items-center justify-between">
-                        <Button disabled={s.locked} className="gap-2" onClick={() => !s.locked && openStory(s.id)}>
-                          <BookOpen className="w-4 h-4" />
-                          {s.type === "Hội thoại" ? "Bắt đầu hội thoại" : "Đọc & luyện ký hiệu"}
+              {/* Chapters List with Connecting Lines - Collapsible */}
+              <div className={cn(
+                "transition-all duration-500 ease-in-out origin-top",
+                isExpanded 
+                  ? "opacity-100 scale-y-100 max-h-[5000px]" 
+                  : "opacity-0 scale-y-0 max-h-0 overflow-hidden"
+              )}>
+                    {/* Continue Button */}
+                    {unitIndex === 0 && (
+                      <div className="flex justify-end mb-6 animate-slide-up">
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "border-2 border-blue-500 text-blue-600 font-semibold",
+                            "hover:bg-blue-50 hover:border-blue-600 hover:scale-110 hover:-translate-y-1",
+                            "transition-all duration-300 shadow-md hover:shadow-xl",
+                            "transform-gpu will-change-transform animate-pulse"
+                          )}
+                          onClick={() => handleChapterStart(String(currentChapter))}
+                        >
+                          <span className="inline-flex items-center gap-2">
+                            TIẾP TỤC
+                            <span className="inline-block animate-bounce-slow">▶</span>
+                          </span>
                         </Button>
-                        {s.locked && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Lock className="w-4 h-4" />
-                            Sẽ mở khóa sớm
-                          </div>
-                        )}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-            {/* Story Modal */}
-            {activeStory && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div className="absolute inset-0 bg-black/60" onClick={closeStory}></div>
-                <div className="relative bg-background w-full max-w-3xl max-h-[90vh] rounded-xl shadow-lg border flex flex-col">
-                  <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
-                    <div>
-                      <h3 className="text-lg font-semibold">{activeStory.title}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Bước {storySteps.length ? activeStepIndex + 1 : 0}/{storySteps.length}
-                      </p>
-                    </div>
-                    <button aria-label="Đóng" className="p-2 rounded hover:bg-accent" onClick={closeStory}>
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-
-                  <div className="p-4 flex-1 overflow-y-auto">
-                    {/* Progress bar */}
-                    <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${storySteps.length ? Math.round(((activeStepIndex + 1) / storySteps.length) * 100) : 0}%` }}></div>
-                    </div>
-
-                    {/* Color Legend */}
-                    <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                      <h4 className="text-sm font-medium mb-2">Chú thích màu sắc từ vựng:</h4>
-                      <div className="flex flex-wrap gap-3 text-xs">
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-blue-500" />
-                          <span>Chào hỏi</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-purple-500" />
-                          <span>Cảm xúc</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-indigo-500" />
-                          <span>Câu hỏi</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-red-500" />
-                          <span>Gia đình</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-orange-500" />
-                          <span>Số đếm</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-green-500" />
-                          <span>Giáo dục</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 rounded-full bg-teal-500" />
-                          <span>Thời gian</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Conversation viewport */}
-                    {storySteps.length > 0 ? (
-                      <div className="space-y-6">
-                        {storySteps.slice(0, activeStepIndex + 1).map((st, idx) => (
-                          <div key={`${idx}-${restartCounter}`} className={`grid grid-cols-1 md:grid-cols-5 gap-4 items-start`}>
-                            <div className="md:col-span-3 order-2 md:order-1">
-                              <div className={`rounded-lg p-3 border ${st.speaker === "A" ? "bg-blue-50 border-blue-200" : "bg-gray-50"}`}>
-                                <div className="flex items-center gap-2 mb-1">
-                                  <span className="text-xs font-medium text-muted-foreground">{st.speaker === "A" ? "Người A" : "Người B"}</span>
-                                </div>
-                                <p 
-                                  className="text-sm" 
-                                  dangerouslySetInnerHTML={{ __html: createClickableText(st.text) }}
-                                  onClick={(e) => {
-                                    const target = e.target as HTMLElement;
-                                    if (target.dataset.word) {
-                                      handleWordClick(target.dataset.word);
-                                    }
-                                  }}
-                                />
-                                {st.hint && (
-                                  <p className="text-xs text-muted-foreground mt-2">Gợi ý ký hiệu: {st.hint}</p>
-                                )}
-                              </div>
-                            </div>
-                            <div className="md:col-span-2 order-1 md:order-2">
-                              {st.mediaType === "video" && st.mediaUrl && (
-                                <video key={`${activeStoryId}-${activeStepIndex}-${restartCounter}`} className="w-full rounded-lg border" src={st.mediaUrl} controls playsInline loop muted />
-                              )}
-                              {st.mediaType === "gif" && st.mediaUrl && (
-                                <img className="w-full rounded-lg border" src={st.mediaUrl} alt="Ký hiệu minh họa" />
-                              )}
-                              <div className="mt-2 flex items-center gap-2">
-                                <Button variant="outline" size="sm" onClick={() => setRestartCounter((c) => c + 1)}>Xem lại</Button>
-                                {idx === activeStepIndex && (
-                                  <Button size="sm">Tôi đã thực hành</Button>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-12 text-muted-foreground">Chưa có nội dung.</div>
                     )}
 
-                    {/* Controls */}
-                    <div className="mt-6 flex items-center justify-between flex-shrink-0">
-                      <Button variant="outline" onClick={goPrev} disabled={isFirstStep} className="gap-2">
-                        <ChevronLeft className="w-4 h-4" />
-                        Trước
-                      </Button>
-                      <div className="text-sm text-muted-foreground">
-                        {Math.round(((activeStepIndex + 1) / (storySteps.length || 1)) * 100)}%
-                      </div>
-                      <Button onClick={goNext} disabled={isLastStep} className="gap-2">
-                        Tiếp
-                        <ChevronRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <TabsContent value="dictionary" className="space-y-6">
-              <Dictionary />
-            </TabsContent>
-
-            <TabsContent value="progress" className="space-y-6">
-              <div className="space-y-6">
-                <h2 className="text-2xl font-bold">Tiến độ học tập</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Trophy className="w-5 h-5 text-blue-600" />
-                        Thống kê tuần này
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex justify-between">
-                        <span>Bài học hoàn thành</span>
-                        <span className="font-semibold text-blue-600">5/7</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Thời gian học</span>
-                        <span className="font-semibold text-blue-600">2h 30m</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Điểm XP</span>
-                        <span className="font-semibold text-blue-600">+350</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <BookOpen className="w-5 h-5 text-blue-600" />
-                        Mục tiêu tháng
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Bài học</span>
-                          <span>15/20</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '75%' }}></div>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Thời gian</span>
-                          <span>8h/12h</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '67%' }}></div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Lịch sử hoạt động</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {[
-                        { action: "Hoàn thành bài 'Chào hỏi cơ bản'", time: "2 giờ trước", xp: "+50" },
-                        { action: "Luyện tập từ điển", time: "Hôm qua", xp: "+25" },
-                        { action: "Hoàn thành bài 'Gia đình'", time: "2 ngày trước", xp: "+75" },
-                        { action: "Thử thách hàng ngày", time: "3 ngày trước", xp: "+100" }
-                      ].map((activity, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div>
-                            <p className="font-medium">{activity.action}</p>
-                            <p className="text-sm text-muted-foreground">{activity.time}</p>
-                          </div>
-                          <Badge className="bg-blue-600 text-white">{activity.xp} XP</Badge>
+                <div className="relative space-y-8">
+                  {/* Vertical Connecting Line */}
+                  {unit.chapters.length > 1 && (
+                    <div className="absolute left-1/2 top-8 bottom-8 w-1 bg-gradient-to-b from-blue-400 via-blue-300 to-gray-300 -z-10 transform -translate-x-1/2 rounded-full" />
+                  )}
+                  
+                      {unit.chapters.map((chapter, index) => (
+                        <div key={chapter.id} className="relative animate-slide-up" style={{ animationDelay: `${index * 150}ms` }}>
+                          <ChapterCard
+                            chapterNumber={chapter.chapterNumber}
+                            title={chapter.title}
+                            lessonsCompleted={chapter.lessonsCompleted}
+                            totalLessons={chapter.totalLessons}
+                            isActive={chapter.isActive}
+                            isLocked={chapter.isLocked}
+                            thumbnail={chapter.thumbnail}
+                            onStart={() => handleChapterStart(chapter.id)}
+                          />
+                          
+                          {/* Connection dot on the line */}
+                          {index < unit.chapters.length - 1 && (
+                            <div className="absolute left-1/2 -bottom-4 w-4 h-4 bg-blue-500 rounded-full transform -translate-x-1/2 z-10 shadow-lg border-2 border-white animate-float" 
+                                 style={{ animationDelay: `${index * 200}ms` }} />
+                          )}
                         </div>
                       ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-            </Tabs>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Daily Challenge */}
-            <Card className="bg-gradient-to-br from-blue-100 to-blue-50 border-blue-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-blue-600" />
-                  Thử thách hàng ngày
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Hoàn thành 1 bài học để duy trì chuỗi ngày học của bạn!
-                </p>
-                <Button className="w-full" variant="outline">
-                  Bắt đầu thử thách
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Leaderboard */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Bảng xếp hạng tuần
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {[
-                    { name: "Minh Anh", xp: 2150, rank: 1 },
-                    { name: "Thu Trang", xp: 1890, rank: 2 },
-                    { name: "Bạn", xp: 1250, rank: 3 }
-                  ].map((user) => (
-                    <div key={user.rank} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                          user.rank === 1 ? 'bg-blue-600 text-white' :
-                          user.rank === 2 ? 'bg-gray-400 text-white' :
-                          'bg-blue-500 text-white'
-                        }`}>
-                          {user.rank}
-                        </span>
-                        <span className="font-medium">{user.name}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">{user.xp} XP</span>
-                    </div>
-                  ))}
                 </div>
-              </CardContent>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Continue Learning Banner - Only on Home Tab */}
+        {activeTab === 'home' && (
+            <Card className="mt-12 bg-gradient-to-r from-blue-100 via-indigo-50 to-blue-50 border-blue-200 hover:shadow-2xl transition-all duration-500 overflow-hidden relative group cursor-pointer hover:scale-[1.02] hover:-translate-y-1 transform-gpu">
+              {/* Animated background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-200/20 to-indigo-200/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer" 
+                   style={{ backgroundSize: '200% 100%' }} />
+              
+              <div className="p-8 flex items-center justify-between relative z-10">
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-all duration-300">
+                    Tiếp tục hành trình học ngôn ngữ ký hiệu
+                  </h2>
+                  <p className="text-gray-700 group-hover:text-gray-900 transition-all duration-300 group-hover:translate-x-2">
+                    Học các ký hiệu cơ bản để giao tiếp với người khác ✨
+                  </p>
+                </div>
+                <div className="text-6xl animate-float">
+                  <span className="inline-block group-hover:animate-wiggle transition-transform duration-300 group-hover:scale-110">
+                    📚
+                  </span>
+                </div>
+              </div>
             </Card>
+        )}
+
+        {/* Practice Tab Content */}
+        {activeTab === 'practice' && renderPracticeContent()}
+
+        {/* Dictionary Tab Content */}
+        {activeTab === 'dictionary' && (
+          <div className="animate-slide-up">
+            <Dictionary />
           </div>
-        </div>
+        )}
+
+        {/* Profile Tab Content */}
+        {activeTab === 'profile' && (
+          <div className="animate-slide-up">
+            <ProfileTab onLogout={onLogout} />
+          </div>
+        )}
       </main>
 
-      {/* Vocabulary Modal */}
-      {selectedWordId && selectedWordData && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => {
-            setSelectedWordId(null);
-            setSelectedWordData(null);
-          }}
-        >
-          <div 
-            className="bg-card rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] border border-border overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <Play className="w-4 h-4 text-primary" />
-                <div>
-                  <span className="font-medium">Ký hiệu cho từ: {selectedWordData.term}</span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="secondary" className="text-xs">
-                      {selectedWordData.category === 'greetings' && 'Chào hỏi'}
-                      {selectedWordData.category === 'emotions' && 'Cảm xúc'}
-                      {selectedWordData.category === 'family' && 'Gia đình'}
-                      {selectedWordData.category === 'numbers' && 'Số đếm'}
-                      {selectedWordData.category === 'education' && 'Giáo dục'}
-                      {selectedWordData.category === 'time' && 'Thời gian'}
-                      {selectedWordData.category === 'questions' && 'Câu hỏi'}
-                    </Badge>
-                    <div className={`w-3 h-3 rounded-full ${
-                      selectedWordData.color === 'blue' ? 'bg-blue-500' :
-                      selectedWordData.color === 'purple' ? 'bg-purple-500' :
-                      selectedWordData.color === 'red' ? 'bg-red-500' :
-                      selectedWordData.color === 'orange' ? 'bg-orange-500' :
-                      selectedWordData.color === 'green' ? 'bg-green-500' :
-                      selectedWordData.color === 'teal' ? 'bg-teal-500' :
-                      selectedWordData.color === 'indigo' ? 'bg-indigo-500' : 'bg-gray-500'
-                    }`} />
-                  </div>
-                </div>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => {
-                  setSelectedWordId(null);
-                  setSelectedWordData(null);
-                }}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                ✕
-              </Button>
-            </div>
-            <div className="p-4 flex-1 overflow-auto">
-              {selectedWordData.videoUrl && (
-                <div className="rounded-lg overflow-hidden border">
-                  <video 
-                    className="w-full aspect-video object-contain bg-black" 
-                    src={selectedWordData.videoUrl}
-                    controls
-                    playsInline
-                    autoPlay
-                    loop
-                    muted
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-50">
+        <div className="container mx-auto px-4 max-w-lg">
+          <div className="flex items-center justify-around py-2">
+                <button 
+                  onClick={() => handleTabClick('home')}
+                  className={cn(
+                    "flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all duration-300",
+                    "hover:scale-105 transform-gpu",
+                    activeTab === 'home' 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-blue-500 hover:bg-gray-50"
+                  )}
+                >
+                  <Home className={cn(
+                    "w-6 h-6 transition-all duration-300",
+                    activeTab === 'home' ? "scale-110 animate-bounce-slow" : "hover:scale-110"
+                  )} 
+                  fill={activeTab === 'home' ? 'currentColor' : 'none'}
                   />
-                </div>
-              )}
-              <div className="text-xs text-muted-foreground mt-2">
-                {selectedWordData.vi}
-              </div>
-            </div>
+                  <span className="text-xs font-medium">Trang chủ</span>
+                  {activeTab === 'home' && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full animate-pulse" />
+                  )}
+                </button>
+            
+                <button 
+                  onClick={() => handleTabClick('practice')}
+                  className={cn(
+                    "flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all duration-300",
+                    "hover:scale-105 transform-gpu",
+                    activeTab === 'practice' 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-blue-500 hover:bg-gray-50"
+                  )}
+                >
+                  <BookOpen className={cn(
+                    "w-6 h-6 transition-all duration-300",
+                    activeTab === 'practice' ? "scale-110 animate-wiggle" : "hover:scale-110"
+                  )} />
+                  <span className="text-xs font-medium">Luyện tập</span>
+                </button>
+            
+                <button 
+                  onClick={() => handleTabClick('dictionary')}
+                  className={cn(
+                    "flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all duration-300",
+                    "hover:scale-105 transform-gpu",
+                    activeTab === 'dictionary' 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-blue-500 hover:bg-gray-50"
+                  )}
+                >
+                  <BookText className={cn(
+                    "w-6 h-6 transition-all duration-300",
+                    activeTab === 'dictionary' ? "scale-110 animate-float" : "hover:scale-110"
+                  )} />
+                  <span className="text-xs font-medium">Từ điển</span>
+                </button>
+                
+                <button 
+                  onClick={() => handleTabClick('profile')}
+                  className={cn(
+                    "flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all duration-300",
+                    "hover:scale-105 transform-gpu",
+                    activeTab === 'profile' 
+                      ? "text-blue-600 bg-blue-50" 
+                      : "text-gray-600 hover:text-blue-500 hover:bg-gray-50"
+                  )}
+                >
+                  <User className={cn(
+                    "w-6 h-6 transition-all duration-300",
+                    activeTab === 'profile' ? "scale-110 animate-breath" : "hover:scale-110"
+                  )} />
+                  <span className="text-xs font-medium">Hồ sơ</span>
+                </button>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Practice Components */}
-      {activePractice === 'quick-review' && (
-        <QuickReview 
-          onComplete={handlePracticeComplete}
+      {activePractice === 'quickReview' && (
+        <QuickReview
+          onComplete={(score, timeSpent) => handlePracticeComplete('quickReview', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}
       
-      {activePractice === 'speed-signs' && (
-        <SpeedChallenge 
-          onComplete={handlePracticeComplete}
+      {activePractice === 'speedChallenge' && (
+        <SpeedChallenge
+          onComplete={(score, timeSpent) => handlePracticeComplete('speedChallenge', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}
       
-      {activePractice === 'mirror-practice' && (
-        <MirrorPractice 
-          onComplete={handlePracticeComplete}
+      {activePractice === 'mirrorPractice' && (
+        <MirrorPractice
+          onComplete={(score, timeSpent) => handlePracticeComplete('mirrorPractice', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}
       
-      {activePractice === 'quiz-mix' && (
-        <QuizMix 
-          onComplete={handlePracticeComplete}
+      {activePractice === 'quizMix' && (
+        <QuizMix
+          onComplete={(score, timeSpent) => handlePracticeComplete('quizMix', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}
       
-      {activePractice === 'conversation-practice' && (
-        <ConversationPractice 
-          onComplete={handlePracticeComplete}
+      {activePractice === 'conversationPractice' && (
+        <ConversationPractice
+          onComplete={(score, timeSpent) => handlePracticeComplete('conversationPractice', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}
       
-      {activePractice === 'daily-challenge' && (
-        <DailyChallenge 
-          onComplete={handlePracticeComplete}
+      {activePractice === 'dailyChallenge' && (
+        <DailyChallenge
+          onComplete={(score, timeSpent) => handlePracticeComplete('dailyChallenge', score, timeSpent)}
           onClose={handlePracticeClose}
         />
       )}

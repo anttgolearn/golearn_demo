@@ -1,346 +1,312 @@
 "use client"
 
-import { useState } from "react"
-import React from "react"
+import { useState, useMemo } from "react"
 import { Button } from "../../shared/ui/button"
 import { Card } from "../../shared/ui/card"
 import { Input } from "../../shared/ui/input"
-import { Badge } from "../../shared/ui/badge"
-import { ArrowLeft, Search, Play, Star, Filter } from "lucide-react"
+import { Play, X, Search } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { 
+  dictionaryCategories, 
+  dictionaryWords, 
+  getFrequentWords, 
+  type DictionaryWord 
+} from "../../lib/dictionary-data"
 
-interface DictionaryEntry {
-  word: string
-  emoji: string
-  description: string
-  category: string
-  difficulty: "easy" | "medium" | "hard"
-  isFavorite: boolean
-  videoUrl?: string
-}
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
-// Demo dictionary entries and categories (no API)
-const categories = [
-  { id: "all", name: "Tất cả", count: 0 },
-  { id: "greetings", name: "Chào hỏi", count: 0 },
-  { id: "courtesy", name: "Lịch sự", count: 0 },
-  { id: "weather", name: "Thời tiết", count: 0 },
-  { id: "family", name: "Gia đình", count: 0 },
-  { id: "numbers", name: "Số đếm", count: 0 },
-  { id: "colors", name: "Màu sắc", count: 0 },
-  { id: "food", name: "Đồ ăn", count: 0 },
-  { id: "emotions", name: "Cảm xúc", count: 0 },
-]
-
-interface DictionaryProps {
-  onBack?: () => void
-}
-
-export function Dictionary({ onBack }: DictionaryProps) {
+export function Dictionary() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [favorites, setFavorites] = useState<string[]>([])
-  const [entries, setEntries] = useState<DictionaryEntry[]>([])
+  const [selectedLetter, setSelectedLetter] = useState<string>("All")
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [videoPreview, setVideoPreview] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [selectedWord, setSelectedWord] = useState<DictionaryWord | null>(null)
 
-  // Initialize local demo data
-  React.useEffect(() => {
-    setLoading(true)
-    setError(null)
-    const demoEntries: DictionaryEntry[] = [
-      { word: 'Xin chào', emoji: '👋', description: 'Lời chào cơ bản', category: 'greetings', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/Chào.mp4' },
-      { word: 'Xin lỗi', emoji: '🙏', description: 'Thể hiện sự xin lỗi', category: 'courtesy', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/xin lỗi.mp4' },
-      { word: 'Mưa', emoji: '🌧️', description: 'Thời tiết: mưa', category: 'weather', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/mưa phùn.mp4' },
-      { word: 'Mẹ', emoji: '👩', description: 'Thành viên gia đình', category: 'family', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/mẹ.mp4' },
-      { word: 'Số 1', emoji: '1️⃣', description: 'Số đếm cơ bản', category: 'numbers', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/1.mp4' },
-      { word: 'Màu đỏ', emoji: '🟥', description: 'Tên màu', category: 'colors', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/màu đỏ.mp4' },
-      { word: 'Cơm', emoji: '🍚', description: 'Món ăn', category: 'food', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/cơm.mp4' },
-      // Cảm xúc (20 từ) - Đã cập nhật ánh xạ video chính xác
-      { word: 'Vui mừng', emoji: '😊', description: 'Cảm xúc tích cực, hạnh phúc', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/vui mừng - nam.mp4' },
-      { word: 'Buồn thảm', emoji: '😢', description: 'Cảm xúc tiêu cực, thất vọng', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/buồn thảm.mp4' },
-      { word: 'Giận dữ', emoji: '😠', description: 'Cảm xúc tức giận, bực bội', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/giận_dữ.mp4' },
-      { word: 'Hoảng sợ', emoji: '😨', description: 'Cảm xúc lo sợ, hoảng hốt', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/hoảng_sợ.mp4' },
-      { word: 'Lo sợ', emoji: '😰', description: 'Cảm xúc bồn chồn, không yên', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/lo_sợ.mp4' },
-      { word: 'Tuyệt vọng', emoji: '😞', description: 'Cảm xúc không đạt được mong muốn', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/tuyệt_vọng.mp4' },
-      { word: 'Ngạc nhiên', emoji: '😲', description: 'Cảm xúc bất ngờ, kinh ngạc', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/Ngạc_nhiên.mp4' },
-      { word: 'Cô đơn', emoji: '😌', description: 'Cảm xúc thoải mái, không căng thẳng', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/cô_đơn.mp4' },
-      { word: 'Hồi hộp', emoji: '😓', description: 'Cảm xúc áp lực, không thoải mái', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/hồi_hộp.mp4' },
-      { word: 'Tự tin', emoji: '😎', description: 'Cảm xúc tin tưởng vào bản thân', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/tự_tin.mp4' },
-      { word: 'Buồn thảm', emoji: '😳', description: 'Cảm xúc ngượng ngùng, e thẹn', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/buồn thảm.mp4' },
-      { word: 'Thích thú', emoji: '🤩', description: 'Cảm xúc hứng thú, yêu thích', category: 'emotions', difficulty: 'easy', isFavorite: false, videoUrl: '/resources/videos/thích_thú.mp4' },
-      { word: 'Nhẹn ngào', emoji: '😑', description: 'Cảm xúc không hứng thú, mệt mỏi', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/nguyện_ngào.mp4' },
-      { word: 'Ghen tị', emoji: '😒', description: 'Cảm xúc không vui vì người khác có gì đó', category: 'emotions', difficulty: 'hard', isFavorite: false, videoUrl: '/resources/videos/ghen_tị.mp4' },
-      { word: 'Xin lỗi', emoji: '🙏', description: 'Cảm xúc cảm kích, trân trọng', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/xin lỗi.mp4' },
-      { word: 'Hồi hộp', emoji: '🥺', description: 'Cảm xúc bồn chồn, lo lắng', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/hồi_hộp.mp4' },
-      { word: 'Bối rối', emoji: '😕', description: 'Cảm xúc không hiểu rõ, lúng túng', category: 'emotions', difficulty: 'medium', isFavorite: false, videoUrl: '/resources/videos/bối_rối.mp4' },
-    ]
-    setEntries(demoEntries)
-    categories.forEach(category => {
-      if (category.id === 'all') {
-        category.count = demoEntries.length
-      } else {
-        category.count = demoEntries.filter(e => e.category === category.id).length
-      }
-    })
-    setLoading(false)
-  }, [])
+  const frequentWords = getFrequentWords()
 
-  const filteredEntries = entries.filter(entry => {
-    const matchesSearch = entry.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         entry.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "all" || entry.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+  // Filter words based on search, letter, and category
+  const filteredWords = useMemo(() => {
+    let words = dictionaryWords
 
-  const toggleFavorite = (word: string) => {
-    setFavorites(prev => 
-      prev.includes(word) 
-        ? prev.filter(f => f !== word)
-        : [...prev, word]
-    )
-  }
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "easy": return "bg-green-100 text-green-800"
-      case "medium": return "bg-yellow-100 text-yellow-800"
-      case "hard": return "bg-red-100 text-red-800"
-      default: return "bg-gray-100 text-gray-800"
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      words = words.filter(w => w.category === selectedCategory)
     }
+
+    // Filter by search term
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase()
+      words = words.filter(w => 
+        w.word.toLowerCase().includes(term) || 
+        w.vietnamese.toLowerCase().includes(term)
+      )
+    }
+
+    // Filter by letter
+    if (selectedLetter !== 'All') {
+      if (selectedLetter === 'Numbers') {
+        words = words.filter(w => w.category === 'numbers')
+      } else {
+        words = words.filter(w => w.word.charAt(0).toUpperCase() === selectedLetter)
+      }
+    }
+
+    return words
+  }, [searchTerm, selectedLetter, selectedCategory])
+
+  const playVideo = (word: DictionaryWord) => {
+    setSelectedWord(word)
+    setVideoPreview(word.videoUrl)
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-card to-muted pb-20">
-        <div className="bg-card border-b p-4">
-          <div className="flex items-center gap-4 max-w-4xl mx-auto">
-            {onBack && (
-              <Button variant="ghost" size="sm" onClick={onBack}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại
-              </Button>
-            )}
-            <div className="flex items-center gap-2">
-              <Search className="w-5 h-5 text-primary" />
-              <h1 className="text-xl font-bold text-foreground">Từ điển ký hiệu</h1>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-          <span className="ml-3 text-gray-600">Đang tải từ điển...</span>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-card to-muted pb-20">
-        <div className="bg-card border-b p-4">
-          <div className="flex items-center gap-4 max-w-4xl mx-auto">
-            {onBack && (
-              <Button variant="ghost" size="sm" onClick={onBack}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại
-              </Button>
-            )}
-            <div className="flex items-center gap-2">
-              <Search className="w-5 h-5 text-primary" />
-              <h1 className="text-xl font-bold text-foreground">Từ điển ký hiệu</h1>
-            </div>
-          </div>
-        </div>
-        <div className="text-center py-20">
-          <div className="text-red-500 mb-4">Lỗi tải dữ liệu: {error}</div>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            Thử lại
-          </button>
-        </div>
-      </div>
-    )
+  const closeVideo = () => {
+    setVideoPreview(null)
+    setSelectedWord(null)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-card to-muted pb-20">
-      {/* Header */}
-      <div className="bg-card border-b p-4">
-        <div className="flex items-center gap-4 max-w-4xl mx-auto">
-          {onBack && (
-            <Button variant="ghost" size="sm" onClick={onBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Quay lại
-            </Button>
-          )}
-          <div className="flex items-center gap-2">
-            <Search className="w-5 h-5 text-primary" />
-            <h1 className="text-xl font-bold text-foreground">Từ điển ký hiệu</h1>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24">
+      <div className="container mx-auto px-4 py-6 max-w-md space-y-6 animate-slide-up">
+        {/* Trophy and Streak Icons */}
+        <div className="flex items-center justify-end gap-3 animate-fade-in">
+          <div className="flex items-center gap-1.5 bg-white rounded-full px-2.5 py-1 shadow-md border border-blue-100">
+            <span className="text-lg">🔥</span>
+            <span className="font-bold text-sm text-gray-800">0</span>
+          </div>
+          <div className="flex items-center gap-1.5 bg-white rounded-full px-2.5 py-1 shadow-md border border-blue-100">
+            <span className="text-lg">🏆</span>
+            <span className="font-bold text-sm text-gray-800">0</span>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto p-6">
-        {/* Search Bar */}
-        <div className="mb-6">
+        {/* Search Section */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide px-1">Search Dictionary</h2>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
-              placeholder="Tìm kiếm ký hiệu..."
+              type="text"
+              placeholder="Type a word..."
               value={searchTerm}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full h-12 pl-10 pr-4 text-base bg-white border border-gray-200 shadow-sm hover:shadow-md focus:shadow-lg focus:border-blue-400 transition-all duration-300 rounded-xl placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-blue-400"
             />
           </div>
         </div>
 
         {/* Category Filter */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Filter className="w-4 h-4 text-muted-foreground" />
-            <h2 className="text-lg font-semibold text-foreground">Chủ đề</h2>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide px-1">Categories</h3>
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {dictionaryCategories.map((category) => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                size="sm"
+                variant="ghost"
                 onClick={() => setSelectedCategory(category.id)}
-                className="text-sm"
+                className={cn(
+                  "h-9 px-3 text-sm font-medium transition-all duration-300 rounded-lg whitespace-nowrap flex-shrink-0",
+                  "hover:scale-105 active:scale-95",
+                  selectedCategory === category.id 
+                    ? "bg-blue-500 text-white shadow-md hover:bg-blue-600" 
+                    : "bg-white text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 border border-gray-200"
+                )}
               >
-                {category.name} ({category.count})
+                <span className="mr-1.5">{category.emoji}</span>
+                {category.name}
               </Button>
             ))}
           </div>
         </div>
 
-        {/* Dictionary Entries */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-foreground">
-              {filteredEntries.length} kết quả
-            </h2>
-            {searchTerm && (
+        {/* Alphabet Filter */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide px-1">Filter by Letter</h3>
+          <div className="grid grid-cols-7 gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => setSelectedLetter("All")}
+              className={cn(
+                "h-9 text-xs font-medium transition-all duration-300 rounded-lg",
+                "hover:scale-105 active:scale-95",
+                selectedLetter === "All" 
+                  ? "bg-blue-500 text-white shadow-md" 
+                  : "bg-white text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 border border-gray-200"
+              )}
+            >
+              All
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setSelectedLetter("Numbers")}
+              className={cn(
+                "h-9 text-xs font-medium transition-all duration-300 rounded-lg col-span-2",
+                "hover:scale-105 active:scale-95",
+                selectedLetter === "Numbers" 
+                  ? "bg-blue-500 text-white shadow-md" 
+                  : "bg-white text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 border border-gray-200"
+              )}
+            >
+              123
+            </Button>
+            {alphabet.map((letter, index) => (
               <Button
+                key={letter}
                 variant="ghost"
-                size="sm"
-                onClick={() => setSearchTerm("")}
+                onClick={() => setSelectedLetter(letter)}
+                className={cn(
+                  "h-9 text-sm font-medium transition-all duration-300 rounded-lg",
+                  "hover:scale-105 active:scale-95",
+                  selectedLetter === letter 
+                    ? "bg-blue-500 text-white shadow-md" 
+                    : "bg-white text-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 border border-gray-200"
+                )}
+                style={{ animationDelay: `${index * 10}ms` }}
               >
-                Xóa tìm kiếm
+                {letter}
               </Button>
-            )}
+            ))}
           </div>
+        </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredEntries.map((entry, index) => (
-              <Card
-                key={index}
-                className="p-4 hover:shadow-md transition-shadow cursor-pointer group"
-              >
-                <div className="space-y-4">
-                  {/* Entry Header */}
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl">{entry.emoji}</div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className={getDifficultyColor(entry.difficulty)}>
-                        {entry.difficulty}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => toggleFavorite(entry.word)}
-                        className="p-1 h-auto"
-                      >
-                        <Star 
-                          className={cn(
-                            "w-4 h-4",
-                            favorites.includes(entry.word) 
-                              ? "text-yellow-500 fill-yellow-500" 
-                              : "text-muted-foreground"
-                          )} 
-                        />
-                      </Button>
+        {/* Most Frequently Searched Words */}
+        {!searchTerm && selectedLetter === "All" && selectedCategory === "all" && (
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide px-1">Frequently Searched</h2>
+            <Card className="divide-y border border-gray-200 shadow-sm overflow-hidden">
+              {frequentWords.map((word, index) => (
+                <button
+                  key={word.id}
+                  onClick={() => playVideo(word)}
+                  className="w-full p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors group"
+                  style={{ animationDelay: `${index * 30}ms` }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">
+                      {word.emoji}
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-semibold text-gray-800">{word.word}</span>
+                      <span className="text-xs text-gray-500">{word.vietnamese}</span>
                     </div>
                   </div>
-
-                  {/* Entry Content */}
-                  <div className="space-y-2">
-                    <h3 className="font-semibold text-foreground text-lg">{entry.word}</h3>
-                    <p className="text-sm text-muted-foreground">{entry.description}</p>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-2">
-                    <Button
-                      size="sm"
-                      className="flex-1 bg-primary/10 hover:bg-primary/20 text-primary"
-                      onClick={() => setVideoPreview(entry.videoUrl || null)}
-                    >
-                      <Play className="w-4 h-4 mr-1" />
-                      Xem
-                    </Button>
-                    
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          {filteredEntries.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-4xl mb-4">🔍</div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">Không tìm thấy ký hiệu</h3>
-              <p className="text-muted-foreground">
-                Thử thay đổi từ khóa hoặc bộ lọc chủ đề
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Favorites Section */}
-        {favorites.length > 0 && (
-          <div className="mt-8 space-y-4">
-            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <Star className="w-5 h-5 text-yellow-500" />
-              Yêu thích ({favorites.length})
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {favorites.map((word) => {
-                const entry = entries.find(e => e.word === word)
-                if (!entry) return null
-                return (
-                  <Badge
-                    key={word}
-                    variant="outline"
-                    className="text-sm cursor-pointer hover:bg-primary/10"
-                    onClick={() => toggleFavorite(word)}
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-9 w-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      playVideo(word)
+                    }}
                   >
-                    {entry.emoji} {entry.word}
-                  </Badge>
-                )
-              })}
-            </div>
+                    <Play className="w-4 h-4" fill="currentColor" />
+                  </Button>
+                </button>
+              ))}
+            </Card>
+          </div>
+        )}
+
+        {/* Filtered Results */}
+        {(searchTerm || selectedLetter !== "All" || selectedCategory !== "all") && (
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide px-1">
+              Results ({filteredWords.length})
+            </h2>
+            {filteredWords.length === 0 ? (
+              <Card className="p-8 text-center border border-gray-200 shadow-sm">
+                <div className="text-5xl mb-3">🔍</div>
+                <p className="text-gray-600 font-medium">No words found</p>
+                <p className="text-gray-400 text-sm mt-1">Try a different search term</p>
+              </Card>
+            ) : (
+              <Card className="divide-y border border-gray-200 shadow-sm overflow-hidden">
+                {filteredWords.map((word, index) => (
+                  <button
+                    key={word.id}
+                    onClick={() => playVideo(word)}
+                    className="w-full p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors group"
+                    style={{ animationDelay: `${index * 30}ms` }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">
+                        {word.emoji}
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-sm font-semibold text-gray-800">{word.word}</span>
+                        <span className="text-xs text-gray-500">{word.vietnamese}</span>
+                      </div>
+                    </div>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        playVideo(word)
+                      }}
+                    >
+                      <Play className="w-4 h-4" fill="currentColor" />
+                    </Button>
+                  </button>
+                ))}
+              </Card>
+            )}
           </div>
         )}
       </div>
 
       {/* Video Preview Modal */}
-      {videoPreview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="bg-card rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] border border-border overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border flex-shrink-0">
-              <div className="font-medium">Xem ký hiệu</div>
-              <Button variant="ghost" size="sm" onClick={() => setVideoPreview(null)}>Đóng</Button>
-            </div>
-            <div className="p-4 flex-1 overflow-y-auto">
-              <div className="rounded-lg overflow-hidden border">
-                <video className="w-full aspect-video object-contain bg-black" src={videoPreview} playsInline autoPlay loop muted />
+      {videoPreview && selectedWord && (
+        <div 
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in"
+          onClick={closeVideo}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col animate-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-white">
+              <div>
+                <h3 className="font-semibold text-lg text-gray-800">{selectedWord.word}</h3>
+                <p className="text-sm text-gray-600">{selectedWord.vietnamese}</p>
               </div>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={closeVideo}
+                className="h-9 w-9 p-0 rounded-lg hover:bg-blue-100 transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-600" />
+              </Button>
+            </div>
+
+            {/* Video Content */}
+            <div className="p-6 bg-gray-50">
+              <div className="rounded-xl overflow-hidden border-2 border-gray-200 bg-black shadow-lg">
+                <video 
+                  key={videoPreview}
+                  className="w-full aspect-video object-contain" 
+                  src={videoPreview} 
+                  playsInline 
+                  autoPlay 
+                  loop 
+                  controls
+                >
+                  <source src={videoPreview} type="video/mp4" />
+                  Video không khả dụng
+                </video>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 bg-white border-t border-gray-200">
+              <Button 
+                onClick={closeVideo}
+                className="w-full h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                Close
+              </Button>
             </div>
           </div>
         </div>
