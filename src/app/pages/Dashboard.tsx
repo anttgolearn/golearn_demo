@@ -46,11 +46,11 @@ const ChapterCard = ({
       return (
         <Card 
           className={cn(
-            "relative overflow-hidden transition-all duration-500 cursor-pointer",
-            "hover:shadow-2xl hover:scale-[1.03] hover:-translate-y-1",
-            "transform-gpu will-change-transform",
-            isActive ? "border-2 border-blue-500 shadow-lg animate-glow" : "border-gray-200 hover:border-blue-400",
-            isLocked && "opacity-60 cursor-not-allowed hover:scale-100 hover:translate-y-0 hover:shadow-none"
+            "relative overflow-hidden transition-all duration-300 cursor-pointer",
+            "hover:shadow-lg hover:-translate-y-0.5",
+            "transform-gpu",
+            isActive ? "border-2 border-blue-500 shadow-md" : "border-gray-200 hover:border-blue-400",
+            isLocked && "opacity-60 cursor-not-allowed hover:translate-y-0 hover:shadow-none"
           )}
           onMouseEnter={() => !isLocked && setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -78,10 +78,10 @@ const ChapterCard = ({
                     src={thumbnail!} 
                     alt={title}
                     className={cn(
-                      "w-full h-full object-cover transition-all duration-500",
-                      "group-hover/thumb:scale-110 group-hover/thumb:rotate-1",
+                      "w-full h-full object-cover transition-transform duration-300",
+                      "group-hover/thumb:scale-105",
                       isLocked ? "grayscale brightness-75" : "brightness-100",
-                      isActive && "brightness-110 contrast-110"
+                      isActive && "brightness-105"
                     )}
                   />
                 )}
@@ -102,8 +102,8 @@ const ChapterCard = ({
                 )}
                 {/* Dynamic overlay gradient */}
                 <div className={cn(
-                  "absolute inset-0 bg-gradient-to-r from-transparent via-background/60 to-background/90 transition-all duration-300",
-                  isHovered && !isLocked && "from-blue-500/10 via-background/50 to-background/80"
+                  "absolute inset-0 bg-gradient-to-r from-transparent via-background/40 to-background/80 transition-opacity duration-300",
+                  isHovered && !isLocked && "opacity-100"
                 )} />
                 {/* Corner accent */}
                 {isActive && (
@@ -142,18 +142,18 @@ const ChapterCard = ({
                     onStart?.();
                   }}
                   className={cn(
-                    "rounded-full w-16 h-16 p-0 transition-all duration-300",
-                    "shadow-lg hover:shadow-2xl hover:scale-125 hover:rotate-6",
-                    "transform-gpu will-change-transform",
+                    "rounded-full w-16 h-16 p-0 transition-all duration-200",
+                    "shadow-md hover:shadow-lg hover:scale-105",
+                    "transform-gpu",
                     isActive 
-                      ? "bg-blue-500 hover:bg-blue-600 animate-breath" 
+                      ? "bg-blue-500 hover:bg-blue-600" 
                       : isHovered
-                        ? "bg-blue-400 hover:bg-blue-500 animate-pulse"
+                        ? "bg-blue-400 hover:bg-blue-500"
                         : "bg-blue-300 hover:bg-blue-400",
-                    isLocked && "opacity-50 cursor-not-allowed hover:scale-100 hover:rotate-0"
+                    isLocked && "opacity-50 cursor-not-allowed hover:scale-100"
                   )}
                 >
-                  <Play className="w-8 h-8 text-white ml-1 transition-transform duration-300" fill="white" />
+                  <Play className="w-8 h-8 text-white ml-1" fill="white" />
                 </Button>
           </div>
           

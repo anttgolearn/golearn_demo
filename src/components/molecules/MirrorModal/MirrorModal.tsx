@@ -68,14 +68,14 @@ export const MirrorModal: React.FC<MirrorModalProps> = ({
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 z-40"
+        className="fixed inset-0 bg-black/50 z-40 animate-fade-in"
         onClick={onClose}
         aria-label="Nền bảng trượt"
       />
       
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-end">
-        <div className="w-full h-40% bg-[#FFF8F3] rounded-t-2xl transform transition-transform duration-300 ease-out">
+        <div className="w-full h-40% bg-[#FFF8F3] rounded-t-2xl transform transition-transform duration-300 ease-out animate-slide-up-from-bottom">
           {/* Header */}
           <div className="flex items-center justify-end p-4">
             <button

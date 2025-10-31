@@ -104,7 +104,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white animate-fade-in">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -146,13 +146,13 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16 lg:py-24">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
+          <div className="text-center space-y-8 animate-slide-up">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight animate-fade-in" style={{animationDelay: '100ms'}}>
               <span className="block">Học ngôn ngữ ký hiệu Việt Nam</span>
               <span className="block text-blue-600">và bắt đầu xây dựng cầu nối!</span>
               </h1>
               
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{animationDelay: '200ms'}}>
                <Button 
                  size="lg" 
                 className="text-lg px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
@@ -176,28 +176,28 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Features Section */}
       <section id="features" className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Đây là<br />cách<br />hoạt động</h2>
               </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            <div className="text-center space-y-4 p-4 lg:p-6">
-              <h3 className="text-lg lg:text-xl font-semibold text-orange-500">Kỹ năng giao tiếp thực tế</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 animate-slide-up">
+            <div className="text-center space-y-2 p-4 lg:p-6">
+              <h3 className="text-lg lg:text-xl font-semibold text-gray-900">Kỹ năng giao tiếp thực tế</h3>
               <p className="text-sm lg:text-base text-gray-600">Đắm mình trong ngôn ngữ ký hiệu thông qua các cuộc hội thoại tương tác và hữu ích giúp bạn giao tiếp nhanh chóng.</p>
             </div>
 
-            <div className="text-center space-y-4 p-4 lg:p-6">
-              <h3 className="text-lg lg:text-xl font-semibold text-orange-600">Ghi nhớ những gì đã học</h3>
+            <div className="text-center space-y-2 p-4 lg:p-6">
+              <h3 className="text-lg lg:text-xl font-semibold text-gray-900">Ghi nhớ những gì đã học</h3>
               <p className="text-sm lg:text-base text-gray-600">Sử dụng bộ luyện từ vựng của chúng tôi để củng cố trí nhớ và giữ lại kiến thức lâu dài.</p>
           </div>
 
-            <div className="text-center space-y-4 p-4 lg:p-6">
-              <h3 className="text-lg lg:text-xl font-semibold text-red-500">Từ điển NNKH</h3>
+            <div className="text-center space-y-2 p-4 lg:p-6">
+              <h3 className="text-lg lg:text-xl font-semibold text-gray-900">Từ điển NNKH</h3>
               <p className="text-sm lg:text-base text-gray-600">Muốn tra cứu một ký hiệu hoặc câu cụ thể? Không vấn đề - từ điển <em>Ngôn ngữ ký hiệu Việt Nam</em> của chúng tôi sẽ giúp bạn.</p>
               </div>
 
-            <div className="text-center space-y-4 p-4 lg:p-6">
-              <h3 className="text-lg lg:text-xl font-semibold text-red-600">Ký hiệu với tự tin</h3>
+            <div className="text-center space-y-2 p-4 lg:p-6">
+              <h3 className="text-lg lg:text-xl font-semibold text-gray-900">Ký hiệu với tự tin</h3>
               <p className="text-sm lg:text-base text-gray-600">Không chắc chắn bạn có đang ký hiệu đúng cách? Cải thiện kỹ thuật với gương ký hiệu GoLearn và tự tin ký hiệu!</p>
             </div>
           </div>
@@ -207,7 +207,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Problem & Solution Section */}
       <section className="py-16 lg:py-20 bg-gray-50">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center animate-slide-up">
             <div className="space-y-6 lg:space-y-8">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Vấn đề & Giải pháp</h2>
               <div className="space-y-4">
@@ -245,11 +245,11 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Market Opportunity Section */}
       <section className="py-16 lg:py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">Cơ hội thị trường</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 animate-slide-up">
             {[
               {
                 title: "Thị trường lớn",
@@ -280,7 +280,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Philosophy Section */}
       <section className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 lg:mb-8">Xây dựng cầu nối</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 lg:mb-8 animate-fade-in">Xây dựng cầu nối</h2>
           <div className="text-6xl lg:text-8xl mb-6 lg:mb-8">🤝</div>
           <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto mb-6 lg:mb-8">
             Sứ mệnh của chúng tôi là giúp bạn kết nối với các thành viên gia đình, bạn bè, đồng nghiệp và hàng xóm khiếm thính. Bắt đầu học Ngôn ngữ ký hiệu Việt Nam ngay bây giờ và giúp xây dựng cầu nối.
@@ -308,14 +308,14 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Technology Stack Section */}
       <section className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Công nghệ tiên tiến</h2>
             <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Sử dụng các công nghệ AI và Machine Learning hiện đại nhất để tạo ra trải nghiệm học tập tối ưu
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 animate-slide-up">
             <div className="text-center space-y-4 p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
               <div className="text-4xl mb-4"></div>
               <h3 className="text-lg font-semibold text-gray-900">AI & ML</h3>
@@ -334,7 +334,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <p className="text-sm text-gray-600">Firebase, Cloud Functions, Real-time Database</p>
           </div>
 
-            <div className="text-center space-y-4 p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+            <div className="text-center space-y-4 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
               <div className="text-4xl mb-4"></div>
               <h3 className="text-lg font-semibold text-gray-900">Cross-platform</h3>
               <p className="text-sm text-gray-600">Web, iOS, Android, Desktop compatibility</p>
@@ -346,7 +346,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Roadmap Section */}
       <section className="py-16 lg:py-20 bg-gray-50">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Lộ trình phát triển</h2>
             <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Kế hoạch phát triển GoLearn trong 12 tháng tới với các mốc quan trọng
@@ -356,7 +356,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
           <div className="relative">
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200"></div>
             
-            <div className="space-y-12">
+            <div className="space-y-12 animate-slide-up">
               {/* Q1 2025 */}
               <div className="flex items-center">
                 <div className="w-1/2 pr-8 text-right">
@@ -440,14 +440,14 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Success Stories Section */}
       <section className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Câu chuyện thành công</h2>
             <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Những thay đổi tích cực mà GoLearn mang lại cho cộng đồng
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 animate-slide-up">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl border-l-4 border-blue-500">
               <div className="flex items-center space-x-4 mb-6">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -494,7 +494,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Community & Team Section */}
       <section id="community" className="py-16 lg:py-20 bg-gray-50">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">Cộng đồng & Đội ngũ</h2>
             <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Đội ngũ đam mê công nghệ và cộng đồng hỗ trợ mạnh mẽ đằng sau GoLearn
@@ -534,7 +534,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
           </div>
 
           {/* Community Stats */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white animate-slide-up">
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div>
                 <div className="text-3xl lg:text-4xl font-bold mb-2">500+</div>
@@ -569,7 +569,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
       {/* Contact & Partnership Section */}
       <section id="contact" className="py-16 lg:py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
         <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center space-y-4 mb-12 lg:mb-16">
+          <div className="text-center space-y-4 mb-12 lg:mb-16 animate-fade-in">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">Liên hệ & Đối tác</h2>
             <p className="text-base lg:text-lg text-blue-100 max-w-3xl mx-auto">
               Hãy liên hệ với chúng tôi để tìm hiểu về cơ hội hợp tác và đầu tư
