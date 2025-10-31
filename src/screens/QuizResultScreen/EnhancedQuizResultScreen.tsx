@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./QuizResultScreen.css";
+import CelebrationIcon from '../../components/icons/CelebrationIcon';
+import HandIcon from '../../components/icons/HandIcon';
+import StrongIcon from '../../components/icons/StrongIcon';
 
 type Props = {
   correct: number;
@@ -161,14 +164,20 @@ export const EnhancedQuizResultScreen: React.FC<Props> = ({
             <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-12 h-8 bg-amber-400 rounded-lg"></div>
             
             {/* Hand character climbing */}
-            <div className="absolute top-8 left-1/2 transform -translate-x-1/2 text-6xl animate-climbing">
-              {percent >= 80 ? '🎉' : percent >= 70 ? '🤚' : '💪'}
+            <div className="absolute top-8 left-1/2 transform -translate-x-1/2 animate-climbing">
+              {percent >= 80 ? (
+                <CelebrationIcon size={56} />
+              ) : percent >= 70 ? (
+                <HandIcon size={56} />
+              ) : (
+                <StrongIcon size={56} />
+              )}
             </div>
             
             {/* Celebration effect */}
             {showCelebration && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-4xl animate-ping">🎊</div>
+                <CelebrationIcon size={36} />
               </div>
             )}
           </div>

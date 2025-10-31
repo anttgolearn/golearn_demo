@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./QuizResultScreen.css";
+import CelebrationIcon from '../../components/icons/CelebrationIcon';
+import HandIcon from '../../components/icons/HandIcon';
+import StrongIcon from '../../components/icons/StrongIcon';
 
 type Props = {
   correct: number;
@@ -71,7 +74,13 @@ export const QuizResultScreen: React.FC<Props> = ({ correct, total, onRetry, onC
           <div className="character-area bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl flex items-center justify-center relative overflow-hidden">
             {/* Simple hand character representation */}
             <div className="text-6xl animate-character-bounce">
-              {percent >= 80 ? '🎉' : percent >= 70 ? '🤚' : '💪'}
+              {percent >= 80 ? (
+                <CelebrationIcon size={56} />
+              ) : percent >= 70 ? (
+                <HandIcon size={56} />
+              ) : (
+                <StrongIcon size={56} />
+              )}
             </div>
             {/* Decorative elements */}
             <div className="absolute top-4 left-4 w-3 h-3 bg-orange-300 rounded-full animate-pulse-dot"></div>

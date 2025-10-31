@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import WarningIcon from "../icons/WarningIcon";
 import "./DialogVideo.css";
 
 export interface DialogVideoProps {
@@ -126,7 +127,9 @@ export const DialogVideo: React.FC<DialogVideoProps> = ({
         {/* Error Overlay */}
         {hasError && (
           <div className="dialog-video-error">
-            <div className="error-icon">⚠️</div>
+            <div className="error-icon">
+              <WarningIcon className="w-6 h-6" />
+            </div>
             <div className="error-text">Không thể tải video</div>
             <button 
               onClick={() => {

@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import "./ReviewVocabScreen.css";
 import { useReviewWords, VocabVideo } from "../../hooks/useReviewWords";
 import { getLessonNavigationInfo } from "../../lib/lesson-navigation";
+import VideoPlaceholder from "../../components/illustrations/VideoPlaceholder";
 
 // Use VocabVideo from useReviewWords hook
 type VocabItem = VocabVideo & {
@@ -341,7 +342,9 @@ export const ReviewVocabScreen: React.FC<Props> = ({
                 {videoError && (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-500">
                     <div className="text-center p-4">
-                      <div className="text-4xl mb-2">📹</div>
+                      <div className="mb-2 flex items-center justify-center">
+                        <VideoPlaceholder width={120} height={80} />
+                      </div>
                       <div className="text-sm font-medium">Video không thể tải</div>
                       <div className="text-xs mt-1">Từ: {selectedVideo.title}</div>
                       <div className="text-xs mt-2 text-gray-400 break-all">

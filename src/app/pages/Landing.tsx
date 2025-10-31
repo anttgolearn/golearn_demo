@@ -320,19 +320,19 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <div className="text-4xl mb-4"></div>
               <h3 className="text-lg font-semibold text-gray-900">AI & ML</h3>
               <p className="text-sm text-gray-600">TensorFlow.js, Computer Vision, Gesture Recognition</p>
-            </div>
+              </div>
 
             <div className="text-center space-y-4 p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
               <div className="text-4xl mb-4"></div>
               <h3 className="text-lg font-semibold text-gray-900">Frontend</h3>
               <p className="text-sm text-gray-600">React, TypeScript, Tailwind CSS, Progressive Web App</p>
-            </div>
+              </div>
 
             <div className="text-center space-y-4 p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
               <div className="text-4xl mb-4"></div>
               <h3 className="text-lg font-semibold text-gray-900">Backend</h3>
               <p className="text-sm text-gray-600">Firebase, Cloud Functions, Real-time Database</p>
-            </div>
+          </div>
 
             <div className="text-center space-y-4 p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
               <div className="text-4xl mb-4"></div>
@@ -368,11 +368,11 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                       <li>• 100 bài học cơ bản</li>
                       <li>• AI nhận diện cử chỉ</li>
                     </ul>
-                  </div>
-                </div>
+              </div>
+              </div>
                 <div className="w-8 h-8 bg-blue-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                   <span className="text-white text-sm font-bold">1</span>
-                </div>
+              </div>
                 <div className="w-1/2 pl-8"></div>
               </div>
 
@@ -381,7 +381,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                 <div className="w-1/2 pr-8"></div>
                 <div className="w-8 h-8 bg-green-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                   <span className="text-white text-sm font-bold">2</span>
-                </div>
+              </div>
                 <div className="w-1/2 pl-8">
                   <div className="bg-white p-6 rounded-xl shadow-lg">
                     <h3 className="text-lg font-semibold text-green-600 mb-2">Q2 2025</h3>
@@ -391,9 +391,9 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                       <li>• Community features</li>
                       <li>• Mobile app launch</li>
                     </ul>
+              </div>
                   </div>
                 </div>
-              </div>
 
               {/* Q3 2025 */}
               <div className="flex items-center">
@@ -407,19 +407,19 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                       <li>• Partnership với trường học</li>
                     </ul>
                   </div>
-                </div>
+                    </div>
                 <div className="w-8 h-8 bg-purple-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                   <span className="text-white text-sm font-bold">3</span>
-                </div>
+                  </div>
                 <div className="w-1/2 pl-8"></div>
-              </div>
+                </div>
 
               {/* Q4 2025 */}
               <div className="flex items-center">
                 <div className="w-1/2 pr-8"></div>
                 <div className="w-8 h-8 bg-orange-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                   <span className="text-white text-sm font-bold">4</span>
-                </div>
+                  </div>
                 <div className="w-1/2 pl-8">
                   <div className="bg-white p-6 rounded-xl shadow-lg">
                     <h3 className="text-lg font-semibold text-orange-600 mb-2">Q4 2025</h3>
@@ -429,10 +429,10 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
                       <li>• Enterprise solutions</li>
                       <li>• Series A funding</li>
                     </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </section>
@@ -450,14 +450,14 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl border-l-4 border-blue-500">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Heart className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
                   <h3 className="font-semibold text-gray-900">Kết nối gia đình</h3>
                   <p className="text-sm text-gray-600">Chị Lan, 32 tuổi - Hà Nội</p>
+                  </div>
                 </div>
-              </div>
               <p className="text-gray-700 italic mb-4">
                 "Con tôi sinh ra đã khiếm thính. Trước đây, chúng tôi chỉ giao tiếp bằng cử chỉ đơn giản. 
                 Nhờ GoLearn, cả gia đình đã học được NNKH và giờ chúng tôi có thể trò chuyện về mọi thứ."
@@ -465,19 +465,19 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <div className="flex space-x-2">
                 <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">Đã học 8 tháng</span>
                 <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full">Hoàn thành Level 5</span>
-              </div>
+                </div>
             </div>
 
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-xl border-l-4 border-green-500">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <School className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <School className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
                   <h3 className="font-semibold text-gray-900">Giáo dục hòa nhập</h3>
                   <p className="text-sm text-gray-600">Trường Tiểu học Hòa Bình - TP.HCM</p>
+                  </div>
                 </div>
-              </div>
               <p className="text-gray-700 italic mb-4">
                 "GoLearn đã giúp chúng tôi tích hợp NNKH vào chương trình giảng dạy. 
                 Tỷ lệ hòa nhập của học sinh khiếm thính tăng 80% trong học kỳ vừa qua."
@@ -485,10 +485,10 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <div className="flex space-x-2">
                 <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full">120 học sinh</span>
                 <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">15 giáo viên</span>
-              </div>
-            </div>
-          </div>
-        </div>
+                </div>
+                  </div>
+                  </div>
+                </div>
       </section>
 
       {/* Community & Team Section */}
@@ -499,7 +499,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
             <p className="text-base lg:text-lg text-gray-600 max-w-3xl mx-auto">
               Đội ngũ đam mê công nghệ và cộng đồng hỗ trợ mạnh mẽ đằng sau GoLearn
             </p>
-          </div>
+                  </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {/* Team Member 1 */}
@@ -510,17 +510,17 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Nguyễn Văn An</h3>
               <p className="text-blue-600 font-medium mb-2">Project Manager & UX Designer</p>
               <p className="text-sm text-gray-600">5+ năm kinh nghiệm trong giáo dục đặc biệt và thiết kế UX</p>
-            </div>
+                </div>
 
             {/* Team Member 2 */}
             <div className="bg-white p-6 rounded-xl shadow-lg text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-green-200 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Code className="h-10 w-10 text-green-600" />
-              </div>
+          </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Trần Thị Minh</h3>
               <p className="text-green-600 font-medium mb-2">Lead Developer & AI Engineer</p>
               <p className="text-sm text-gray-600">Chuyên gia AI và Machine Learning với 7+ năm kinh nghiệm</p>
-            </div>
+              </div>
 
             {/* Team Member 3 */}
             <div className="bg-white p-6 rounded-xl shadow-lg text-center">
@@ -530,7 +530,7 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Lê Đức Hùng</h3>
               <p className="text-purple-600 font-medium mb-2">Frontend Developer & Content Creator</p>
               <p className="text-sm text-gray-600">Chuyên gia React/TypeScript với niềm đam mê về UX</p>
-            </div>
+              </div>
           </div>
 
           {/* Community Stats */}
@@ -547,8 +547,8 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <div>
                 <div className="text-3xl lg:text-4xl font-bold mb-2">95%</div>
                 <div className="text-blue-100">Độ hài lòng</div>
-              </div>
-            </div>
+                  </div>
+                  </div>
           </div>
 
           {/* Community Actions */}
@@ -561,8 +561,8 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               <Button variant="outline" className="px-8 py-4 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-lg" onClick={handleGoToDashboard}>
                 Đã có tài khoản
               </Button>
-            </div>
-          </div>
+                </div>
+              </div>
         </div>
       </section>
 
@@ -573,38 +573,38 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">Liên hệ & Đối tác</h2>
             <p className="text-base lg:text-lg text-blue-100 max-w-3xl mx-auto">
               Hãy liên hệ với chúng tôi để tìm hiểu về cơ hội hợp tác và đầu tư
-            </p>
-          </div>
-
+                  </p>
+                </div>
+                
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div className="text-center">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Mail className="h-8 w-8 text-white" />
-              </div>
+                    </div>
               <h3 className="text-lg font-semibold text-white mb-2">Email</h3>
               <p className="text-blue-100 text-sm">contact@golearn.vn</p>
               <p className="text-blue-200 text-xs mt-1">Phản hồi trong 24h</p>
-            </div>
-
+                </div>
+                
             <div className="text-center">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Phone className="h-8 w-8 text-white" />
-              </div>
+                      </div>
               <h3 className="text-lg font-semibold text-white mb-2">Điện thoại</h3>
               <p className="text-blue-100 text-sm">+84 123 456 789</p>
               <p className="text-blue-200 text-xs mt-1">Thứ 2-6, 8:00-18:00</p>
-            </div>
+                </div>
 
-            <div className="text-center">
+                  <div className="text-center">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="h-8 w-8 text-white" />
-              </div>
+                  </div>
               <h3 className="text-lg font-semibold text-white mb-2">Địa chỉ</h3>
               <p className="text-blue-100 text-sm">123 Nguyễn Huệ, Q1</p>
               <p className="text-blue-200 text-xs mt-1">TP. Hồ Chí Minh</p>
-            </div>
-          </div>
-
+                </div>
+              </div>
+              
         </div>
       </section>
 

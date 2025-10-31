@@ -3,6 +3,7 @@ import { Button } from '../../../shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/ui/card';
 // Icons removed as they are not used in this simplified version
 import { iconicVocabularyByChapter } from '../data/iconic-vocabulary';
+import LessonPlaceholder from '../../../components/illustrations/LessonPlaceholder';
 
 interface IconicLearningProps {
   onComplete: (score: number, timeSpent: number) => void;
@@ -200,11 +201,9 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
             playsInline
           />
                   ) : (
-                    <img
-                      src="https://picsum.photos/400/400?random=main"
-                      alt={currentWord.word}
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="w-full h-full flex items-center justify-center bg-white">
+                      <LessonPlaceholder width={400} height={400} />
+                    </div>
                   )}
                 </div>
         </div>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./QuizResultScreen.css";
+import CheckCircleIcon from '../../components/icons/CheckCircleIcon';
+import XCircleIcon from '../../components/icons/XCircleIcon';
 
 type QuestionResult = {
   id: string;
@@ -116,124 +118,120 @@ export const QuizResultDetailScreen: React.FC<Props> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white" data-testid="quiz-result-detail-screen">
-      <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-6 px-1" data-testid="quiz-result-detail-screen">
+      <div className="w-full max-w-4xl mx-auto p-2 sm:p-4">
         {/* Header with Score */}
         <div className="text-center mb-8">
-          <div className={`mb-4 ${isAnimating ? 'animate-score-count' : ''}`}>
-            <div className={`text-6xl font-bold mb-2 ${getScoreColor()}`}>
+          <div className={`mb-4 ${isAnimating ? 'animate-score-count' : ''}`}> 
+            <div className={`text-6xl sm:text-7xl font-bold mb-2 ${getScoreColor()} score-display`}> 
               {displayScore}%
-            </div>
+            </div> 
           </div>
-          
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             {getScoreMessage()}
           </h1>
-          
           <p className="text-lg text-gray-600 mb-6">
             Bạn đã trả lời đúng {correct}/{total} câu hỏi
           </p>
-
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 mb-2"
           >
             {showDetails ? "Ẩn chi tiết" : "Xem chi tiết từng câu"}
           </button>
         </div>
-
         {/* Question Results Detail */}
         {showDetails && (
-          <div className="space-y-4 mb-8">
+          <div className="space-y-6 mb-10">
             <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
               Chi tiết từng câu hỏi
             </h2>
-            
-            {questionResults.map((result, index) => (
-              <div
-                key={result.id}
-                className={`p-6 rounded-xl border-2 transition-all duration-200 ${
-                  result.isCorrect
-                    ? "border-green-200 bg-green-50 hover:bg-green-100"
-                    : "border-red-200 bg-red-50 hover:bg-red-100"
-                }`}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                      Câu {result.id}: {result.question}
-                    </h3>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-gray-600">Câu trả lời của bạn:</span>
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          result.isCorrect 
-                            ? "bg-green-100 text-green-800" 
-                            : "bg-red-100 text-red-800"
-                        }`}>
-                          {result.userAnswer}
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium text-gray-600">Đáp án đúng:</span>
-                        <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                          {result.correctAnswer}
-                        </span>
+            <div className="flex flex-col gap-6">
+              {questionResults.map((result, index) => (
+                <div
+                  key={result.id}
+                  className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 w-full overflow-hidden ${
+                    result.isCorrect
+                      ? "border-green-200 bg-green-50 hover:bg-green-100"
+                      : "border-red-200 bg-red-50 hover:bg-red-100"
+                  }`}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="flex flex-col md:flex-row items-start gap-4 justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-1 sm:mb-2">
+                        Câu {result.id}: {result.question}
+                      </h3>
+                      <div className="space-y-1 sm:space-y-2">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                          <span className="text-sm font-medium text-gray-600">Câu trả lời của bạn:</span>
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            result.isCorrect
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}>
+                            {result.userAnswer}
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                          <span className="text-sm font-medium text-gray-600">Đáp án đúng:</span>
+                          <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                            {result.correctAnswer}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex flex-row items-center space-x-2 ml-0 md:ml-4 mt-3 md:mt-0">
+                      <span className="text-2xl sm:text-3xl">
+                        {result.isCorrect ? (
+                          <CheckCircleIcon className="w-7 h-7 sm:w-8 sm:h-8" />
+                        ) : (
+                          <span className="inline-flex items-center justify-center mr-2">
+                            <XCircleIcon size={32} color="#ef4444" className="w-8 h-8" />
+                          </span>
+                        )}
+                      </span>
+                      <span className={`text-sm font-medium ${
+                        result.isCorrect ? "text-green-600" : "text-red-600"
+                      }`}>
+                        {result.isCorrect ? "Đúng" : "Sai"}
+                      </span>
+                    </div>
                   </div>
-                  
-                  <div className="flex items-center space-x-2 ml-4">
-                    <span className="text-3xl">
-                      {result.isCorrect ? "✅" : "❌"}
-                    </span>
-                    <span className={`text-sm font-medium ${
-                      result.isCorrect ? "text-green-600" : "text-red-600"
-                    }`}>
-                      {result.isCorrect ? "Đúng" : "Sai"}
-                    </span>
-                  </div>
+                  {result.explanation && (
+                    <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-white rounded-lg border border-gray-200">
+                      <h4 className="font-semibold text-gray-700 mb-1 sm:mb-2">Giải thích:</h4>
+                      <p className="text-gray-600">{result.explanation}</p>
+                    </div>
+                  )}
+                  {result.videoUrl && (
+                    <div className="mt-3 sm:mt-4">
+                      <video
+                        controls
+                        className="w-full h-40 sm:h-48 bg-gray-100 rounded-lg"
+                        poster="/placeholder-video.jpg"
+                      >
+                        <source src={result.videoUrl} type="video/mp4" />
+                        Trình duyệt của bạn không hỗ trợ video.
+                      </video>
+                    </div>
+                  )}
                 </div>
-
-                {result.explanation && (
-                  <div className="mt-4 p-4 bg-white rounded-lg border border-gray-200">
-                    <h4 className="font-semibold text-gray-700 mb-2">Giải thích:</h4>
-                    <p className="text-gray-600">{result.explanation}</p>
-                  </div>
-                )}
-
-                {result.videoUrl && (
-                  <div className="mt-4">
-                    <video
-                      controls
-                      className="w-full h-48 bg-gray-100 rounded-lg"
-                      poster="/placeholder-video.jpg"
-                    >
-                      <source src={result.videoUrl} type="video/mp4" />
-                      Trình duyệt của bạn không hỗ trợ video.
-                    </video>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
-
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-2">
           <button
             onClick={onRetry}
-            className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+            className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
           >
             Làm lại bài
           </button>
-          
           <button
             onClick={onContinue}
-            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
           >
             Tiếp tục
           </button>

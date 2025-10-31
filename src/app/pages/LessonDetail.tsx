@@ -20,6 +20,10 @@ import {
   User,
   Book
 } from "lucide-react";
+import MirrorIcon from "../../components/icons/MirrorIcon";
+import CheckCircleIcon from "../../components/icons/CheckCircleIcon";
+import HandIcon from "../../components/icons/HandIcon";
+import { Hash, Users, Smile, Sparkles } from "lucide-react";
 import { cn } from "../../lib/utils";
 
 // Import practice components
@@ -891,7 +895,7 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
                 </p>
               </div>
             </div>
-            <div className="text-4xl animate-float">🎯</div>
+            <div className="text-4xl animate-float"><Target className="w-8 h-8" /></div>
           </div>
           <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
             <div 
@@ -993,7 +997,18 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
                     "shadow-lg animate-float",
                     category.color
                   )}>
-                    {category.icon}
+                    {(() => {
+                      const map: Record<string, JSX.Element> = {
+                        '⚡': <Sparkles className="w-6 h-6 text-white" />, 
+                        '⭐': <Star className="w-6 h-6 text-white" />, 
+                        '🎯': <Target className="w-6 h-6 text-white" />, 
+                        '🪞': <MirrorIcon className="w-6 h-6 text-white" />, 
+                        '📝': <BookOpen className="w-6 h-6 text-white" />, 
+                        '💬': <Book className="w-6 h-6 text-white" />, 
+                        '🏆': <Trophy className="w-6 h-6 text-white" />, 
+                      };
+                      return map[category.icon] || <Sparkles className="w-6 h-6 text-white" />;
+                    })()}
                   </div>
                   <div>
                     <h3 className="font-bold text-lg text-gray-800">{category.title}</h3>
@@ -1009,7 +1024,7 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
                 </div>
                 {practiceScores[category.id] && (
                   <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <CheckCircleIcon className="w-4 h-4 text-green-600" />
                     <span className="text-green-600 font-semibold">
                       {practiceScores[category.id].score} điểm
                     </span>
@@ -1035,13 +1050,13 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
                 conversationPractice: 'Luyện hội thoại',
                 dailyChallenge: 'Thử thách hàng ngày'
               };
-              const activityIcons = {
-                quickReview: '⚡',
-                speedChallenge: '🎯',
-                mirrorPractice: '🪞',
-                quizMix: '📝',
-                conversationPractice: '💬',
-                dailyChallenge: '🏆'
+              const activityIcons: Record<string, JSX.Element> = {
+                quickReview: <Sparkles className="w-7 h-7" />, 
+                speedChallenge: <Target className="w-7 h-7" />, 
+                mirrorPractice: <MirrorIcon className="w-7 h-7" />, 
+                quizMix: <BookOpen className="w-7 h-7" />, 
+                conversationPractice: <Book className="w-7 h-7" />, 
+                dailyChallenge: <Trophy className="w-7 h-7" />
               };
               
               return (
@@ -1081,9 +1096,9 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
             })
           ) : (
             [
-              { title: 'Ôn tập Chào hỏi', time: '2 giờ trước', score: 95, icon: '👋' },
-              { title: 'Từ Gia đình', time: 'Hôm qua', score: 88, icon: '👨‍👩‍👧' },
-              { title: 'Luyện tập Số đếm', time: '2 ngày trước', score: 92, icon: '🔢' },
+              { title: 'Ôn tập Chào hỏi', time: '2 giờ trước', score: 95, icon: <HandIcon size={28} /> },
+              { title: 'Từ Gia đình', time: 'Hôm qua', score: 88, icon: <Users className="w-7 h-7 text-indigo-600" /> },
+              { title: 'Luyện tập Số đếm', time: '2 ngày trước', score: 92, icon: <Hash className="w-7 h-7 text-green-600" /> },
             ].map((activity, index) => (
               <Card 
                 key={index}
@@ -1166,10 +1181,10 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
       wordsLearned: 120,
       practiceTime: '2h 30m',
       achievements: [
-        { id: 1, icon: '🔥', name: '7 ngày liên tiếp', earned: true },
-        { id: 2, icon: '⭐', name: 'Chương đầu tiên', earned: true },
-        { id: 3, icon: '🎯', name: '100 từ', earned: true },
-        { id: 4, icon: '🏆', name: 'Tuần hoàn hảo', earned: false },
+        { id: 1, icon: 'streak', name: '7 ngày liên tiếp', earned: true },
+        { id: 2, icon: 'milestone', name: 'Chương đầu tiên', earned: true },
+        { id: 3, icon: 'target', name: '100 từ', earned: true },
+        { id: 4, icon: 'trophy', name: 'Tuần hoàn hảo', earned: false },
       ]
     };
 
@@ -1180,8 +1195,8 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
           <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 animate-pulse" />
           <div className="p-8 relative z-10">
             <div className="flex items-center gap-6">
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center text-5xl shadow-2xl animate-breath">
-                👤
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl animate-breath">
+                <Users className="w-12 h-12 text-purple-600" />
               </div>
               <div className="flex-1">
                 <h2 className="text-3xl font-bold mb-2">{userStats.name}</h2>
@@ -1252,15 +1267,29 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className={cn(
-                  "text-5xl mb-3",
+                  "mb-3 flex items-center justify-center",
                   achievement.earned ? "animate-bounce-slow" : ""
                 )}>
-                  {achievement.icon}
+                  {(() => {
+                    switch (achievement.icon) {
+                      case 'streak':
+                        return <Sparkles className="w-10 h-10 text-amber-500" />;
+                      case 'milestone':
+                        return <Star className="w-10 h-10 text-yellow-500" />;
+                      case 'target':
+                        return <Target className="w-10 h-10 text-red-500" />;
+                      case 'trophy':
+                        return <Trophy className="w-10 h-10 text-yellow-500" />;
+                      default:
+                        return <Star className="w-10 h-10 text-blue-500" />;
+                    }
+                  })()}
                 </div>
                 <div className="text-sm font-semibold text-gray-800">{achievement.name}</div>
                 {achievement.earned && (
-                  <Badge className="mt-2 bg-green-500 text-white text-xs">
-                    ✓ Đã đạt
+                  <Badge className="mt-2 bg-green-500 text-white text-xs inline-flex items-center gap-1">
+                    <CheckCircleIcon className="w-3.5 h-3.5 text-white" />
+                    Đã đạt
                   </Badge>
                 )}
               </Card>

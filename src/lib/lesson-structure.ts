@@ -91,6 +91,8 @@ export interface LessonQuestion {
   correctAnswer: string | string[] | boolean;
   explanation?: string;
   points?: number;
+  // Cloze-specific field: Các index của từ sẽ bị ẩn (ví dụ: [0] để ẩn từ đầu tiên)
+  hiddenIndices?: number[];
 }
 
 export interface Lesson {

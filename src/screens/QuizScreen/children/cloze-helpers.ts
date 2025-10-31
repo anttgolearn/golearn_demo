@@ -1,9 +1,24 @@
 // Helper functions for cloze questions
 
 export interface Fill {
-  id: number;    // ID của hint được chọn (-1 nếu chưa chọn)
-  value: string; // Giá trị text được điền vào gap
+  value: string;     // Giá trị text của từ (ví dụ: "Cảm")
+  index: number;     // Vị trí của từ trong câu (0, 1, 2,...)
+  key: string;       // Chữ cái đầu tiên để định danh (ví dụ: "c" cho "Cảm")
 }
+
+// Parse word into Fill with index and key
+// Ví dụ: "Cảm" tại vị trí 0 → { value: "Cảm", index: 0, key: "c" }
+export const createFill = (word: string, index: number): Fill => {
+  const key = word.charAt(0).toLowerCase();
+  return { value: word, index, key };
+};
+
+// Parse correct phrase into array of Fills
+// Ví dụ: "Cảm ơn" → [{ value: "Cảm", index: 0, key: "c" }, { value: "ơn", index: 1, key: "ơ" }]
+export const parsePhrase = (phrase: string): Fill[] => {
+  const words = phrase.trim().split(/\s+/);
+  return words.map((word, index) => createFill(word, index));
+};
 
 // Parse correct fills from format like "{NICE} MEET-you" or "{[CROSS][CROSSING]} -1-2-3 RIGHT"
 export const getCorrectFills = (fills: string): Array<Array<string>> => {

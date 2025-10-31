@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
+import HandIcon from "../../components/icons/HandIcon";
+import { Users, Hash, Smile, BookOpen } from "lucide-react";
+import ChapterIllustration from "../../components/illustrations/ChapterIllustration";
 import { fetchChapterLessons, type LessonSummary } from "../../models/chapter-overview-store/chapter-overview-store";
 import { HARDCODED_CHAPTERS } from "../../lib/mock-lessons";
 import { LessonItem } from "../../components/molecules/LessonItem/LessonItem";
@@ -97,6 +100,17 @@ export const ChapterOverviewScreen: React.FC<ChapterOverviewScreenProps> = ({ on
     return chapterInfo[chapterId] || { title: "Chương học", description: "Học ký hiệu ngôn ngữ", icon: "📚", color: "bg-blue-50", unit: "Unit" };
   };
 
+  const getVariantForChapter = (id: string, icon: string) => {
+    if (icon === '👋') return 'greetings';
+    if (icon.includes('👨')) return 'family';
+    if (icon === '🔢') return 'numbers';
+    if (icon === '😊') return 'emotions';
+    if (id.startsWith('1_')) return 'greetings';
+    if (id.startsWith('2_')) return 'emotions';
+    if (id.startsWith('3_') || id.startsWith('4_')) return 'numbers';
+    return 'default';
+  };
+
   const renderHeader = () => {
     const chapterInfo = getChapterInfo(chapterId);
     const totalTime = lessons.reduce((sum, lesson) => sum + (lesson.estimatedTime || 0), 0);
@@ -122,7 +136,9 @@ export const ChapterOverviewScreen: React.FC<ChapterOverviewScreenProps> = ({ on
           </div>
           <div className="mt-4">
             <div className="text-sm font-medium text-gray-500 mb-2"></div>
-            <span className="text-5xl mb-4 block">{chapterInfo.icon}</span>
+            <div className="mb-4 flex items-center justify-center">
+              <ChapterIllustration width={180} height={140} variant={getVariantForChapter(chapterId, chapterInfo.icon)} />
+            </div>
             <h1 className="text-3xl font-extrabold text-gray-900 mb-2">{chapterInfo.title}</h1>
             <p className="text-base text-gray-600 mt-2 max-w-2xl mx-auto leading-relaxed">
               {chapterInfo.description}

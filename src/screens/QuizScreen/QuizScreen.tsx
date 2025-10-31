@@ -31,7 +31,7 @@ type QuizScreenProps = {
 export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | string[] | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -904,6 +904,10 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
     }
   }, [lessonId]);
 
+  useEffect(() => {
+    setSelected(null);
+  }, [index]);
+
   const current = questions[index];
 
   const confirm = () => {
@@ -923,15 +927,18 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
     // For MULTIPLE_CHOICE inside discover flow, first click acts as Check, second as Next
     if (current.type === "MULTIPLE_CHOICE") {
       if (!showResult) {
-        if (!selected) return; // require selection before checking
+        if (!selected) return;
         let ok = false;
+        const safeNormalize = (s: any) => (typeof s === 'string'
+          ? s.toLowerCase().trim()
+          : '');
         if (Array.isArray(current.answer)) {
-          const toSet = (arr: string[]) => new Set(arr.map(s => s.trim().toLowerCase()));
+          const toSet = (arr: any[]) => new Set((arr || []).map(safeNormalize));
           const ans = toSet(current.answer as any);
           const sel = Array.isArray(selected) ? toSet(selected as any) : toSet([selected as any]);
           ok = ans.size === sel.size && [...ans].every(a => sel.has(a));
         } else {
-          ok = selected === current.answer;
+          ok = safeNormalize(selected) === safeNormalize(current.answer);
         }
         setIsCorrect(ok);
         setShowResult(true);
@@ -943,17 +950,12 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
     if (current.type === "CLOZE_ANSWER") {
       if (!showResult) {
         if (!selected) return;
-        const normalize = (s: string) => s.trim().toLowerCase();
-        const normalizedSelected = normalize(selected);
-        const normalizedAnswer = normalize(current.answer || '');
+        const safeNormalize = (s: any) => (typeof s === 'string'
+          ? s.toLowerCase().trim()
+          : '');
+        const normalizedSelected = safeNormalize(selected);
+        const normalizedAnswer = safeNormalize(current.answer || '');
         const ok = normalizedSelected === normalizedAnswer;
-        console.log('Cloze answer check:', { 
-          selected, 
-          answer: current.answer, 
-          normalizedSelected, 
-          normalizedAnswer, 
-          isCorrect: ok 
-        });
         setIsCorrect(ok);
         setShowResult(true);
         if (ok) setCorrectCount((c) => c + 1);
@@ -1238,14 +1240,13 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
                 options={current.options}
                 selected={selected}
                 onSelect={(value) => {
-                  console.log('QuizScreen onSelect called with:', value);
                   setSelected(value);
                 }}
                 showResult={showResult}
                 correctAnswer={current.answer}
                 buttonText={showResult ? (index === total - 1 ? 'Hoàn thành' : 'Tiếp theo') : 'Kiểm tra'}
                 onButtonClick={confirm}
-                buttonDisabled={showResult}
+                buttonDisabled={!selected || showResult}
               />
             )}
           </div>

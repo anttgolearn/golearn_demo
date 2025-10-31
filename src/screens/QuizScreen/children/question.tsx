@@ -32,6 +32,7 @@ type QuestionProps = {
   // Cloze support (minimal)
   isTyping?: boolean;
   gapParts?: string[];
+  hiddenIndices?: number[]; // Các index sẽ bị ẩn trong Cloze
   // Button behavior
   buttonText?: string;
   onButtonClick?: () => void;
@@ -74,6 +75,7 @@ export const Question: React.FC<QuestionProps> = ({
   onSelectMulti,
   isTyping,
   gapParts: _gapParts,
+  hiddenIndices,
   buttonText = "Kiểm tra",
   onButtonClick,
   buttonDisabled = false,
@@ -165,17 +167,34 @@ export const Question: React.FC<QuestionProps> = ({
           );
           break;
         case 'CLOZE_ANSWER':
-          const fills = _answers as Array<string>;
-          const correctFills = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer || ''];
-          if (isTyping) {
-            // For typing mode, use fuzzy matching
-            correct = correctFills.some(correctFill => 
-              isAnswerCorrect(fills[0] || '', correctFill)
-            );
-          } else {
-            // For click-to-select mode, check exact match
-            correct = correctFills.every((f, i) => f.includes(fills[i] || ''));
-          }
+          // Import Fill type từ cloze-helpers
+          type Fill = { value: string; index: number; key: string };
+          const fills = _answers as unknown as Fill[];
+          
+          // Parse correctAnswer thành Fill[]
+          const correctPhrase = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer || '';
+          const correctWords = correctPhrase.trim().split(/\s+/);
+          const correctFills: Fill[] = correctWords.map((word: string, idx: number) => ({
+            value: word,
+            index: idx,
+            key: word.charAt(0).toLowerCase()
+          }));
+          
+          console.log('Checking cloze answer:', { fills, correctFills });
+          
+          // Kiểm tra từng fill: value, index, và key phải khớp
+          correct = fills.every(fill => {
+            const expectedFill = correctFills[fill.index];
+            if (!expectedFill) return false;
+            
+            const match = fill.value === expectedFill.value && 
+                         fill.index === expectedFill.index && 
+                         fill.key === expectedFill.key;
+            
+            console.log('Fill check:', { fill, expectedFill, match });
+            return match;
+          }) && fills.length > 0;
+          
           break;
         case 'ICONIC_LEARNING':
           // For iconic learning, the answer is handled by onIconicAnswer
@@ -228,7 +247,8 @@ export const Question: React.FC<QuestionProps> = ({
             options: options,
             correctAnswer: correctAnswer,
             isTyping: isTyping,
-            isAnswered: showResult
+            isAnswered: showResult,
+            hiddenIndices: hiddenIndices
           }}
           selected={selected}
           onSelect={onSelect}

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import InfoIcon from "../icons/InfoIcon";
 import "./ContentPage.css";
 
 // Types
@@ -248,7 +249,9 @@ export const ContentPage: React.FC<ContentPageProps> = ({
                 {part.type === 'popup' && part.content && (
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 content-popup">
                     <div className="flex items-start gap-4">
-                      <div className="text-blue-500 text-2xl">ℹ️</div>
+                      <div className="text-blue-500 text-2xl">
+                        <InfoIcon className="w-6 h-6 text-blue-500" />
+                      </div>
                       <div 
                         className="text-gray-700 content-popup-text"
                         dangerouslySetInnerHTML={{ __html: part.content }}

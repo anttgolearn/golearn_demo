@@ -156,6 +156,37 @@ export const VIDEO_CONTENT_MAP = {
   },
 };
 
+// Helper: Tạo câu hỏi Cloze với logic Fill mới
+// Ví dụ: createClozeQuestion("Cảm ơn", videoUrl, ["Xin chào", "Tạm biệt"], [0])
+// Sẽ tạo câu hỏi: ____ ơn với các đáp án: Cảm (0-c), Xin chào, Tạm biệt
+const createClozeQuestion = (
+  correctPhrase: string,
+  videoUrl: string,
+  distractors: string[],
+  hiddenIndices?: number[],
+  questionId?: string
+): LessonQuestion => {
+  const words = correctPhrase.trim().split(/\s+/);
+  const hiddenIdxs = hiddenIndices || [0]; // Mặc định ẩn từ đầu tiên
+  
+  // Tạo options: bao gồm các từ đúng cần điền + các từ nhiễu
+  const correctWords = hiddenIdxs.map(idx => words[idx]);
+  const allOptions = [...correctWords, ...distractors];
+  
+  return {
+    id: questionId || `cloze-${Date.now()}`,
+    type: 'cloze_answer',
+    category: QuestionCategories.CLOZE_ANSWER.CAT_4A,
+    prompt: `Điền từ còn thiếu`,
+    title: correctPhrase,
+    questionParts: [{ type: 'video', url: videoUrl }],
+    answerOptions: allOptions.map(opt => ({ label: opt, isCorrect: correctWords.includes(opt) })),
+    correctAnswer: correctPhrase,
+    // Thêm field để OptionsCloze biết các index cần ẩn
+    hiddenIndices: hiddenIdxs,
+  };
+};
+
 // Lesson content generators for each lesson type
 export const generateLessonContent = (lessonId: string, lessonType: LessonType): LessonQuestion[] => {
   const questions: LessonQuestion[] = [];
@@ -376,26 +407,18 @@ const generateDiscoverQuestions = (lessonId: string, videoCategory: keyof typeof
           correctAnswer: data.label,
         });
       } else {
-        // Cloze: Điền từ còn thiếu
-        const distractors = otherWords.map(([, d]) => d.label);
-        // Normalize function to match QuizScreen logic
-        const normalize = (s: string) => s.trim().toLowerCase();
-        const normalizedLabel = normalize(data.label);
-        const normalizedDistractors = distractors.map(label => normalize(label));
+        // Cloze: Điền từ còn thiếu - Sử dụng logic Fill mới
+        const distractors = otherWords.slice(0, 2).map(([, d]) => d.label);
         
-        questions.push({
-          id: `${lessonId}-cloze-${i + 1}`,
-          type: 'cloze_answer',
-          category: QuestionCategories.CLOZE_ANSWER.CAT_4A,
-          prompt: `Điền từ cho ký hiệu này`,
-          title: data.label,
-          questionParts: [{ type: 'video', url: data.video }],
-          answerOptions: [
-            { label: normalizedLabel, isCorrect: true },
-            ...normalizedDistractors.map(label => ({ label: label, isCorrect: false }))
-          ],
-          correctAnswer: normalizedLabel,
-        });
+        questions.push(
+          createClozeQuestion(
+            data.label,
+            data.video,
+            distractors,
+            [0], // Ẩn từ đầu tiên
+            `${lessonId}-cloze-${i + 1}`
+          )
+        );
       }
     }
   }
@@ -459,26 +482,18 @@ const generateDiscoverQuestions = (lessonId: string, videoCategory: keyof typeof
           correctAnswer: data.label,
         });
       } else {
-        // Cloze: Điền từ còn thiếu
-        const distractors = otherWords.map(([, d]) => d.label);
-        // Normalize function to match QuizScreen logic
-        const normalize = (s: string) => s.trim().toLowerCase();
-        const normalizedLabel = normalize(data.label);
-        const normalizedDistractors = distractors.map(label => normalize(label));
+        // Cloze: Điền từ còn thiếu - Sử dụng logic Fill mới
+        const distractors = otherWords.slice(0, 2).map(([, d]) => d.label);
         
-        questions.push({
-          id: `${lessonId}-cloze-${i + 4}`,
-          type: 'cloze_answer',
-          category: QuestionCategories.CLOZE_ANSWER.CAT_4A,
-          prompt: `Điền từ cho ký hiệu này`,
-          title: data.label,
-          questionParts: [{ type: 'video', url: data.video }],
-          answerOptions: [
-            { label: normalizedLabel, isCorrect: true },
-            ...normalizedDistractors.map(label => ({ label: label, isCorrect: false }))
-          ],
-          correctAnswer: normalizedLabel,
-        });
+        questions.push(
+          createClozeQuestion(
+            data.label,
+            data.video,
+            distractors,
+            [0], // Ẩn từ đầu tiên
+            `${lessonId}-cloze-${i + 4}`
+          )
+        );
       }
     }
   }

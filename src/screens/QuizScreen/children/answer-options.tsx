@@ -31,6 +31,7 @@ type AnswerOptionsProps = {
     correctAnswer?: string | string[];
     isTyping?: boolean;
     isAnswered?: boolean;
+    hiddenIndices?: number[];
   };
   buttonText?: string;
   onButtonClick?: () => void;
@@ -56,8 +57,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
   onSubmitAnswer,
 }) => {
   // Handle cloze answer type
-  if (type === 'cloze_answer' && question) {
-    console.log('Rendering cloze question:', { type, question, options, correctAnswer });
+  if ((type && type.toUpperCase() === 'CLOZE_ANSWER') && question) {
     return (
       <OptionsCloze
         question={{
@@ -66,14 +66,10 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
           // Keep options as they are - OptionsCloze will use question.options for hints
         }}
         selected={selected}
+        // onSelect sẽ nhận mảng object hoặc mảng string, tuỳ typing hay chọn
         onSelect={(value) => {
-          console.log('AnswerOptions onSelect called with:', value);
-          // Always call the parent onSelect to update selected state
           onSelect(value);
-          // Also call onSubmitAnswer if available
-          if (onSubmitAnswer) {
-            onSubmitAnswer([value], false); // Don't submit immediately, just update selection
-          }
+          if (onSubmitAnswer) onSubmitAnswer(value as any, false);
         }}
         correctAnswer={correctAnswer}
         showResult={showResult}
@@ -84,18 +80,40 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
   // Handle single/multiple answer types with new OptionsSingleMultiple
   if ((type === 'single' || type === 'multiple') && options) {
     // Convert current format to OptionsSingleMultiple format
-    const answerOptions = options.map((option, index) => ({
+    const normalize = (s: string) => (s || '').toLowerCase().trim();
+    const rawAnswerOptions = options.map((option, index) => ({
       answerText: option,
-      media: videoOptions?.[index] ? {
-        url: videoOptions[index].videoSrc,
-        label: videoOptions[index].label,
-      } : undefined,
-      isCorrect: Array.isArray(correctAnswers) ? correctAnswers.includes(option) : option === correctAnswer,
+      media: videoOptions?.[index]
+        ? {
+            url: videoOptions[index].videoSrc,
+            label: videoOptions[index].label,
+          }
+        : undefined,
+      isCorrect: Array.isArray(correctAnswers)
+        ? correctAnswers.includes(option)
+        : option === correctAnswer,
     }));
 
-    const selectedAnswers = Array.isArray(selected) 
-      ? selected.map(s => options.indexOf(s)).filter(i => i !== -1)
-      : selected ? [options.indexOf(selected)].filter(i => i !== -1) : [];
+    // Deduplicate by answerText + media.url to prevent duplicate choices showing
+    const uniqueMap = new Map<string, { answerText: string; media?: { url?: string; label?: string }; isCorrect?: boolean }>();
+    for (const opt of rawAnswerOptions) {
+      const key = `${normalize(opt.answerText)}|${opt.media?.url || ''}`;
+      if (!uniqueMap.has(key)) {
+        uniqueMap.set(key, { ...opt });
+      } else if (opt.isCorrect) {
+        const existing = uniqueMap.get(key)!;
+        existing.isCorrect = true; // if any duplicate is correct, mark kept one correct
+      }
+    }
+    const answerOptions = Array.from(uniqueMap.values());
+
+    // Map selected (string or string[]) to indices in the deduped list
+    const findIndexByText = (s: string) => answerOptions.findIndex((o) => normalize(o.answerText) === normalize(s));
+    const selectedAnswers = Array.isArray(selected)
+      ? selected.map(findIndexByText).filter((i) => i !== -1)
+      : selected
+      ? [findIndexByText(selected)].filter((i) => i !== -1)
+      : [];
 
     return (
       <OptionsSingleMultiple
@@ -109,9 +127,10 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
           if (onSubmitAnswer) {
             onSubmitAnswer(answers, true);
           } else if (type === 'single') {
-            onSelect(options[answers[0]] || '');
+            const picked = answerOptions[answers[0]]?.answerText || '';
+            onSelect(picked);
           } else {
-            onSelectMulti?.(answers.map(i => options[i]).filter(Boolean));
+            onSelectMulti?.(answers.map((i) => answerOptions[i]?.answerText).filter(Boolean) as string[]);
           }
         }}
       />
@@ -213,9 +232,9 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
   return (
     <div className="w-full max-w-4xl mb-8" data-testid="question-type-single">
       <div className="flex flex-col gap-4">
-        {(options || []).map((o, i) => (
+        {((options || []).filter((v, i, a) => a.findIndex((s) => (s || '').toLowerCase().trim() === (v || '').toLowerCase().trim()) === i)).map((o, i) => (
           <div
-            key={o}
+            key={`${o}-${i}`}
             tabIndex={0}
             className={`flex items-center justify-between rounded-xl border-2 px-6 py-4 text-left transition-all duration-200 cursor-pointer ${
               showResult 

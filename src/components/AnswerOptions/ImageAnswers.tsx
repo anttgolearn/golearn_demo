@@ -1,4 +1,6 @@
 import React from "react";
+import CheckCircleIcon from "../icons/CheckCircleIcon";
+import XCircleIcon from "../icons/XCircleIcon";
 import { AnswerOption, AnswerOptionsProps } from "./AnswerOptions";
 
 interface ImageAnswersProps extends Omit<AnswerOptionsProps, 'options'> {
@@ -117,7 +119,11 @@ export const ImageAnswers: React.FC<ImageAnswersProps> = ({
                     {showResult && (
                       <div className="image-result-overlay">
                         <div className="image-result-indicator">
-                          {status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : ''}
+                          {status === 'correct' ? (
+                            <CheckCircleIcon className="w-6 h-6 text-green-600" />
+                          ) : status === 'incorrect' ? (
+                            <XCircleIcon className="w-6 h-6 text-red-600" />
+                          ) : null}
                         </div>
                       </div>
                     )}

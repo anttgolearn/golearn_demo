@@ -1,14 +1,19 @@
 import { Button } from "../../shared/ui/button";
 import { Card } from "../../shared/ui/card";
 import { Badge } from "../../shared/ui/badge";
-import { Play, Home, BookOpen, BookText, User, ChevronDown, Trophy, Target } from "lucide-react";
+import { Play, Home, BookOpen, BookText, User, ChevronDown, Trophy, Target, Users, Hash, Smile, Zap, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { cn } from "../../lib/utils";
 import { Dictionary } from "../../shared/components/dictionary";
 import { ProfileTab } from "../../shared/components/profile-tab";
+import CheckCircleIcon from "../../components/icons/CheckCircleIcon";
+import LockIcon from "../../components/icons/LockIcon";
+import MirrorIcon from "../../components/icons/MirrorIcon";
+import HandIcon from "../../components/icons/HandIcon";
 
 // Import practice components
 import { QuickReview, SpeedChallenge, MirrorPractice, QuizMix, ConversationPractice, DailyChallenge } from "../../features/practice";
+import ChapterIllustration from "../../components/illustrations/ChapterIllustration";
 
 // Chapter Card Component
 interface ChapterCardProps {
@@ -20,6 +25,7 @@ interface ChapterCardProps {
   isLocked?: boolean;
   thumbnail?: string;
   onStart?: () => void;
+  illustration?: 'greetings' | 'family' | 'numbers' | 'emotions' | 'default';
 }
 
 const ChapterCard = ({
@@ -30,7 +36,8 @@ const ChapterCard = ({
   isActive = false,
   isLocked = false,
   thumbnail,
-  onStart
+  onStart,
+  illustration
 }: ChapterCardProps) => {
   const progress = (lessonsCompleted / totalLessons) * 100;
   const isCompleted = lessonsCompleted === totalLessons;
@@ -56,18 +63,28 @@ const ChapterCard = ({
       
       <div className="flex items-stretch">
             {/* Thumbnail Image */}
-            {thumbnail && (
+            {(thumbnail || illustration) && (
               <div className="relative w-40 flex-shrink-0 overflow-hidden group/thumb">
-                <img 
-                  src={thumbnail} 
-                  alt={title}
-                  className={cn(
-                    "w-full h-full object-cover transition-all duration-500",
-                    "group-hover/thumb:scale-110 group-hover/thumb:rotate-1",
+                {illustration ? (
+                  <div className={cn(
+                    "w-full h-full flex items-center justify-center bg-white transition-all duration-500",
                     isLocked ? "grayscale brightness-75" : "brightness-100",
                     isActive && "brightness-110 contrast-110"
-                  )}
-                />
+                  )}>
+                    <ChapterIllustration width={160} height={160} variant={illustration} />
+                  </div>
+                ) : (
+                  <img 
+                    src={thumbnail!} 
+                    alt={title}
+                    className={cn(
+                      "w-full h-full object-cover transition-all duration-500",
+                      "group-hover/thumb:scale-110 group-hover/thumb:rotate-1",
+                      isLocked ? "grayscale brightness-75" : "brightness-100",
+                      isActive && "brightness-110 contrast-110"
+                    )}
+                  />
+                )}
                 {/* Animated shine effect on hover */}
                 {!isLocked && (
                   <div className={cn(
@@ -79,7 +96,7 @@ const ChapterCard = ({
                 {isLocked && (
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[2px]">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-xl animate-pulse">
-                      <span className="text-2xl">🔒</span>
+                      <LockIcon size={22} />
                     </div>
                   </div>
                 )}
@@ -96,7 +113,7 @@ const ChapterCard = ({
             )}
         
         <div className="flex-1 p-6">
-          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               <Badge className={cn(
                 "mb-2 transition-colors",
@@ -162,7 +179,10 @@ const ChapterCard = ({
           {isCompleted && (
             <div className="absolute top-4 right-4 z-10 animate-bounce-slow">
               <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-glow">
-                <span className="inline-block animate-wiggle">✓</span> Hoàn thành
+                <span className="inline-block align-middle mr-1">
+                  <CheckCircleIcon className="w-4 h-4 text-white" />
+                </span>
+                Hoàn thành
               </div>
             </div>
           )}
@@ -503,11 +523,58 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     setActivePractice(null);
   };
 
+  const renderCategoryIcon = (id: string) => {
+    switch (id) {
+      case 'quick':
+        return <Zap className="w-6 h-6 text-white" />;
+      case 'target':
+        return <Target className="w-6 h-6 text-white" />;
+      case 'mirror':
+        return <MirrorIcon className="w-6 h-6 text-white" />;
+      case 'books':
+        return <BookOpen className="w-6 h-6 text-white" />;
+      case 'chat':
+        return <BookText className="w-6 h-6 text-white" />;
+      case 'trophy':
+        return <Trophy className="w-6 h-6 text-white" />;
+      default:
+        return <Zap className="w-6 h-6 text-white" />;
+    }
+  };
+
+  const getIllustrationVariantForUnit = (unitId: string, icon: string, title: string): 'greetings' | 'family' | 'numbers' | 'emotions' | 'default' => {
+    if (icon === '👋' || title.toLowerCase().includes('chào')) return 'greetings';
+    if (icon === '👨‍👩‍👧' || title.toLowerCase().includes('gia đình')) return 'family';
+    if (icon === '🔢' || title.toLowerCase().includes('số')) return 'numbers';
+    if (icon === '😊' || title.toLowerCase().includes('cảm xúc')) return 'emotions';
+    if (unitId === 'unit-1') return 'greetings';
+    if (unitId === 'unit-2') return 'family';
+    if (unitId === 'unit-3') return 'numbers';
+    if (unitId === 'unit-4') return 'emotions';
+    return 'default';
+  };
+
+  const renderUnitIcon = (icon: string) => {
+    // Map known emojis to icons
+    if (icon === '👋') return <HandIcon size={28} />;
+    if (icon === '👨  👧') return <Users className="w-7 h-7 text-blue-700" />;
+    if (icon === '🔢') return <Hash className="w-7 h-7 text-green-700" />;
+    if (icon === '😊') return <Smile className="w-7 h-7 text-pink-700" />;
+    return <Smile className="w-7 h-7" />;
+  };
+
+  const renderActivityIcon = (icon: string) => {
+    if (icon === '👋') return <HandIcon size={28} />;
+    if (icon === '👨  👧') return <Users className="w-7 h-7 text-indigo-600" />;
+    if (icon === '🔢') return <Hash className="w-7 h-7 text-green-600" />;
+    return <Sparkles className="w-7 h-7" />;
+  };
+
   // Practice categories data - updated with mapping to practice components
   const practiceCategories = [
     { 
       id: 'quickReview', 
-      icon: '⚡', 
+      icon: 'quick', 
       title: 'Ôn tập nhanh', 
       description: 'Luyện tập với flashcard', 
       color: 'from-blue-400 to-blue-500', 
@@ -516,7 +583,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     },
     { 
       id: 'speedChallenge', 
-      icon: '🎯', 
+      icon: 'target', 
       title: 'Thử thách tốc độ', 
       description: 'Nhận diện nhanh ký hiệu', 
       color: 'from-red-400 to-pink-500', 
@@ -525,7 +592,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     },
     { 
       id: 'mirrorPractice', 
-      icon: '🪞', 
+      icon: 'mirror', 
       title: 'Luyện gương', 
       description: 'Thực hành trước gương', 
       color: 'from-blue-400 to-indigo-500', 
@@ -534,7 +601,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     },
     { 
       id: 'quizMix', 
-      icon: '📚', 
+      icon: 'books', 
       title: 'Quiz tổng hợp', 
       description: 'Kiểm tra kiến thức', 
       color: 'from-purple-400 to-pink-500', 
@@ -543,7 +610,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     },
     { 
       id: 'conversationPractice', 
-      icon: '💬', 
+      icon: 'chat', 
       title: 'Luyện hội thoại', 
       description: 'Thực hành giao tiếp', 
       color: 'from-green-400 to-emerald-500', 
@@ -552,7 +619,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     },
     { 
       id: 'dailyChallenge', 
-      icon: '🏆', 
+      icon: 'trophy', 
       title: 'Thử thách hàng ngày', 
       description: 'Thử thách đặc biệt', 
       color: 'from-blue-400 to-indigo-500', 
@@ -587,7 +654,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                 </p>
               </div>
             </div>
-            <div className="text-4xl animate-float">🎯</div>
+            <div className="text-4xl animate-float"><Target className="w-8 h-8" /></div>
           </div>
           <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
             <div 
@@ -625,7 +692,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                     "shadow-lg animate-float",
                     category.color
                   )}>
-                    {category.icon}
+                    {renderCategoryIcon(category.icon)}
                   </div>
                   <div>
                     <h3 className="font-bold text-lg text-gray-800">{category.title}</h3>
@@ -640,11 +707,10 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                   <span>{category.exercises} bài tập</span>
                 </div>
                 {practiceScores[category.id] && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="text-green-600 font-semibold">
-                      ✓ {practiceScores[category.id].score} điểm
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2 text-sm text-green-600 font-semibold">
+                  <CheckCircleIcon className="w-4 h-4 text-green-600" />
+                  <span>{practiceScores[category.id].score} điểm</span>
+                </div>
                 )}
               </div>
             </div>
@@ -668,7 +734,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="text-3xl animate-wiggle">{activity.icon}</div>
+                  <div className="text-3xl animate-wiggle">{renderActivityIcon(activity.icon)}</div>
                   <div>
                     <h4 className="font-semibold text-gray-800">{activity.title}</h4>
                     <p className="text-sm text-gray-600">{activity.time}</p>
@@ -768,8 +834,8 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                         {/* Icon with animated background */}
                         <div className="absolute inset-0 bg-white rounded-full blur-md opacity-75 group-hover:opacity-100 transition-all duration-500 animate-breath" />
                         <div className="relative bg-white rounded-full p-4 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-110 transform-gpu">
-                          <span className="text-4xl inline-block transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 animate-float">
-                            {unit.icon}
+                          <span className="inline-block transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 animate-float">
+                            {renderUnitIcon(unit.icon)}
                           </span>
                         </div>
                       </div>
@@ -798,7 +864,7 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                         >
                           <span className="inline-flex items-center gap-2">
                             TIẾP TỤC
-                            <span className="inline-block animate-bounce-slow">▶</span>
+                            <Play className="w-4 h-4 inline-block animate-bounce-slow" />
                           </span>
                         </Button>
                       </div>
@@ -819,7 +885,8 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                             totalLessons={chapter.totalLessons}
                             isActive={chapter.isActive}
                             isLocked={chapter.isLocked}
-                            thumbnail={chapter.thumbnail}
+                            thumbnail={undefined}
+                            illustration={getIllustrationVariantForUnit(unit.id, unit.icon, unit.title)}
                             onStart={() => handleChapterStart(chapter.id)}
                           />
                           
@@ -848,13 +915,14 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
                   <h2 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-all duration-300">
                     Tiếp tục hành trình học ngôn ngữ ký hiệu
                   </h2>
-                  <p className="text-gray-700 group-hover:text-gray-900 transition-all duration-300 group-hover:translate-x-2">
-                    Học các ký hiệu cơ bản để giao tiếp với người khác ✨
+                  <p className="text-gray-700 group-hover:text-gray-900 transition-all duration-300 group-hover:translate-x-2 inline-flex items-center gap-2">
+                    <span>Học các ký hiệu cơ bản để giao tiếp với người khác</span>
+                    <Sparkles className="w-5 h-5 text-yellow-500" />
                   </p>
                 </div>
                 <div className="text-6xl animate-float">
                   <span className="inline-block group-hover:animate-wiggle transition-transform duration-300 group-hover:scale-110">
-                    📚
+                    <BookOpen className="w-12 h-12 text-blue-700" />
                   </span>
                 </div>
               </div>
