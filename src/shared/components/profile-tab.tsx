@@ -52,7 +52,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
         </div>
 
         {/* Streak Card */}
-        <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-2 border-orange-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-50 border-2 border-blue-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow">
           <div className="p-5 text-center space-y-3">
             {/* Fire Icon with streak count */}
             <div className="flex flex-col items-center">
@@ -72,14 +72,14 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                   <div className={cn(
                     "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all",
                     index === 0 
-                      ? "border-orange-400 border-dashed" 
+                      ? "border-blue-400 border-dashed" 
                       : "border-gray-300"
                   )}>
-                    {index === 0 && <div className="w-1.5 h-1.5 bg-orange-400 rounded-full" />}
+                    {index === 0 && <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />}
                   </div>
                   <span className={cn(
                     "text-xs mt-1",
-                    index === 0 ? "text-orange-600 font-semibold" : "text-gray-600"
+                    index === 0 ? "text-blue-600 font-semibold" : "text-gray-600"
                   )}>
                     {day}
                   </span>
@@ -91,7 +91,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
 
         {/* Upgrade Button */}
         <Button 
-          className="w-full h-12 text-base font-semibold bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transition-all duration-300 rounded-xl"
+          className="w-full h-12 text-base font-semibold bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg transition-all duration-300 rounded-xl"
         >
           Upgrade
         </Button>
@@ -109,7 +109,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 </div>
                 <span className="text-sm font-medium text-gray-800">Edit personal data</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronRight className="w-5 h-5 text-blue-500" />
             </button>
 
             {/* Change password */}
@@ -120,7 +120,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 </div>
                 <span className="text-sm font-medium text-gray-800">Change password</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronRight className="w-5 h-5 text-blue-500" />
             </button>
 
             {/* Switch language */}
@@ -131,7 +131,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 </div>
                 <span className="text-sm font-medium text-gray-800">Switch language</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronRight className="w-5 h-5 text-blue-500" />
             </button>
           </Card>
         </div>
@@ -149,10 +149,10 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 <span className="text-sm font-medium text-gray-800">Payment plans</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 bg-orange-500 text-white text-xs font-semibold rounded">
+                <span className="px-2 py-0.5 bg-blue-500 text-white text-xs font-semibold rounded">
                   UPGRADE
                 </span>
-                <ChevronRight className="w-5 h-5 text-orange-500" />
+                <ChevronRight className="w-5 h-5 text-blue-500" />
               </div>
             </button>
           </Card>
@@ -171,7 +171,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 </div>
                 <span className="text-sm font-medium text-gray-800">Download certificate</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronRight className="w-5 h-5 text-blue-500" />
             </button>
 
             {/* Reset all progress */}
@@ -182,7 +182,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 </div>
                 <span className="text-sm font-medium text-gray-800">Reset all progress</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronRight className="w-5 h-5 text-blue-500" />
             </button>
           </Card>
         </div>
@@ -199,7 +199,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
                 </div>
                 <span className="text-sm font-medium text-gray-800">Help</span>
               </div>
-              <ChevronRight className="w-5 h-5 text-orange-500" />
+              <ChevronRight className="w-5 h-5 text-blue-500" />
             </button>
           </Card>
         </div>
@@ -208,7 +208,7 @@ export function ProfileTab({ onLogout }: ProfileTabProps) {
         <Button
           onClick={onLogout}
           variant="outline"
-          className="w-full h-12 text-base font-medium text-orange-600 border-2 border-orange-200 hover:bg-orange-50 hover:border-orange-300 transition-all duration-300 rounded-xl"
+          className="w-full h-12 text-base font-medium text-blue-600 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 rounded-xl"
         >
           <LogOut className="w-5 h-5 mr-2" />
           Log out

@@ -143,7 +143,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <Card className="w-full max-w-md bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
+        <Card className="w-full max-w-md bg-gradient-to-br from-yellow-50 to-blue-50 border-yellow-200">
           <CardHeader className="text-center">
             <div className="mx-auto w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
               <Trophy className="w-8 h-8 text-yellow-600" />
@@ -166,8 +166,8 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-white rounded-lg">
                 <div className="flex items-center justify-center gap-1 mb-1">
-                  <Flame className="w-5 h-5 text-orange-500" />
-                  <span className="text-2xl font-bold text-orange-600">{newStreak}</span>
+                  <Flame className="w-5 h-5 text-blue-500" />
+                  <span className="text-2xl font-bold text-blue-600">{newStreak}</span>
                 </div>
                 <div className="text-sm text-muted-foreground">Ngày liên tiếp</div>
               </div>
@@ -177,12 +177,12 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
               </div>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-r from-yellow-100 to-blue-100 rounded-lg">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Star className="w-5 h-5 text-yellow-500" />
-                <span className="text-lg font-semibold text-orange-700">+{xpEarned} XP</span>
+                <span className="text-lg font-semibold text-blue-700">+{xpEarned} XP</span>
               </div>
-              <div className="text-sm text-orange-600">Điểm kinh nghiệm kiếm được</div>
+              <div className="text-sm text-blue-600">Điểm kinh nghiệm kiếm được</div>
             </div>
 
             <div className="p-4 bg-yellow-50 rounded-lg">
@@ -216,7 +216,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
   if (showInstructions) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <Card className="w-full max-w-md bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
+        <Card className="w-full max-w-md bg-gradient-to-br from-yellow-50 to-blue-50 border-yellow-200">
           <CardHeader className="text-center">
             <div className="mx-auto w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
               <Trophy className="w-8 h-8 text-yellow-600" />
@@ -254,7 +254,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
 
             <div className="p-3 bg-yellow-100 rounded-lg">
               <div className="flex items-center gap-2 mb-1">
-                <Flame className="w-4 h-4 text-orange-500" />
+                <Flame className="w-4 h-4 text-blue-500" />
                 <span className="font-semibold text-yellow-800">Streak hiện tại: {streak} ngày</span>
               </div>
               <p className="text-xs text-yellow-700">Duy trì streak để nhận bonus XP!</p>
@@ -279,7 +279,7 @@ const DailyChallenge: React.FC<DailyChallengeProps> = ({ onComplete, onClose }) 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-3xl bg-white max-h-[90vh] flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 flex-shrink-0">
+        <CardHeader className="bg-gradient-to-r from-yellow-50 to-blue-50 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl flex items-center gap-2">

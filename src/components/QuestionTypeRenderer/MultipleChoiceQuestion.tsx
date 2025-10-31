@@ -34,7 +34,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
       <div className="w-full max-w-4xl mx-auto p-4">
         {/* Question Card */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">

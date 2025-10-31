@@ -62,6 +62,17 @@ const IconicLearningWrapper: React.FC<IconicLearningWrapperProps> = ({ onComplet
 
   const currentWord = iconicVocabulary[currentIndex];
 
+  if (!currentWord || !Array.isArray((currentWord as any).options) || (currentWord as any).options.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Không tìm thấy dữ liệu Iconic</h2>
+          <p className="text-gray-600 mb-4">Chapter: {chapterId}. Vui lòng thêm câu hỏi/iconicOptions cho chương này.</p>
+        </div>
+      </div>
+    );
+  }
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timeSpent > 0) {
@@ -112,7 +123,7 @@ const IconicLearningWrapper: React.FC<IconicLearningWrapperProps> = ({ onComplet
     const hasVideoOptions = currentWord.options.some((opt: any) => opt.type === "video");
     if (hasVideoOptions) {
       // If options are videos, show image in center
-      return currentWord.image || "https://www.lingvano.com/bsl/wp-content/uploads/sites/4/asl_content/01/01_02/01_02-SWIM.jpg";
+      return currentWord.image || "";
     }
     // If options are images, show video in center
     return currentWord.video;

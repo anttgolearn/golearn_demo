@@ -90,12 +90,12 @@ const MirrorPractice: React.FC<MirrorPracticeProps> = ({ onComplete, onClose }) 
               </div>
             </div>
 
-            <div className="text-center p-3 sm:p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg">
+            <div className="text-center p-3 sm:p-4 bg-gradient-to-r from-yellow-100 to-blue-100 rounded-lg">
               <div className="flex items-center justify-center gap-2 mb-1 sm:mb-2">
                 <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
-                <span className="text-base sm:text-lg font-semibold text-orange-700">+{xpEarned} XP</span>
+                <span className="text-base sm:text-lg font-semibold text-blue-700">+{xpEarned} XP</span>
               </div>
-              <div className="text-xs sm:text-sm text-orange-600">Điểm kinh nghiệm kiếm được</div>
+              <div className="text-xs sm:text-sm text-blue-600">Điểm kinh nghiệm kiếm được</div>
             </div>
 
             <div className="p-3 sm:p-4 bg-purple-50 rounded-lg">

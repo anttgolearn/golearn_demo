@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./QuizResultScreen.css";
 import CheckCircleIcon from '../../components/icons/CheckCircleIcon';
 import XCircleIcon from '../../components/icons/XCircleIcon';
+import { getLessonById } from '../../lib/lesson-structure';
+import { generateLessonContent, VIDEO_CONTENT_MAP } from '../../lib/lesson-content-generator';
+import { X, Play } from 'lucide-react';
 
 type QuestionResult = {
   id: string;
@@ -28,10 +31,62 @@ export const QuizResultDetailScreen: React.FC<Props> = ({
   onContinue,
   lessonId = "1"
 }) => {
-  const percent = total ? Math.round((correct / total) * 100) : 0;
+  // Calculate actual total questions (excluding CONTENT slides) from lesson
+  const actualTotal = useMemo(() => {
+    try {
+      const lesson = getLessonById(lessonId);
+      if (lesson) {
+        const qs = generateLessonContent(lessonId, lesson.type) || [];
+        // Filter out CONTENT type questions when counting (they're not scored)
+        const scoredQuestions = qs.filter(q => {
+          const qt = (q.type || '').toString().toLowerCase();
+          return qt !== 'content';
+        });
+        return scoredQuestions.length || total;
+      }
+    } catch {}
+    return total;
+  }, [lessonId, total]);
+
+  const percent = actualTotal ? Math.round((correct / actualTotal) * 100) : 0;
   const [displayScore, setDisplayScore] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<{label: string; video: string} | null>(null);
+
+  // Build vocabulary list actually used in this lesson (fallback to category list)
+  const vocabList = useMemo(() => {
+    try {
+      const lesson = getLessonById(lessonId);
+      if (lesson) {
+        const qs = generateLessonContent(lessonId, lesson.type) || [];
+        const items = qs.map((q) => {
+          const videoUrl = (q.questionParts || []).find(p => p.type === 'video')?.url || '';
+          const label = q.title || '';
+          return { label, video: videoUrl };
+        })
+        .filter(i => i.label && i.video);
+        // Dedupe by label
+        const map = new Map<string, {label: string; video: string}>();
+        items.forEach(i => { if (!map.has(i.label)) map.set(i.label, i); });
+        return Array.from(map.values());
+      }
+    } catch {}
+    // Fallback: derive category and use map entries
+    const cat = (() => {
+      if (lessonId.includes('01_01')) return 'greetings';
+      if (lessonId.includes('01_02')) return 'family';
+      if (lessonId.includes('02_01') || lessonId.includes('02_02')) return 'emotions';
+      if (lessonId.includes('03_01')) return 'animals';
+      if (lessonId.includes('03_02')) return 'weather';
+      if (lessonId.includes('04_01')) return 'numbers';
+      if (lessonId.includes('05_01')) return 'food';
+      if (lessonId.includes('05_02')) return 'objects';
+      return 'greetings';
+    })() as keyof typeof VIDEO_CONTENT_MAP;
+    const entries = Object.values(VIDEO_CONTENT_MAP[cat] || {});
+    return entries.map(e => ({ label: e.label, video: e.video }));
+  }, [lessonId]);
 
   // Mock question results data
   const questionResults: QuestionResult[] = [
@@ -120,26 +175,90 @@ export const QuizResultDetailScreen: React.FC<Props> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-6 px-1" data-testid="quiz-result-detail-screen">
       <div className="w-full max-w-4xl mx-auto p-2 sm:p-4">
-        {/* Header with Score */}
+        {/* Recall Header */}
         <div className="text-center mb-8">
           <div className={`mb-4 ${isAnimating ? 'animate-score-count' : ''}`}> 
             <div className={`text-6xl sm:text-7xl font-bold mb-2 ${getScoreColor()} score-display`}> 
               {displayScore}%
             </div> 
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {getScoreMessage()}
-          </h1>
-          <p className="text-lg text-gray-600 mb-6">
-            Bạn đã trả lời đúng {correct}/{total} câu hỏi
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Nhắc lại kiến thức đã học</h1>
+          <p className="text-lg text-gray-600 mb-2">
+            Bạn đã trả lời đúng {correct}/{actualTotal} câu hỏi
           </p>
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 mb-2"
-          >
-            {showDetails ? "Ẩn chi tiết" : "Xem chi tiết từng câu"}
-          </button>
+          <p className="text-gray-600">Xem lại các ký hiệu từ bài học này để củng cố kiến thức.</p>
         </div>
+
+        {/* Vocabulary recap - Card list style */}
+        <div className="mb-10 max-w-2xl mx-auto">
+          <div className="space-y-3">
+            {vocabList.slice(0, 12).map((item, idx) => (
+              <div 
+                key={`${item.label}-${idx}`} 
+                className="rounded-lg border border-blue-200 bg-white p-4 flex items-center justify-between hover:shadow-sm transition-shadow"
+              >
+                <div className="text-lg font-semibold text-gray-900 uppercase">
+                  {item.label}
+                </div>
+          <button
+                  onClick={() => setSelectedVideo(item)}
+                  className="w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors shadow-sm"
+                  aria-label={`Phát video ${item.label}`}
+          >
+                  <Play className="w-5 h-5 text-white ml-0.5" fill="white" />
+          </button>
+              </div>
+            ))}
+            {vocabList.length === 0 && (
+              <div className="text-gray-600 text-center py-8">Không tìm thấy từ vựng cho bài này.</div>
+            )}
+          </div>
+        </div>
+
+        {/* Video Modal - Slides up from bottom */}
+        {selectedVideo && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 z-[9998] animate-fade-in"
+              onClick={() => setSelectedVideo(null)}
+            />
+
+            {/* Modal */}
+            <div className="fixed inset-0 z-[9999] flex items-end">
+              <div className="w-full bg-white rounded-t-3xl shadow-2xl animate-slide-up-from-bottom max-h-[90vh] flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedVideo.label}</h2>
+                  <button
+                    onClick={() => setSelectedVideo(null)}
+                    className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+                    aria-label="Đóng"
+                  >
+                    <X className="w-5 h-5 text-gray-600" />
+                  </button>
+                </div>
+
+                {/* Video Content */}
+                <div className="flex-1 overflow-hidden p-6 flex items-center justify-center bg-gray-50">
+                  <div className="w-full max-w-2xl aspect-video bg-black rounded-lg overflow-hidden relative">
+                    <video
+                      src={selectedVideo.video}
+                      controls
+                      autoPlay
+                      className="w-full h-full object-contain"
+                    >
+                      Trình duyệt của bạn không hỗ trợ video.
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Toggle for per-question details (optional) */}
+
         {/* Question Results Detail */}
         {showDetails && (
           <div className="space-y-6 mb-10">
@@ -222,19 +341,21 @@ export const QuizResultDetailScreen: React.FC<Props> = ({
           </div>
         )}
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-2">
+        <div className="max-w-2xl mx-auto space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={onRetry}
-            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
+              className="flex-1 px-8 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold text-lg rounded-lg transition-colors"
           >
             Làm lại bài
           </button>
           <button
             onClick={onContinue}
-            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
+              className="flex-1 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-lg transition-colors shadow-sm"
           >
             Tiếp tục
           </button>
+          </div>
         </div>
       </div>
     </div>

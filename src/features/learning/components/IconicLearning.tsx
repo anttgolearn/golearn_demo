@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../../shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/ui/card';
 // Icons removed as they are not used in this simplified version
-import { iconicVocabularyByChapter } from '../data/iconic-vocabulary';
+import { iconicVocabularyByChapter } from '../../../lib/qa-library/iconic';
 import LessonPlaceholder from '../../../components/illustrations/LessonPlaceholder';
+import CorrectIcon from '../../../components/atoms/Icon/CorrectIcon';
+import IncorrectIcon from '../../../components/atoms/Icon/IncorrectIcon';
+import QuizButton from '../../../components/atoms/Button/QuizButton';
+import { getAnswerStatus } from '../../../lib/answer-evaluation';
 
 interface IconicLearningProps {
   onComplete: (score: number, timeSpent: number) => void;
@@ -16,7 +20,7 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
   const [score, setScore] = useState(0);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
+  const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
 
@@ -69,7 +73,7 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
       return () => clearTimeout(timer);
     } else if (timeLeft === 0 && !isAnswered) {
       // Time's up - mark as incorrect
-      handleAnswer(-1);
+      handleTimeUp();
     }
   }, [timeLeft, isAnswered]);
 
@@ -77,35 +81,46 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
   useEffect(() => {
     setTimeLeft(currentWord?.timeLimit || 15);
     setSelectedAnswer(null);
-    setShowFeedback(false);
+    setShowResult(false);
     setIsAnswered(false);
     setIsCorrect(false);
   }, [currentIndex, currentWord]);
 
-  const handleAnswer = (answerId: number) => {
-    // Allow changing answer even after selection
+  const handleSelectAnswer = (answerId: number) => {
     setSelectedAnswer(answerId);
-    
-    // Only mark as answered and show feedback if not already answered
-    if (!isAnswered) {
-      setIsAnswered(true);
-      setShowFeedback(true);
+  };
+
+  const handleCheck = () => {
+    if (isAnswered) return;
+    const correctOption = currentWord.options.find((opt: any) => opt.isCorrect);
+    const isCorrectAnswer = selectedAnswer != null && correctOption && correctOption.id === selectedAnswer;
+
+    setIsCorrect(Boolean(isCorrectAnswer));
+    setIsAnswered(true);
+    setShowResult(true);
+
+    // Update score only once per question when first answered correctly
+    if (isCorrectAnswer) {
+      if (userAnswers[currentIndex] !== 'correct') {
+        setScore(score + (currentWord.points || 10));
+      }
     }
-    
-    const isCorrectAnswer = currentWord.options.find((opt: any) => opt.id === answerId)?.isCorrect || false;
-    setIsCorrect(isCorrectAnswer);
-    
-    // Update score only if this is a new correct answer
-    if (isCorrectAnswer && !userAnswers.includes(answerId.toString())) {
-      setScore(score + (currentWord.points || 10));
-    }
-    
-    // Update user answers array
+
     const newAnswers = [...userAnswers];
-    if (newAnswers[currentIndex]) {
-      newAnswers[currentIndex] = answerId.toString();
-    } else {
-      newAnswers.push(answerId.toString());
+    newAnswers[currentIndex] = isCorrectAnswer ? 'correct' : (selectedAnswer != null ? selectedAnswer.toString() : 'none');
+    setUserAnswers(newAnswers);
+  };
+
+  const handleTimeUp = () => {
+    if (isAnswered) return;
+    setSelectedAnswer(-1);
+    setIsCorrect(false);
+    setIsAnswered(true);
+    setShowResult(true);
+
+    const newAnswers = [...userAnswers];
+    if (newAnswers[currentIndex] !== 'correct') {
+      newAnswers[currentIndex] = 'incorrect';
     }
     setUserAnswers(newAnswers);
   };
@@ -188,7 +203,7 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
           
           <CardContent className="space-y-6">
             {/* Video/Image */}
-            <div className="flex justify-center">
+          <div className="flex justify-center">
               <div className="w-full max-w-md">
                 <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                   {currentWord.questionType === 'video_choice' ? (
@@ -214,14 +229,19 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
               {currentWord.options.map((option: any) => {
             const isSelected = selectedAnswer === option.id;
                 const isCorrectOption = option.isCorrect;
-                const showCorrect = showFeedback && isCorrectOption;
-                const showIncorrect = showFeedback && isSelected && !isCorrectOption;
+                const showCorrect = showResult && isCorrectOption;
+                const showIncorrect = showResult && isSelected && !isCorrectOption;
+                const status = getAnswerStatus(
+                  { id: option.id, isCorrect: isCorrectOption },
+                  selectedAnswer !== null ? [Number(selectedAnswer)] : [],
+                  showResult
+                );
 
             return (
                   <button
                     key={option.id}
-                    onClick={() => handleAnswer(option.id)}
-                    className={`p-4 rounded-lg border-2 transition-all duration-200 ${
+                    onClick={() => !isAnswered && handleSelectAnswer(option.id)}
+                    className={`relative p-4 rounded-lg border-2 transition-all duration-200 ${
                       showCorrect
                         ? 'border-green-500 bg-green-50'
                         : showIncorrect
@@ -252,39 +272,83 @@ const IconicLearning: React.FC<IconicLearningProps> = ({ onComplete, onClose, ch
                       </div>
                       <span className="text-lg font-medium">{option.text}</span>
                     </div>
+
+                    {/* Result Indicator (styled similar to AnswerOptions) */}
+                    {showResult && (
+                      <div className="absolute top-2 right-2 result-indicator text-xl">
+                        {status === 'Chính xác' ? '✅' : status === 'Không chính xác' ? '❌' : ''}
+                      </div>
+                    )}
                   </button>
             );
           })}
       </div>
 
-            {/* Feedback */}
-            {selectedAnswer !== null && (
-              <div className={`text-center p-4 rounded-lg ${
-                isCorrect ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
-              }`}>
-                <p className="text-lg font-semibold">
-                  {isCorrect ? 'Chính xác! 🎉' : 'Sai rồi! Hãy thử lại 💪'}
-                </p>
-                <p className="text-sm mt-2">
-                  Bạn có thể thay đổi lựa chọn bất kỳ lúc nào
-                </p>
-              </div>
-            )}
-
+        
             {/* Action Buttons */}
             <div className="flex justify-center space-x-4">
-              {isAnswered && (
-          <Button
-            onClick={handleNext}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2"
-          >
-            {currentIndex < iconicVocabulary.length - 1 ? 'Tiếp theo' : 'Hoàn thành'}
-          </Button>
-        )}
+              {!isAnswered && (
+                <QuizButton
+                  onClick={handleCheck}
+                  disabled={selectedAnswer === null}
+                  variant={selectedAnswer === null ? 'disabled' : 'primary'}
+                  size="lg"
+                >
+                  Kiểm tra
+                </QuizButton>
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
+      {/* Bottom Result Panel */}
+      {isAnswered && (
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50"
+          data-testid={isCorrect ? 'lesson-panel-correct' : 'lesson-panel-incorrect'}
+        >
+          <div className={`w-full py-6 px-4 ${isCorrect ? 'bg-green-100' : 'bg-red-100'}`}>
+            <div className="max-w-md mx-auto">
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="inline-flex items-center justify-center ">
+                    {isCorrect ? (
+                      <svg width="32" height="32" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="22" fill="#22c55e"></circle>
+                        <path stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" d="M15 22.714 19.2 27 29 17"></path>
+                      </svg>
+                    ) : (
+                      <svg width="32" height="32" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="22" r="22" fill="#ef4444"></circle>
+                        <path stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="m15.75 8.25-7.5 7.5m7.5 0-7.5-7.5"></path>
+                      </svg>
+                    )}
+                  </div>
+                  <div className={`text-xl font-bold ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                    {isCorrect ? 'Chính xác!' : 'Không chính xác!'}
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center gap-3">
+                <button
+                  className={`
+                px-8 py-3 rounded-lg text-white font-semibold text-base
+
+                transition-all duration-200 hover:opacity-90 active:scale-95
+
+                ${isCorrect ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
+
+              `}
+                  data-testid="lesson-button"
+                  onClick={handleNext}
+                >
+                  {currentIndex < iconicVocabulary.length - 1 ? 'Tiếp theo' : 'Hoàn thành'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -53,7 +53,7 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
   };
 
   return (
-    <div className="flex-1 bg-orange-50 p-5">
+    <div className="flex-1 bg-blue-50 p-5">
       <div className="flex flex-row items-center justify-between mb-5">
         <Button onClick={onBack} variant="ghost" className="p-2">
           ← Quay lại
@@ -116,7 +116,7 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
                   variant={feedback.overallExperience === option.value ? 'default' : 'outline'}
                   onClick={() => setFeedback(prev => ({ ...prev, overallExperience: option.value as any }))}
                   className={`flex flex-row items-center py-2 px-3 rounded-full min-w-25 justify-center ${
-                    feedback.overallExperience === option.value ? 'bg-orange-500' : ''
+                    feedback.overallExperience === option.value ? 'bg-blue-500' : ''
                   }`}
                 >
                   <span className="text-base mr-1.5">{option.emoji}</span>
@@ -140,7 +140,7 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
                   variant={feedback.difficulty === option.value ? 'default' : 'outline'}
                   onClick={() => setFeedback(prev => ({ ...prev, difficulty: option.value as any }))}
                   className={`flex flex-row items-center py-2 px-3 rounded-full min-w-25 justify-center ${
-                    feedback.difficulty === option.value ? 'bg-orange-500' : ''
+                    feedback.difficulty === option.value ? 'bg-blue-500' : ''
                   }`}
                 >
                   <span className="text-base mr-1.5">{option.emoji}</span>
@@ -165,7 +165,7 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
                   variant={feedback.cameraQuality === option.value ? 'default' : 'outline'}
                   onClick={() => setFeedback(prev => ({ ...prev, cameraQuality: option.value as any }))}
                   className={`flex flex-row items-center py-2 px-3 rounded-full min-w-25 justify-center ${
-                    feedback.cameraQuality === option.value ? 'bg-orange-500' : ''
+                    feedback.cameraQuality === option.value ? 'bg-blue-500' : ''
                   }`}
                 >
                   <span className="text-base mr-1.5">{option.emoji}</span>
@@ -188,7 +188,7 @@ const CameraPracticeFeedbackScreen: React.FC<CameraPracticeFeedbackScreenProps> 
       </div>
 
       <div className="pt-5">
-        <Button onClick={handleSubmit} className="bg-orange-500 py-4 px-8 rounded-lg">
+        <Button onClick={handleSubmit} className="bg-blue-500 py-4 px-8 rounded-lg">
           Tiếp tục
         </Button>
       </div>

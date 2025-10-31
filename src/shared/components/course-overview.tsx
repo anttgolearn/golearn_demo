@@ -37,7 +37,7 @@ export function CourseOverview({ onStartChapter, onNavigate }: CourseOverviewPro
             <h1 className="text-xl font-bold text-foreground">Introduction</h1>
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-yellow-500" />
-              <Medal className="w-5 h-5 text-orange-500" />
+              <Medal className="w-5 h-5 text-blue-500" />
             </div>
           </div>
           <Button variant="ghost" size="sm">

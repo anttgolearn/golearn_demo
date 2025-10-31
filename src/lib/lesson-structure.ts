@@ -202,7 +202,7 @@ export const LESSON_TYPE_CONFIG = {
   },
   Explore: {
     icon: '🧭',
-    color: '#F97316', // orange
+    color: '#3B82F6', // blue
     description: 'Khám phá nâng cao',
     questionTypes: ['CONTENT', 'SINGLE', 'MULTIPLE'],
     difficulty: 'hard',

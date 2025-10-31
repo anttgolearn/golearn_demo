@@ -32,7 +32,7 @@ export function BottomNavigation({ currentSection, onNavigate }: BottomNavigatio
                   "flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all duration-300",
                   "hover:scale-105 transform-gpu relative",
                   isActive 
-                    ? "text-orange-600 bg-orange-50" 
+                    ? "text-blue-600 bg-blue-50" 
                     : "text-gray-600 hover:text-blue-500 hover:bg-gray-50"
                 )}
               >
@@ -45,7 +45,7 @@ export function BottomNavigation({ currentSection, onNavigate }: BottomNavigatio
                 />
                 <span className="text-xs font-medium">{item.label}</span>
                 {isActive && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-600 rounded-full animate-pulse" />
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-600 rounded-full animate-pulse" />
                 )}
               </button>
             )

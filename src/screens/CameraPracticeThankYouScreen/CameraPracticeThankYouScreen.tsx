@@ -11,9 +11,9 @@ const CameraPracticeThankYouScreen: React.FC<CameraPracticeThankYouScreenProps> 
   onBack
 }) => {
   return (
-    <div className="flex-1 bg-orange-50 p-5 justify-between">
+    <div className="flex-1 bg-blue-50 p-5 justify-between">
       <div className="flex-1 flex justify-center items-center">
-        <div className="w-30 h-30 rounded-full bg-orange-500 flex justify-center items-center mb-8">
+        <div className="w-30 h-30 rounded-full bg-blue-500 flex justify-center items-center mb-8">
           <span className="text-6xl">🎉</span>
         </div>
         
@@ -57,7 +57,7 @@ const CameraPracticeThankYouScreen: React.FC<CameraPracticeThankYouScreenProps> 
       </div>
 
       <div className="space-y-3">
-        <Button onClick={onComplete} className="bg-orange-500 py-4 px-8 rounded-lg">
+        <Button onClick={onComplete} className="bg-blue-500 py-4 px-8 rounded-lg">
           Tiếp tục học
         </Button>
         

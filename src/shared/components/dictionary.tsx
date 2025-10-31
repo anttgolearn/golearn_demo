@@ -192,7 +192,7 @@ export function Dictionary() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-9 w-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+                    className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
                     onClick={(e) => {
                       e.stopPropagation()
                       playVideo(word)
@@ -239,7 +239,7 @@ export function Dictionary() {
                     <Button
                       size="icon"
                       variant="ghost"
-                      className="h-9 w-9 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
+                      className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95"
                       onClick={(e) => {
                         e.stopPropagation()
                         playVideo(word)

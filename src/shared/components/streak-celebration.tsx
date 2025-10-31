@@ -44,7 +44,7 @@ export function StreakCelebration({ streak, onContinue }: StreakCelebrationProps
   }
 
   const getStreakColor = () => {
-    if (streak >= 30) return "from-yellow-400 to-orange-500"
+    if (streak >= 30) return "from-yellow-400 to-blue-500"
     if (streak >= 14) return "from-red-400 to-pink-500"
     if (streak >= 7) return "from-blue-400 to-purple-500"
     if (streak >= 3) return "from-green-400 to-blue-500"

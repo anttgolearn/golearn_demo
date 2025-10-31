@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { MirrorModal } from "../../components/molecules/MirrorModal";
 import ContentPage from "../../components/organisms/ContentPage/ContentPage";
 import { AnswerFeedbackPanel } from "../../components/molecules/AnswerFeedbackPanel";
@@ -39,7 +39,11 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
   const [finished, setFinished] = useState(false);
   const [showMirror, setShowMirror] = useState(false);
   const [quizCategory, setQuizCategory] = useState<string>('Lesson');
-  const total = questions.length || 1;
+  // Calculate total excluding CONTENT slides (they're not scored)
+  const total = useMemo(() => {
+    const scoredQuestions = questions.filter(q => q.type !== 'CONTENT');
+    return scoredQuestions.length || questions.length || 1;
+  }, [questions]);
 
   // Detect if this is an iconic quiz
   const isIconicQuiz = lessonId.includes('-iconic');

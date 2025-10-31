@@ -90,7 +90,7 @@ const SpeedChallenge: React.FC<SpeedChallengeProps> = ({ onComplete, onClose }) 
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <Card className="w-full max-w-md bg-gradient-to-br from-red-50 to-orange-50 border-red-200">
+        <Card className="w-full max-w-md bg-gradient-to-br from-red-50 to-blue-50 border-red-200">
           <CardHeader className="text-center">
             <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
               <Zap className="w-8 h-8 text-red-600" />
@@ -148,7 +148,7 @@ const SpeedChallenge: React.FC<SpeedChallengeProps> = ({ onComplete, onClose }) 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-2xl bg-white max-h-[90vh] flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 flex-shrink-0">
+          <CardHeader className="bg-gradient-to-r from-red-50 to-blue-50 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl flex items-center gap-2">

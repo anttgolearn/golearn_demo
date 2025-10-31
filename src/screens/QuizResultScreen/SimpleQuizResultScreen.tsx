@@ -63,7 +63,7 @@ export const SimpleQuizResultScreen: React.FC<Props> = ({
         {/* Score Display */}
         <div className="text-center mb-8" data-testid="quiz-result-header">
           <div className={`mb-4 ${isAnimating ? 'animate-score-count' : ''}`}>
-            <div className="text-7xl font-bold text-orange-500 mb-2">
+            <div className="text-7xl font-bold text-blue-500 mb-2">
               {displayScore}%
             </div>
           </div>
@@ -101,7 +101,7 @@ export const SimpleQuizResultScreen: React.FC<Props> = ({
         <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           {/* Primary Button - Orange like in the image */}
           <button 
-            className="w-full py-4 px-8 rounded-2xl font-semibold text-lg text-white bg-orange-500 hover:bg-orange-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+            className="w-full py-4 px-8 rounded-2xl font-semibold text-lg text-white bg-blue-500 hover:bg-blue-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
             onClick={onRetry}
             data-testid="button-panel-primary-action"
           >

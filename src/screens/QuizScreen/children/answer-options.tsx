@@ -174,7 +174,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
                 <div 
                   className={`absolute inset-0 rounded-xl border-2 ${
                     isSelected(option.label)
-                      ? 'border-orange-500' 
+                      ? 'border-blue-500' 
                       : 'border-gray-300'
                   }`}
                   data-testid="video-answer-border"
@@ -202,7 +202,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
                     tabIndex={0}
                     className={`w-7 h-7 rounded-full border-2 flex items-center justify-center ${
                       isSelected(option.label)
-                        ? 'border-orange-500 bg-orange-500'
+                        ? 'border-blue-500 bg-blue-500'
                         : 'border-gray-400 bg-white'
                     }`}
                     data-testid={isSelected(option.label) ? "radio-circle-selected" : "radio-correct-option"}

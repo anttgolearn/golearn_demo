@@ -417,12 +417,12 @@ const Landing = ({ onGetStarted, onGoToDashboard }: LandingProps) => {
               {/* Q4 2025 */}
               <div className="flex items-center">
                 <div className="w-1/2 pr-8"></div>
-                <div className="w-8 h-8 bg-orange-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
                   <span className="text-white text-sm font-bold">4</span>
                   </div>
                 <div className="w-1/2 pl-8">
                   <div className="bg-white p-6 rounded-xl shadow-lg">
-                    <h3 className="text-lg font-semibold text-orange-600 mb-2">Q4 2025</h3>
+                    <h3 className="text-lg font-semibold text-blue-600 mb-2">Q4 2025</h3>
                     <h4 className="font-semibold text-gray-900 mb-2">Market Expansion</h4>
                     <ul className="text-sm text-gray-600 space-y-1">
                       <li>• Mở rộng ra thị trường Đông Nam Á</li>

@@ -91,7 +91,7 @@ export const MirrorModal: React.FC<MirrorModalProps> = ({
           <div className="px-4 pb-4 h-full flex flex-col">
             {/* Sign Text */}
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">{signText}</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Vui mừng</h2>
             </div>
 
             {/* Camera Permission Info */}

@@ -410,18 +410,7 @@ export const Question: React.FC<QuestionProps> = ({
           </div>
         </div>
 
-        {/* Feedback message */}
-        {showResult && (
-          <div
-            className={`text-center mt-6 px-4 py-2 rounded-md ${
-              isCorrect ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-            }`}
-          >
-            <p className="font-medium text-base">
-              {isCorrect ? 'Chính xác! 🎉' : 'Sai rồi! Hãy thử lại 💪'}
-            </p>
-          </div>
-        )}
+
 
         {/* Button - Using QuizButton component */}
         <div className="flex justify-center mt-8">

@@ -9,7 +9,7 @@ export const TestLayoutConsistency: React.FC = () => {
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
 
   const videoOptions = [
-    { label: "HELLO", videoSrc: "/resources/videos/hello.mp4" },
+    { label: "Vui mừng", videoSrc: "/resources/videos/hello.mp4" },
     { label: "WELCOME", videoSrc: "/resources/videos/welcome.mp4" },
     { label: "ME", videoSrc: "/resources/videos/me.mp4" },
     { label: "YOU", videoSrc: "/resources/videos/you.mp4" },
