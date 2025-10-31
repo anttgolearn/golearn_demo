@@ -2,6 +2,7 @@ import React from "react";
 import CheckCircleIcon from "../icons/CheckCircleIcon";
 import XCircleIcon from "../icons/XCircleIcon";
 import { AnswerOption, AnswerOptionsProps } from "./AnswerOptions";
+import { getAnswerStatus } from "../../lib/answer-evaluation";
 
 interface ImageAnswersProps extends Omit<AnswerOptionsProps, 'options'> {
   options: AnswerOption[];
@@ -16,16 +17,7 @@ export const ImageAnswers: React.FC<ImageAnswersProps> = ({
   theme = 'blue',
   disabled = false
 }) => {
-  const getAnswerStatus = (option: AnswerOption) => {
-    if (!showResult) return '';
-    
-    if (option.isCorrect) {
-      return 'correct';
-    } else if (selectedAnswers.includes(option.id)) {
-      return 'incorrect';
-    }
-    return '';
-  };
+  const getStatus = (option: AnswerOption) => getAnswerStatus(option, selectedAnswers, showResult);
 
   const getThemeClasses = (theme: string) => {
     const themes = {
@@ -42,10 +34,10 @@ export const ImageAnswers: React.FC<ImageAnswersProps> = ({
         indicator: 'border-green-500 bg-green-500'
       },
       orange: {
-        selected: 'border-orange-500 bg-orange-50',
+        selected: 'border-blue-500 bg-blue-50',
         correct: 'border-green-500 bg-green-50',
         incorrect: 'border-red-500 bg-red-50',
-        indicator: 'border-orange-500 bg-orange-500'
+        indicator: 'border-blue-500 bg-blue-500'
       },
       purple: {
         selected: 'border-purple-500 bg-purple-50',
@@ -70,7 +62,7 @@ export const ImageAnswers: React.FC<ImageAnswersProps> = ({
     <div className="image-answers-container">
       <div className="image-answers-grid">
         {options.map((option) => {
-          const status = getAnswerStatus(option);
+          const status = getStatus(option);
           const isSelected = selectedAnswers.includes(option.id);
           
           return (
@@ -82,9 +74,9 @@ export const ImageAnswers: React.FC<ImageAnswersProps> = ({
                 isSelected ? 'selected' : ''
               } ${
                 showResult 
-                  ? status === 'correct'
+                  ? status === 'Chính xác'
                     ? themeClasses.correct
-                    : status === 'incorrect'
+                    : status === 'Không chính xác'
                       ? themeClasses.incorrect
                       : ''
                   : ''
@@ -119,9 +111,9 @@ export const ImageAnswers: React.FC<ImageAnswersProps> = ({
                     {showResult && (
                       <div className="image-result-overlay">
                         <div className="image-result-indicator">
-                          {status === 'correct' ? (
+                          {status === 'Chính xác' ? (
                             <CheckCircleIcon className="w-6 h-6 text-green-600" />
-                          ) : status === 'incorrect' ? (
+                          ) : status === 'Không chính xác' ? (
                             <XCircleIcon className="w-6 h-6 text-red-600" />
                           ) : null}
                         </div>

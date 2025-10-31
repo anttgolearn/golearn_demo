@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import ImageAnswers from "./ImageAnswers";
 import VideoAnswers from "./VideoAnswers";
 import "./AnswerOptions.css";
+import { getAnswerStatus } from "../../lib/answer-evaluation";
 
 // Types
 export interface AnswerOption {
@@ -50,16 +51,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
     setPlayingVideo(null);
   };
 
-  const getAnswerStatus = (option: AnswerOption) => {
-    if (!showResult) return '';
-    
-    if (option.isCorrect) {
-      return 'correct';
-    } else if (selectedAnswers.includes(option.id)) {
-      return 'incorrect';
-    }
-    return '';
-  };
+  const getStatus = (option: AnswerOption) => getAnswerStatus(option, selectedAnswers, showResult);
 
   const getThemeClasses = (theme: string) => {
     const themes = {
@@ -80,12 +72,12 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
         indicator: 'border-green-500 bg-green-500'
       },
       orange: {
-        primary: 'border-orange-500 bg-orange-50',
-        selected: 'border-orange-500 bg-orange-50',
+        primary: 'border-blue-500 bg-blue-50',
+        selected: 'border-blue-500 bg-blue-50',
         correct: 'border-green-500 bg-green-50',
         incorrect: 'border-red-500 bg-red-50',
-        button: 'bg-orange-500 hover:bg-orange-600',
-        indicator: 'border-orange-500 bg-orange-500'
+        button: 'bg-blue-500 hover:bg-blue-600',
+        indicator: 'border-blue-500 bg-blue-500'
       },
       purple: {
         primary: 'border-purple-500 bg-purple-50',
@@ -152,7 +144,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
     <div className="answer-options-container">
       <div className="space-y-3">
         {options.map((option, index) => {
-          const status = getAnswerStatus(option);
+          const status = getStatus(option);
           const isSelected = selectedAnswers.includes(option.id);
           
           return (
@@ -164,9 +156,9 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
                 isSelected ? 'selected' : ''
               } ${
                 showResult 
-                  ? status === 'correct'
+                  ? status === 'Chính xác'
                     ? themeClasses.correct
-                    : status === 'incorrect'
+                    : status === 'Không chính xác'
                       ? themeClasses.incorrect
                       : ''
                   : ''
@@ -242,7 +234,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({
                 {/* Result Indicator */}
                 {showResult && (
                   <div className="result-indicator">
-                    {status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : ''}
+                    {status === 'Chính xác' ? '✅' : status === 'Không chính xác' ? '❌' : ''}
                   </div>
                 )}
               </div>

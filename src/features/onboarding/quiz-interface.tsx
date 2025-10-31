@@ -6,6 +6,7 @@ import { Card } from "../../shared/ui/card"
 import { Progress } from "../../shared/ui/progress"
 import { Badge } from "../../shared/ui/badge"
 import { ChevronRight, Check, X, ArrowLeft, RotateCcw, Trophy, Star, Clock, Camera } from "lucide-react"
+import { AnswerFeedbackPanel } from "../../components/molecules/AnswerFeedbackPanel"
 import { cn } from "../../lib/utils"
 import { QuizQuestion, fetchQuizQuestions } from "../../lib/quizData"
 
@@ -636,7 +637,7 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
                   size="icon"
                   onClick={() => setPlaybackRate((r) => (r === 1 ? 0.5 : r === 0.5 ? 1.25 : 1))}
                   className="bg-black/50 text-white hover:bg-black/70"
-                  aria-label="Change video speed"
+                  aria-label="Thay đổi tốc độ video"
                 >
                   <span className="text-xs font-semibold">{playbackRate}x</span>
                 </Button>
@@ -645,7 +646,7 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
                   size="icon"
                   onClick={() => setShowMirror(true)}
                   className="bg-black/50 text-white hover:bg-black/70"
-                  aria-label="Open sign mirror"
+                  aria-label="Mở gương ký hiệu"
                 >
                   <Camera className="w-5 h-5" />
                 </Button>
@@ -669,17 +670,17 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
               onClick={() => setShowMirror(false)}
             >
               <div 
-                className="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] border-2 border-orange-200 overflow-hidden flex flex-col mx-auto animate-slide-up"
+                className="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-[95vw] sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] border-2 border-blue-200 overflow-hidden flex flex-col mx-auto animate-slide-up"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Header */}
-                <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-orange-50 to-yellow-50 border-b border-orange-200 flex-shrink-0 rounded-t-lg sm:rounded-t-xl">
+                <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 flex-shrink-0 rounded-t-lg sm:rounded-t-xl">
                   <h3 className="font-semibold text-sm sm:text-base text-gray-800">Luyện tập gương</h3>
                   <Button 
                     variant="ghost" 
                     size="sm"
                     onClick={() => setShowMirror(false)}
-                    className="h-8 w-8 p-0 hover:bg-orange-200 flex-shrink-0 rounded-full"
+                    className="h-8 w-8 p-0 hover:bg-blue-200 flex-shrink-0 rounded-full"
                     aria-label="Đóng"
                   >
                     <span className="text-lg text-gray-600">×</span>
@@ -702,10 +703,10 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
                 </div>
 
                 {/* Footer */}
-                <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-t border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50 flex-shrink-0 rounded-b-lg sm:rounded-b-xl">
+                <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-t border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex-shrink-0 rounded-b-lg sm:rounded-b-xl">
                   <Button 
                     onClick={() => setShowMirror(false)}
-                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
                   >
                     Đóng
                   </Button>
@@ -717,49 +718,23 @@ export function QuizInterface({ onNext, onBack, categoryId, questionCount = 10, 
           {/* Answer Options */}
           {renderQuestion()}
 
-          {/* Result Message */}
+          {/* Result Panel */}
           {showResult && (
-            <div className={cn(
-              "text-center p-4 rounded-xl",
-              isCorrect ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700",
-            )}>
-              <div className="font-semibold mb-2">
-                {isCorrect ? "Chính xác!" : "Chưa đúng, thử lại nhé!"}
-              </div>
-              {currentQuestion.explanation && (
-                <p className="text-sm">{currentQuestion.explanation}</p>
-              )}
-            </div>
+            <AnswerFeedbackPanel 
+              isCorrect={isCorrect} 
+              onNext={handleNext} 
+              onRetry={!isCorrect ? handleRetry : undefined}
+            />
           )}
 
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            {showResult ? (
-              <div className="flex space-x-3">
-                {!isCorrect && (
-                  <Button
-                    onClick={handleRetry}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    <RotateCcw className="w-4 h-4 mr-2" />
-                    Thử lại
-                  </Button>
-                )}
-                <Button
-                  onClick={handleNext}
-                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
-                >
-                  {currentQuestionIndex < questions.length - 1 ? "Tiếp tục" : "Hoàn tất"}
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Button>
-              </div>
-            ) : (
+          {/* Action Hint when not answered */}
+          {!showResult && (
+            <div className="space-y-3">
               <div className="text-center text-sm text-muted-foreground">
                 Chọn một đáp án để tiếp tục
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </Card>
     </div>

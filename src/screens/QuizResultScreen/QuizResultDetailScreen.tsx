@@ -225,7 +225,7 @@ export const QuizResultDetailScreen: React.FC<Props> = ({
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-2">
           <button
             onClick={onRetry}
-            className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
+            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-lg rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-full sm:w-auto"
           >
             Làm lại bài
           </button>

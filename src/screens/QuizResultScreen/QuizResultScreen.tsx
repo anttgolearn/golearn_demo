@@ -40,7 +40,7 @@ export const QuizResultScreen: React.FC<Props> = ({ correct, total, onRetry, onC
   // Determine score category and styling
   const getScoreCategory = () => {
     if (percent >= 80) return { color: 'text-green-600', message: 'Excellent!', subMessage: 'You have completed the lesson.' };
-    if (percent >= 70) return { color: 'text-orange-500', message: "You're so close!", subMessage: 'Repeat the lesson and get over 80% to complete it.' };
+    if (percent >= 70) return { color: 'text-blue-500', message: "You're so close!", subMessage: 'Repeat the lesson and get over 80% to complete it.' };
     return { color: 'text-red-500', message: 'Keep practicing!', subMessage: 'Don\'t give up! Practice makes perfect!' };
   };
 
@@ -71,7 +71,7 @@ export const QuizResultScreen: React.FC<Props> = ({ correct, total, onRetry, onC
 
         {/* Character Animation Area */}
         <div className="mb-8 flex justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-          <div className="character-area bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl flex items-center justify-center relative overflow-hidden">
+          <div className="character-area bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center relative overflow-hidden">
             {/* Simple hand character representation */}
             <div className="text-6xl animate-character-bounce">
               {percent >= 80 ? (
@@ -83,7 +83,7 @@ export const QuizResultScreen: React.FC<Props> = ({ correct, total, onRetry, onC
               )}
             </div>
             {/* Decorative elements */}
-            <div className="absolute top-4 left-4 w-3 h-3 bg-orange-300 rounded-full animate-pulse-dot"></div>
+            <div className="absolute top-4 left-4 w-3 h-3 bg-blue-300 rounded-full animate-pulse-dot"></div>
             <div className="absolute top-8 right-6 w-2 h-2 bg-yellow-300 rounded-full animate-pulse-dot" style={{ animationDelay: '0.5s' }}></div>
             <div className="absolute bottom-6 left-8 w-2 h-2 bg-red-300 rounded-full animate-pulse-dot" style={{ animationDelay: '1s' }}></div>
           </div>
@@ -95,7 +95,7 @@ export const QuizResultScreen: React.FC<Props> = ({ correct, total, onRetry, onC
           <button 
             className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105 active:scale-95 ${
               percent < 80 
-                ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg' 
+                ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg' 
                 : 'bg-green-500 hover:bg-green-600 text-white shadow-lg'
             }`}
             onClick={onRetry}

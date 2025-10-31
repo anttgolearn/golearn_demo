@@ -25,7 +25,7 @@ const SpeedChallenge: React.FC<SpeedChallengeProps> = ({ onComplete, onClose }) 
     { word: "Gia đình", video: "/resources/videos/bố mẹ.mp4", options: ["Bạn bè", "Gia đình", "Trường học", "Công việc"] },
     { word: "Vui mừng", video: "/resources/videos/vui mừng - nam.mp4", options: ["Buồn", "Vui mừng", "Giận dữ", "Lo lắng"] },
     { word: "Số một", video: "/resources/videos/1.mp4", options: ["Một", "Hai", "Ba", "Bốn"] },
-    { word: "Cảm ơn", video: "/resources/videos/xin lỗi.mp4", options: ["Xin lỗi", "Cảm ơn", "Không có gì", "Tạm biệt"] }
+    { word: "Cảm ơn", video: "/resources/videos/cảm ơn.mp4", options: ["Xin lỗi", "Cảm ơn", "Không có gì", "Tạm biệt"] }
   ];
 
   const currentWord = vocabulary[currentIndex];
@@ -116,17 +116,17 @@ const SpeedChallenge: React.FC<SpeedChallengeProps> = ({ onComplete, onClose }) 
                 <div className="text-sm text-muted-foreground">Tổng thời gian</div>
               </div>
               <div className="text-center p-4 bg-white rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">{avgTime}s</div>
+                <div className="text-2xl font-bold text-blue-600">{avgTime}s</div>
                 <div className="text-sm text-muted-foreground">Trung bình/câu</div>
               </div>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Star className="w-5 h-5 text-yellow-500" />
-                <span className="text-lg font-semibold text-orange-700">+{xpEarned} XP</span>
+                <span className="text-lg font-semibold text-blue-700">+{xpEarned} XP</span>
               </div>
-              <div className="text-sm text-orange-600">Điểm kinh nghiệm kiếm được</div>
+              <div className="text-sm text-blue-600">Điểm kinh nghiệm kiếm được</div>
             </div>
 
             <div className="flex gap-3">

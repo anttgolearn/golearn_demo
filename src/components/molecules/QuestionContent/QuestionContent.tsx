@@ -47,7 +47,7 @@ const Video = ({ videoUrl, label, sizeType, onMirrorPress }: any) => (
       />
       {onMirrorPress && (
         <button
-          aria-label="Open sign mirror"
+          aria-label="Mở gương ký hiệu"
           role="button"
           className="absolute bottom-2 left-2 inline-flex items-center justify-center w-6 h-8 bg-white/90 hover:bg-white transition-colors rounded"
           data-testid="mirror-button"
@@ -91,7 +91,7 @@ const Picture = ({ desiredWidth, uri, label }: any) => (
     <div className="relative rounded-xl border bg-white overflow-hidden">
       <img
         src={uri}
-        alt={label || "Question content"}
+        alt={label || "Nội dung câu hỏi"}
         className="w-full h-auto object-contain"
         style={{ maxWidth: desiredWidth }}
       />
@@ -204,7 +204,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
         />
         {onMirrorClick && (
           <button
-            aria-label="Open sign mirror"
+            aria-label="Mở gương ký hiệu"
             role="button"
             className="absolute bottom-2 left-2 inline-flex items-center justify-center w-6 h-8 bg-white/90 hover:bg-white transition-colors rounded"
             data-testid="mirror-button"

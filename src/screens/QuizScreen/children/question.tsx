@@ -274,38 +274,7 @@ export const Question: React.FC<QuestionProps> = ({
     
     return (
       <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center p-6">
-        {/* Progress bar trên cùng */}
-        <div className="flex items-center justify-between">
-        <button 
-          aria-label="Open Quiz navigation" 
-          className="p-2 rounded hover:bg-gray-200"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24" height="24">
-            <g stroke="#292F32" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5">
-              <path d="M2 12h20M2 6h20M2 18h20"/>
-            </g>
-          </svg>
-        </button>
-        
-        <div className="flex-1 mx-4">
-          {/* Progress bar */}
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className="h-2 bg-blue-500 transition-all duration-300" 
-              style={{ width: `${progressPercentage}%` }} 
-            />
-          </div>
-        </div>
-        
-        <button 
-          aria-label="Change video speed" 
-          className="p-2 rounded hover:bg-gray-200"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" width="28" height="28">
-            <circle cx="18" cy="18" r="14" fill="#C7CBCD"/>
-          </svg>
-        </button>
-      </div>
+
 
         {/* Tiêu đề */}
         <h2 className="text-lg font-medium text-gray-800 mt-8 mb-4 text-center">
@@ -318,7 +287,7 @@ export const Question: React.FC<QuestionProps> = ({
             {mediaType === "image" ? (
               <img
                 src={mediaUrl}
-                alt="Question image"
+                alt="Ảnh câu hỏi"
                 className="w-full aspect-square object-cover"
               />
             ) : (
@@ -361,7 +330,7 @@ export const Question: React.FC<QuestionProps> = ({
                           : showIncorrect
                           ? 'border-red-500'
                           : 'border-blue-500'
-                        : 'border-gray-300 hover:border-orange-200'
+                        : 'border-gray-300 hover:border-blue-200'
                     }`}
                   >
                     {/* Ảnh hoặc Video */}
@@ -401,7 +370,7 @@ export const Question: React.FC<QuestionProps> = ({
                         tabIndex={0}
                         className={`w-7 h-7 rounded-full border-2 flex items-center justify-center ${
                           isSelected
-                            ? 'border-orange-500 bg-blue-500'
+                            ? 'border-blue-500 bg-blue-500'
                             : 'border-gray-400 bg-white'
                         }`}
                       >

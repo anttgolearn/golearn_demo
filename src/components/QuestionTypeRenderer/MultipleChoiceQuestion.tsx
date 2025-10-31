@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Question, QuestionTypeRendererProps } from "./QuestionTypeRenderer";
+import { getAnswerStatus, getCorrectAnswersCount, getSelectedCorrectCount } from "../../lib/answer-evaluation";
 
 interface MultipleChoiceQuestionProps extends Omit<QuestionTypeRendererProps, 'question'> {
   question: Question;
@@ -30,27 +31,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
     onAnswerSelect(optionId);
   };
 
-  const getAnswerStatus = (option: any) => {
-    if (!showResult) return '';
-    
-    if (option.isCorrect) {
-      return 'correct';
-    } else if (selectedAnswers.includes(option.id)) {
-      return 'incorrect';
-    }
-    return '';
-  };
-
-  const getCorrectAnswersCount = () => {
-    return question.answerOptions.filter(option => option.isCorrect).length;
-  };
-
-  const getSelectedCorrectCount = () => {
-    return selectedAnswers.filter(answerId => {
-      const option = question.answerOptions.find(opt => opt.id === answerId);
-      return option?.isCorrect;
-    }).length;
-  };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100">
@@ -101,12 +82,12 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                 Chọn tất cả đáp án đúng:
               </h3>
               <div className="text-sm text-gray-500">
-                {selectedAnswers.length} đã chọn / {getCorrectAnswersCount()} đáp án đúng
+                {selectedAnswers.length} đã chọn / {getCorrectAnswersCount(question.answerOptions)} đáp án đúng
               </div>
             </div>
             
             {question.answerOptions.map((option, index) => {
-              const status = getAnswerStatus(option);
+              const status = getAnswerStatus(option, selectedAnswers, showResult);
               
               return (
                 <button
@@ -114,13 +95,13 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                   onClick={() => handleAnswerSelect(option.id)}
                   className={`w-full p-4 rounded-xl border-2 transition-all duration-200 text-left answer-option ${
                     selectedAnswers.includes(option.id)
-                      ? 'border-orange-500 bg-orange-50 selected'
+                      ? 'border-blue-500 bg-blue-50 selected'
                       : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   } ${
                     showResult 
-                      ? status === 'correct'
+                      ? status === 'Chính xác'
                         ? 'border-green-500 bg-green-50 correct'
-                        : status === 'incorrect'
+                        : status === 'Không chính xác'
                           ? 'border-red-500 bg-red-50 incorrect'
                           : 'border-gray-200'
                       : ''
@@ -131,7 +112,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                     {/* Checkbox */}
                     <div className={`w-6 h-6 rounded border-2 flex items-center justify-center selection-indicator ${
                       selectedAnswers.includes(option.id)
-                        ? 'border-orange-500 bg-orange-500 selected'
+                        ? 'border-blue-500 bg-blue-500 selected'
                         : 'border-gray-300'
                     }`}>
                       {selectedAnswers.includes(option.id) && (
@@ -171,7 +152,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                     {/* Result Indicator */}
                     {showResult && (
                       <div className="text-2xl result-indicator">
-                        {status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : ''}
+                        {status === 'Chính xác' ? '✅' : status === 'Không chính xác' ? '❌' : ''}
                       </div>
                     )}
                   </div>
@@ -182,10 +163,10 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
 
           {/* Progress Indicator */}
           {!showResult && (
-            <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div className="flex items-center gap-3">
-                <div className="text-orange-500 text-xl">💡</div>
-                <div className="text-sm text-orange-700">
+                <div className="text-blue-500 text-xl">💡</div>
+                <div className="text-sm text-blue-700">
                   <strong>Mẹo:</strong> Có thể có nhiều đáp án đúng. Hãy chọn tất cả các đáp án bạn cho là đúng.
                 </div>
               </div>
@@ -195,28 +176,28 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
           {/* Result Summary */}
           {showResult && (
             <div className="mt-6 p-4 rounded-lg border-2 ${
-              getSelectedCorrectCount() === getCorrectAnswersCount() && selectedAnswers.length === getCorrectAnswersCount()
+              getSelectedCorrectCount(selectedAnswers, question.answerOptions) === getCorrectAnswersCount(question.answerOptions) && selectedAnswers.length === getCorrectAnswersCount(question.answerOptions)
                 ? 'bg-green-50 border-green-200'
                 : 'bg-red-50 border-red-200'
             }">
               <div className="flex items-center gap-3">
                 <div className="text-2xl">
-                  {getSelectedCorrectCount() === getCorrectAnswersCount() && selectedAnswers.length === getCorrectAnswersCount()
+                  {getSelectedCorrectCount(selectedAnswers, question.answerOptions) === getCorrectAnswersCount(question.answerOptions) && selectedAnswers.length === getCorrectAnswersCount(question.answerOptions)
                     ? '🎉'
                     : '😔'
                   }
                 </div>
                 <div>
                   <div className="font-semibold text-gray-800">
-                    {getSelectedCorrectCount() === getCorrectAnswersCount() && selectedAnswers.length === getCorrectAnswersCount()
+                    {getSelectedCorrectCount(selectedAnswers, question.answerOptions) === getCorrectAnswersCount(question.answerOptions) && selectedAnswers.length === getCorrectAnswersCount(question.answerOptions)
                       ? 'Chính xác!'
                       : 'Chưa hoàn toàn đúng'
                     }
                   </div>
                   <div className="text-sm text-gray-600">
-                    Bạn đã chọn đúng {getSelectedCorrectCount()}/{getCorrectAnswersCount()} đáp án đúng
-                    {selectedAnswers.length > getCorrectAnswersCount() && 
-                      ` (${selectedAnswers.length - getCorrectAnswersCount()} đáp án sai)`
+                    Bạn đã chọn đúng {getSelectedCorrectCount(selectedAnswers, question.answerOptions)}/{getCorrectAnswersCount(question.answerOptions)} đáp án đúng
+                    {selectedAnswers.length > getCorrectAnswersCount(question.answerOptions) && 
+                      ` (${selectedAnswers.length - getCorrectAnswersCount(question.answerOptions)} đáp án sai)`
                     }
                   </div>
                 </div>
@@ -239,7 +220,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
               <button
                 onClick={onSubmitAnswer}
                 disabled={selectedAnswers.length === 0}
-                className="px-8 py-3 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-8 py-3 bg-blue-500 text-white font-semibold rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Kiểm tra
               </button>

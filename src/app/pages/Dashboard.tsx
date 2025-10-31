@@ -345,77 +345,6 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
     {
       id: "unit-3",
       unitNumber: 3,
-      title: "Số đếm và Thời gian",
-      totalChapters: 10,
-      icon: "🔢",
-      thumbnail: "/images/lesson-numbers-DJNsYzix.jpg",
-      gradient: "from-green-200 via-green-100 to-green-50",
-      chapters: [
-        {
-          id: "3",
-          chapterNumber: 1,
-          title: "Số từ 1-20",
-          lessonsCompleted: 0,
-          totalLessons: 6,
-          isActive: false,
-          isLocked: false,
-          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
-        },
-        {
-          id: "17",
-          chapterNumber: 2,
-          title: "Số từ 21-100",
-          lessonsCompleted: 0,
-          totalLessons: 6,
-          isActive: false,
-          isLocked: false,
-          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
-        },
-        {
-          id: "18",
-          chapterNumber: 3,
-          title: "Thời gian trong ngày",
-          lessonsCompleted: 0,
-          totalLessons: 6,
-          isActive: false,
-          isLocked: false,
-          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
-        },
-        {
-          id: "19",
-          chapterNumber: 4,
-          title: "Ngày trong tuần",
-          lessonsCompleted: 0,
-          totalLessons: 6,
-          isActive: false,
-          isLocked: false,
-          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
-        },
-        {
-          id: "20",
-          chapterNumber: 5,
-          title: "Tháng và năm",
-          lessonsCompleted: 0,
-          totalLessons: 6,
-          isActive: false,
-          isLocked: false,
-          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
-        },
-        {
-          id: "21",
-          chapterNumber: 6,
-          title: "Thực hành số đếm",
-          lessonsCompleted: 0,
-          totalLessons: 6,
-          isActive: false,
-          isLocked: true,
-          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
-        }
-      ]
-    },
-    {
-      id: "unit-4",
-      unitNumber: 4,
       title: "Cảm xúc và Tình cảm",
       totalChapters: 6,
       icon: "😊",
@@ -481,6 +410,77 @@ const Dashboard = ({ onGoToLessonDetail, onGoToChapterOverview, onLogout }: Dash
           isActive: false,
           isLocked: true,
           thumbnail: "/images/lesson-emotions-CLtOmn_z.jpg"
+        }
+      ]
+    },
+    {
+      id: "unit-4",
+      unitNumber: 4,
+      title: "Số đếm và Thời gian",
+      totalChapters: 10,
+      icon: "🔢",
+      thumbnail: "/images/lesson-numbers-DJNsYzix.jpg",
+      gradient: "from-green-200 via-green-100 to-green-50",
+      chapters: [
+        {
+          id: "3",
+          chapterNumber: 1,
+          title: "Số từ 1-20",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "17",
+          chapterNumber: 2,
+          title: "Số từ 21-100",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "18",
+          chapterNumber: 3,
+          title: "Thời gian trong ngày",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "19",
+          chapterNumber: 4,
+          title: "Ngày trong tuần",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "20",
+          chapterNumber: 5,
+          title: "Tháng và năm",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: false,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
+        },
+        {
+          id: "21",
+          chapterNumber: 6,
+          title: "Thực hành số đếm",
+          lessonsCompleted: 0,
+          totalLessons: 6,
+          isActive: false,
+          isLocked: true,
+          thumbnail: "/images/lesson-numbers-DJNsYzix.jpg"
         }
       ]
     }

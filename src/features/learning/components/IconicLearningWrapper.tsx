@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Question } from '../../../screens/QuizScreen/children/question';
 import { iconicVocabularyByChapter } from '../data/iconic-vocabulary';
+import { QuizHeader } from '../../../components/molecules/QuizHeader/QuizHeader';
 
 interface IconicLearningWrapperProps {
   onComplete: (score: number, timeSpent: number) => void;
@@ -151,24 +152,39 @@ const IconicLearningWrapper: React.FC<IconicLearningWrapperProps> = ({ onComplet
   };
 
   return (
-    <Question
-      prompt={getPrompt()}
-      type="ICONIC_LEARNING"
-      mediaUrl={getCenterMedia()}
-      mediaType={getCenterMediaType()}
-      selected={selectedAnswer}
-      onSelect={handleSelect}
-      showResult={showFeedback}
-      correctAnswer={currentWord.options.find((opt: any) => opt.isCorrect)?.id.toString()}
-      iconicOptions={currentWord.options}
-      currentIndex={currentIndex}
-      totalQuestions={iconicVocabulary.length}
-      onIconicAnswer={handleIconicAnswer}
-      onSubmitAnswer={handleSubmitAnswer}
-      buttonText={getButtonText()}
-      onButtonClick={handleButtonClick}
-      buttonDisabled={!selectedAnswer}
-    />
+    <div className="min-h-screen bg-gray-100">
+      <div className="w-full max-w-5xl mx-auto px-4 py-4">
+        {/* Quiz Header (default) */}
+        <QuizHeader
+          currentIndex={currentIndex}
+          totalQuestions={iconicVocabulary.length}
+          onMenuClick={() => {}}
+          onSpeedClick={() => {}}
+        />
+
+        {/* Content area */}
+        <div className="mt-6">
+          <Question
+            prompt={getPrompt()}
+            type="ICONIC_LEARNING"
+            mediaUrl={getCenterMedia()}
+            mediaType={getCenterMediaType()}
+            selected={selectedAnswer}
+            onSelect={handleSelect}
+            showResult={showFeedback}
+            correctAnswer={currentWord.options.find((opt: any) => opt.isCorrect)?.id.toString()}
+            iconicOptions={currentWord.options}
+            currentIndex={currentIndex}
+            totalQuestions={iconicVocabulary.length}
+            onIconicAnswer={handleIconicAnswer}
+            onSubmitAnswer={handleSubmitAnswer}
+            buttonText={getButtonText()}
+            onButtonClick={handleButtonClick}
+            buttonDisabled={!selectedAnswer}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

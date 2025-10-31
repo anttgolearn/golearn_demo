@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 type QuizHeaderProps = {
   currentIndex: number;
   totalQuestions: number;
   onMenuClick?: () => void;
   onSpeedClick?: () => void;
+  onExitLesson?: () => void;
 };
 
 export const QuizHeader: React.FC<QuizHeaderProps> = ({
@@ -12,16 +13,23 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
   totalQuestions,
   onMenuClick,
   onSpeedClick,
+  onExitLesson,
 }) => {
   const progressPercentage = ((currentIndex + 1) / totalQuestions) * 100;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleOpenMenu = () => {
+    setIsMenuOpen(true);
+    if (onMenuClick) onMenuClick();
+  };
 
   return (
     <div className="w-full max-w-5xl mx-auto" data-testid="quiz-header-wrapper">
       <div className="flex items-center justify-between">
         <button 
-          aria-label="Open Quiz navigation" 
+          aria-label="Mở menu bài kiểm tra" 
           className="p-2 rounded hover:bg-gray-200"
-          onClick={onMenuClick}
+          onClick={handleOpenMenu}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24" height="24">
             <g stroke="#292F32" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5">
@@ -41,7 +49,7 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
         </div>
         
         <button 
-          aria-label="Change video speed" 
+          aria-label="Thay đổi tốc độ video" 
           className="p-2 rounded hover:bg-gray-200"
           onClick={onSpeedClick}
         >
@@ -50,6 +58,56 @@ export const QuizHeader: React.FC<QuizHeaderProps> = ({
           </svg>
         </button>
       </div>
+
+      {isMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 z-[9998]"
+            onClick={() => setIsMenuOpen(false)}
+          />
+
+          {/* Bottom Sheet Modal */}
+          <div className="fixed inset-0 z-[9999] flex items-end" role="dialog" aria-modal="true">
+            <div className="w-full bg-white rounded-t-3xl shadow-2xl animate-slide-up-from-bottom" style={{ paddingBottom: "24px" }}>
+              {/* Header with close */}
+              <div className="flex items-center justify-end p-4">
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="h-10 w-10 p-0 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
+                  aria-label="Đóng cửa sổ"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="24" height="24">
+                    <path stroke="#292F32" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 4 4 20m16 0L4 4" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="px-6 pb-2">
+                <div className="space-y-4">
+                  <button
+                    className="w-full h-12 rounded-full bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Tiếp tục học
+                  </button>
+                  <button
+                    className="w-full h-12 rounded-full border border-blue-500 text-blue-600 font-semibold bg-white hover:bg-blue-50 transition-colors"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onExitLesson?.();
+                    }}
+                  >
+                    Thoát bài học
+                  </button>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

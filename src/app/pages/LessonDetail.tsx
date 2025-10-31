@@ -925,7 +925,7 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
             title: 'Ký hiệu biểu tượng', 
             description: 'Học các ký hiệu đặc trưng thông qua visual learning', 
             icon: '⭐', 
-            color: 'from-yellow-500 to-orange-600', 
+            color: 'from-blue-500 to-blue-600', 
             exercises: 5,
             component: 'IconicLearning'
           },
@@ -1892,7 +1892,7 @@ const LessonDetail = ({ lessonId, onBackToDashboard }: LessonDetailProps) => {
                     </Button>
                     <Button 
                       className={cn(
-                        "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700",
+                        "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
                         "transition-all duration-300 hover:scale-110 shadow-lg",
                         "transform-gpu w-full sm:w-auto"
                       )}

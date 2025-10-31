@@ -11,19 +11,16 @@ import {
 export const VIDEO_CONTENT_MAP = {
   // Greetings and Basic Communication - Expanded for comprehensive QuizScreen
   greetings: {
-    'chao': { label: 'Chào', video: '/resources/videos/Chào.mp4' },
     'tam-biet': { label: 'Tạm biệt', video: '/resources/videos/tạm biệt.mp4' },
     'xin-loi': { label: 'Xin lỗi', video: '/resources/videos/xin lỗi.mp4' },
-    'cam-on': { label: 'Cảm ơn', video: '/resources/videos/Chào.mp4' }, // Reuse video for demonstration
-    'xin-chao': { label: 'Xin chào', video: '/resources/videos/tạm biệt.mp4' }, // Reuse video for demonstration
-    'chao-ban': { label: 'Chào bạn', video: '/resources/videos/xin lỗi.mp4' }, // Reuse video for demonstration
+    'cam-on': { label: 'Cảm ơn', video: '/resources/videos/cảm ơn.mp4' },
+    'xin-chao': { label: 'Xin chào', video: '/resources/videos/Chào.mp4' },
   },
   
   // Family and Relationships
   family: {
     'bo': { label: 'Bố', video: '/resources/videos/bố.mp4' },
     'me': { label: 'Mẹ', video: '/resources/videos/mẹ.mp4' },
-    'cha-me': { label: 'Cha mẹ', video: '/resources/videos/cha mẹ.mp4' },
     'bo-me': { label: 'Bố mẹ', video: '/resources/videos/bố mẹ.mp4' },
     'co-giao': { label: 'Cô giáo', video: '/resources/videos/cô giáo.mp4' },
     'bang-hoc-sinh': { label: 'Bảng học sinh', video: '/resources/videos/bảng học sinh.mp4' },

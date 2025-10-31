@@ -9,6 +9,7 @@ import { HARDCODED_QUIZZES } from "../../lib/mock-lessons";
 import { generateLessonContent } from "../../lib/lesson-content-generator";
 import { buildQuizFromHardcoded, getRandomClozeTemplate } from "../../lib/quiz-builders";
 import { IconicLearningWrapper } from "../../features/learning";
+import { getCurrentChapterInfo } from "../../lib/lesson-navigation";
 
 type Question = {
   id: string;
@@ -141,7 +142,7 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
           prompt: "Ký hiệu nào có nghĩa là 'Xin lỗi'?", 
           videoOptions: [
             { label: "Xin lỗi", videoSrc: "/resources/videos/xin lỗi.mp4" },
-            { label: "Cảm ơn", videoSrc: "/resources/videos/Chào.mp4" }
+            { label: "Cảm ơn", videoSrc: "/resources/videos/cảm ơn.mp4" }
           ],
           answer: "Xin lỗi" 
         },
@@ -997,7 +998,7 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <button
-                  aria-label="Retake lesson"
+                  aria-label="Làm lại bài học"
                   className="px-6 py-3 rounded-lg border bg-white hover:bg-gray-50 text-gray-900 shadow-sm"
                   data-testid="button-panel-primary-action"
                   onClick={() => {
@@ -1012,7 +1013,7 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
                   Làm lại bài
                 </button>
                 <button
-                  aria-label="Continue"
+                  aria-label="Tiếp tục"
                   className="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow"
                   data-testid="button-panel-tertiary-action"
                   onClick={() => {
@@ -1057,6 +1058,21 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({ lessonId, onFinish }) =>
             totalQuestions={total}
             onMenuClick={() => {}}
             onSpeedClick={() => {}}
+            onExitLesson={() => {
+              try {
+                const info = getCurrentChapterInfo(lessonId);
+                if (info && typeof info.unitId === 'number' && typeof info.chapterId === 'number') {
+                  // Convert (unitId, chapterId) to global chapter index used by ChapterOverviewScreen
+                  // ChapterOverviewScreen maps: 1_1 -> 1, 1_2 -> 2, 2_1 -> 3, 2_2 -> 4, ...
+                  const globalChapterIndex = (info.unitId - 1) * 2 + info.chapterId;
+                  window.location.hash = `#/chapter/${globalChapterIndex}`;
+                } else {
+                  window.location.hash = "#/chapter/1";
+                }
+              } catch {
+                window.location.hash = "#/chapter/1";
+              }
+            }}
           />
 
           {/* Content area */}

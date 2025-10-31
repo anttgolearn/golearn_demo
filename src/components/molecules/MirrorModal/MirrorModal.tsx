@@ -70,7 +70,7 @@ export const MirrorModal: React.FC<MirrorModalProps> = ({
       <div 
         className="fixed inset-0 bg-black/50 z-40"
         onClick={onClose}
-        aria-label="Bottom sheet backdrop"
+        aria-label="Nền bảng trượt"
       />
       
       {/* Modal */}
@@ -81,7 +81,7 @@ export const MirrorModal: React.FC<MirrorModalProps> = ({
             <button
               onClick={onClose}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="Close Modal"
+              aria-label="Đóng cửa sổ"
             >
               <X className="w-6 h-6 text-gray-600" />
             </button>
@@ -133,18 +133,6 @@ export const MirrorModal: React.FC<MirrorModalProps> = ({
                 </div>
               )}
 
-              {/* Reference Video */}
-              {videoSrc && (
-                <div className="w-full h-32 bg-black rounded-xl overflow-hidden">
-                  <video
-                    src={videoSrc}
-                    autoPlay
-                    loop
-                    playsInline
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -47,13 +47,17 @@ export const OptionsCloze: React.FC<OptionsClozeProps> = ({
   const distractorWords = question.options || [];
   
   // Tạo mảng hints với Fill object cho mỗi hint
+  // Yêu cầu: chỉ hiển thị 1 chữ đầu của một từ/ cụm từ (vd: "tạm biệt" -> "tạm", "xin chào" -> "xin")
   const allHints: Fill[] = [
     ...correctHints,
-    ...distractorWords.map((word) => ({
-      value: word,
-      index: -1, // Từ nhiễu không có index hợp lệ
-      key: word.charAt(0).toLowerCase()
-    }))
+    ...distractorWords.map((word) => {
+      const firstToken = (word || '').trim().split(/\s+/)[0] || '';
+      return {
+        value: firstToken,
+        index: -1, // Từ nhiễu không có index hợp lệ
+        key: firstToken.charAt(0).toLowerCase()
+      };
+    })
   ];
 
   // Loại bỏ các hint trùng nhãn (ưu tiên giữ hint đúng có index >= 0)
@@ -143,8 +147,17 @@ export const OptionsCloze: React.FC<OptionsClozeProps> = ({
     newFills.delete(gapIdx);
     setSelectedFills(newFills);
     
-    const fillsArray = Array.from(newFills.values());
-    onSelect(fillsArray);
+    // Nếu sau khi xóa vẫn còn đủ fill cho tất cả các gap thì gửi chuỗi hoàn chỉnh,
+    // ngược lại gửi chuỗi rỗng để disable nút Kiểm tra
+    const allFilled = hiddenIndices.every(idx => newFills.has(idx));
+    if (allFilled) {
+      const composed = correctFills
+        .map((fill, idx) => (hiddenIndices.includes(idx) ? (newFills.get(idx)?.value || '') : fill.value))
+        .join(' ');
+      onSelect(composed);
+    } else {
+      onSelect('');
+    }
   };
 
   // Keyboard support (tạm thời disable vì cần refactor)
@@ -186,7 +199,7 @@ export const OptionsCloze: React.FC<OptionsClozeProps> = ({
                 type="button"
                 className={`h-12 min-w-[120px] px-4 rounded-lg border-2 text-center transition-colors text-lg font-semibold ${
                   selectedFill
-                    ? 'border-orange-500 bg-orange-100 text-orange-800'
+                    ? 'border-blue-500 bg-blue-100 text-blue-800'
                     : 'border-gray-300 bg-gray-200 text-gray-500 hover:bg-gray-300'
                 }`}
                 onClick={() => onGapPress(idx)}

@@ -57,7 +57,7 @@ const QuizMix: React.FC<QuizMixProps> = ({ onComplete, onClose }) => {
       id: 5,
       type: 'video',
       question: 'Ký hiệu này có nghĩa là gì?',
-      video: '/resources/videos/xin lỗi.mp4',
+      video: '/resources/videos/cảm ơn.mp4',
       options: ['Cảm ơn', 'Xin lỗi', 'Tạm biệt', 'Chào hỏi'],
       correct: 1
     }
@@ -162,16 +162,16 @@ const QuizMix: React.FC<QuizMixProps> = ({ onComplete, onClose }) => {
             </div>
             
             <div className="text-center p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-orange-600">{formatTime(timeSpent)}</div>
+              <div className="text-2xl font-bold text-blue-600">{formatTime(timeSpent)}</div>
               <div className="text-sm text-muted-foreground">Thời gian hoàn thành</div>
             </div>
 
-            <div className="text-center p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg">
+            <div className="text-center p-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Star className="w-5 h-5 text-yellow-500" />
-                <span className="text-lg font-semibold text-orange-700">+{xpEarned} XP</span>
+                <span className="text-lg font-semibold text-blue-700">+{xpEarned} XP</span>
               </div>
-              <div className="text-sm text-orange-600">Điểm kinh nghiệm kiếm được</div>
+              <div className="text-sm text-blue-600">Điểm kinh nghiệm kiếm được</div>
             </div>
 
             <div className="p-4 bg-green-50 rounded-lg">

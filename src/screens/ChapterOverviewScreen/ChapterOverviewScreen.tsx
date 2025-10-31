@@ -79,7 +79,7 @@ export const ChapterOverviewScreen: React.FC<ChapterOverviewScreenProps> = ({ on
       "1_1": { title: "Chào hỏi và lịch sự", description: "Học các ký hiệu chào hỏi cơ bản: Chào, Tạm biệt, Xin lỗi", icon: "👋", color: "bg-blue-50", unit: "Unit 1: Giao tiếp cơ bản" },
       "1_2": { title: "Gia đình và mối quan hệ", description: "Học ký hiệu về các thành viên gia đình: Bố, Mẹ, Cha mẹ, Bố mẹ", icon: "👨‍👩‍👧‍👦", color: "bg-green-50", unit: "Unit 1: Giao tiếp cơ bản" },
       "2_1": { title: "Cảm xúc cơ bản", description: "Học ký hiệu cảm xúc cơ bản: Vui mừng, Buồn tảm, Giận dữ, Thích thú, Ngạc nhiên, Hoảng sợ, Lo sợ, Tuyệt vọng, Hồi hộp, Bối rối", icon: "😊", color: "bg-blue-50", unit: "Unit 2: Cảm xúc và tâm trạng" },
-      "2_2": { title: "Cảm xúc nâng cao", description: "Học các cảm xúc phức tạp: Tự tin, Lo sợ, Ghen tị, Tuyệt vọng, Ngẹn ngàoi, Cô đơn, Giận dỗi, Nổi giận", icon: "🤔", color: "bg-orange-50", unit: "Unit 2: Cảm xúc và tâm trạng" },
+      "2_2": { title: "Cảm xúc nâng cao", description: "Học các cảm xúc phức tạp: Tự tin, Lo sợ, Ghen tị, Tuyệt vọng, Ngẹn ngàoi, Cô đơn, Giận dỗi, Nổi giận", icon: "🤔", color: "bg-blue-50", unit: "Unit 2: Cảm xúc và tâm trạng" },
       "3_1": { title: "Động vật thường gặp", description: "Học ký hiệu động vật: Con chó, Con mèo, Con gà", icon: "🐕", color: "bg-purple-50", unit: "Unit 3: Thiên nhiên và động vật" },
       "3_2": { title: "Thời tiết và thời gian", description: "Học ký hiệu thời tiết: Mùa hè, Mùa đông, Mùa thu, Mưa phùn", icon: "🌤️", color: "bg-cyan-50", unit: "Unit 3: Thiên nhiên và động vật" },
       "4_1": { title: "Số đếm cơ bản", description: "Học ký hiệu số đếm cơ bản: Số 1, Số 2, Số 3", icon: "🔢", color: "bg-indigo-50", unit: "Unit 4: Số đếm và hình học" },
@@ -125,7 +125,7 @@ export const ChapterOverviewScreen: React.FC<ChapterOverviewScreenProps> = ({ on
             <button
               className="border rounded-full w-12 h-12 flex items-center justify-center bg-white text-lg hover:bg-gray-50 transition-colors shadow-sm"
               data-testid="chapter-overview-back"
-              aria-label="Back"
+              aria-label="Quay lại"
               onClick={() => window.location.href = '/dashboard#/dashboard'}
             >
               ←
@@ -218,7 +218,7 @@ export const ChapterOverviewScreen: React.FC<ChapterOverviewScreenProps> = ({ on
                   if (next) onOpenLesson?.(String(next.id));
                 }}
                 data-testid="chapter-continue-cta"
-                aria-label="Continue learning"
+                aria-label="Tiếp tục học"
               >
                 Tiếp tục học
               </button>

@@ -113,10 +113,10 @@ export const ReviewVocabScreen: React.FC<Props> = ({
 
   // Get theme colors - default orange theme
   const theme = {
-    primary: 'bg-orange-500',
-    primaryLight: 'bg-orange-100',
-    primaryDark: 'bg-orange-600',
-    background: 'from-orange-50 to-orange-100'
+    primary: 'bg-blue-500',
+    primaryLight: 'bg-blue-100',
+    primaryDark: 'bg-blue-600',
+    background: 'from-blue-50 to-blue-100'
   };
 
   return (
@@ -224,7 +224,7 @@ export const ReviewVocabScreen: React.FC<Props> = ({
             }}
             onClick={(e) => e.stopPropagation()}
             role="slider"
-            aria-label="Bottom Sheet"
+            aria-label="Bảng trượt"
           >
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
@@ -234,7 +234,7 @@ export const ReviewVocabScreen: React.FC<Props> = ({
                 <button
                   onClick={handleCloseVideo}
                   className="h-10 w-10 p-0 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center"
-                  aria-label="Close Modal"
+                  aria-label="Đóng cửa sổ"
                   data-testid="modal-navigation-close"
                 >
                   <svg 
@@ -332,7 +332,7 @@ export const ReviewVocabScreen: React.FC<Props> = ({
                 {videoLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
                     <div className="text-center">
-                      <div className="animate-spin w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto mb-2"></div>
+                      <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-2"></div>
                       <div className="text-sm text-gray-600">Đang tải video...</div>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export const ReviewVocabScreen: React.FC<Props> = ({
                             video.style.display = 'block';
                           }
                         }}
-                        className="mt-3 px-3 py-1 bg-orange-500 text-white text-xs rounded hover:bg-orange-600 transition-colors"
+                        className="mt-3 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
                       >
                         Thử lại
                       </button>
@@ -372,7 +372,7 @@ export const ReviewVocabScreen: React.FC<Props> = ({
                 {/* Speed Control Button - Bottom Right */}
                 <button
                   className="absolute bottom-4 right-4 h-9 w-9 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
-                  aria-label="Change video speed"
+                  aria-label="Thay đổi tốc độ video"
                   data-testid="turtle-slower-active"
                 >
                   <svg 

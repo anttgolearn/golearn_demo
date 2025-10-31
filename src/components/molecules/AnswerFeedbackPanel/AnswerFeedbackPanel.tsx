@@ -5,11 +5,13 @@ import IncorrectIcon from '../../atoms/Icon/IncorrectIcon';
 interface AnswerFeedbackPanelProps {
   isCorrect: boolean;
   onNext: () => void;
+  onRetry?: () => void;
 }
 
 export const AnswerFeedbackPanel: React.FC<AnswerFeedbackPanelProps> = ({ 
   isCorrect, 
-  onNext 
+  onNext,
+  onRetry
 }) => {
   return (
     <div 
@@ -35,13 +37,21 @@ export const AnswerFeedbackPanel: React.FC<AnswerFeedbackPanelProps> = ({
                   isCorrect ? 'text-green-800' : 'text-red-800'
                 }`}
               >
-                {isCorrect ? 'Correct!' : 'Incorrect!'}
+                {isCorrect ? 'Chính xác!' : 'Không chính xác!'}
               </div>
             </div>
           </div>
 
-          {/* Next Button - Centered */}
-          <div className="flex justify-center">
+          {/* Action Buttons - Centered */}
+          <div className="flex justify-center gap-3">
+            {!isCorrect && onRetry && (
+              <button
+                onClick={onRetry}
+                className="px-6 py-3 rounded-lg font-semibold text-base border border-gray-300 text-gray-800 bg-white hover:bg-gray-50 transition-all duration-200 active:scale-95"
+              >
+                Thử lại
+              </button>
+            )}
             <button
               onClick={onNext}
               className={`
@@ -54,7 +64,7 @@ export const AnswerFeedbackPanel: React.FC<AnswerFeedbackPanelProps> = ({
               `}
               data-testid="lesson-button"
             >
-              Next
+              Tiếp theo
             </button>
           </div>
         </div>

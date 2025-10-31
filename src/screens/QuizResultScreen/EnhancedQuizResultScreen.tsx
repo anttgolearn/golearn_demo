@@ -76,12 +76,12 @@ export const EnhancedQuizResultScreen: React.FC<Props> = ({
       buttonColor: 'bg-green-500 hover:bg-green-600'
     };
     if (percent >= 70) return { 
-      color: 'text-orange-500', 
-      bgColor: 'bg-orange-50',
+      color: 'text-blue-500', 
+      bgColor: 'bg-blue-50',
       message: "You're so close!", 
       subMessage: 'Repeat the lesson and get over 80% to complete it.',
       emoji: '🤚',
-      buttonColor: 'bg-orange-500 hover:bg-orange-600'
+      buttonColor: 'bg-blue-500 hover:bg-blue-600'
     };
     if (percent >= 50) return { 
       color: 'text-yellow-600', 
@@ -120,7 +120,7 @@ export const EnhancedQuizResultScreen: React.FC<Props> = ({
         {/* Header with Streak */}
         {showStreak && currentStreak > 0 && (
           <div className="text-center mb-6 animate-fade-in-up">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-sm font-medium">
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
               🔥 {currentStreak} day streak
             </div>
           </div>
@@ -136,7 +136,7 @@ export const EnhancedQuizResultScreen: React.FC<Props> = ({
         {/* Score Display */}
         <div className="text-center mb-8" data-testid="quiz-result-header">
           <div className={`mb-4 ${isAnimating ? 'animate-score-count' : ''}`}>
-            <div className="text-7xl font-bold text-orange-500 mb-2">
+            <div className="text-7xl font-bold text-blue-500 mb-2">
               {displayScore}%
             </div>
           </div>
@@ -187,7 +187,7 @@ export const EnhancedQuizResultScreen: React.FC<Props> = ({
         <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           {/* Primary Button */}
           <button 
-            className="w-full py-4 px-8 rounded-2xl font-semibold text-lg text-white bg-orange-500 hover:bg-orange-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
+            className="w-full py-4 px-8 rounded-2xl font-semibold text-lg text-white bg-blue-500 hover:bg-blue-600 transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg"
             onClick={onRetry}
             data-testid="button-panel-primary-action"
           >

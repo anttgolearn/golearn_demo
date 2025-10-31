@@ -116,10 +116,10 @@ export const ContentPage: React.FC<ContentPageProps> = ({
         background: 'from-green-50 to-emerald-100'
       },
       orange: {
-        primary: 'bg-orange-500 hover:bg-orange-600',
-        secondary: 'bg-orange-100 text-orange-800',
-        accent: 'border-orange-500',
-        background: 'from-orange-50 to-amber-100'
+        primary: 'bg-blue-500 hover:bg-blue-600',
+        secondary: 'bg-blue-100 text-blue-800',
+        accent: 'border-blue-500',
+        background: 'from-blue-50 to-indigo-100'
       },
       purple: {
         primary: 'bg-purple-500 hover:bg-purple-600',

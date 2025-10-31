@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Question, QuestionTypeRendererProps } from "./QuestionTypeRenderer";
+import { getAnswerStatus } from "../../lib/answer-evaluation";
 
 interface DialogQuestionProps extends Omit<QuestionTypeRendererProps, 'question'> {
   question: Question;
@@ -52,16 +53,7 @@ export const DialogQuestion: React.FC<DialogQuestionProps> = ({
     onAnswerSelect(optionId);
   };
 
-  const getAnswerStatus = (option: any) => {
-    if (!showResult) return '';
-    
-    if (option.isCorrect) {
-      return 'correct';
-    } else if (selectedAnswers.includes(option.id)) {
-      return 'incorrect';
-    }
-    return '';
-  };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100">
@@ -193,7 +185,7 @@ export const DialogQuestion: React.FC<DialogQuestionProps> = ({
               </h3>
               
               {question.answerOptions.map((option, index) => {
-                const status = getAnswerStatus(option);
+                const status = getAnswerStatus(option, selectedAnswers, showResult);
                 
                 return (
                   <button
@@ -205,9 +197,9 @@ export const DialogQuestion: React.FC<DialogQuestionProps> = ({
                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     } ${
                       showResult 
-                        ? status === 'correct'
+                        ? status === 'Chính xác'
                           ? 'border-green-500 bg-green-50 correct'
-                          : status === 'incorrect'
+                          : status === 'Không chính xác'
                             ? 'border-red-500 bg-red-50 incorrect'
                             : 'border-gray-200'
                         : ''
@@ -236,7 +228,7 @@ export const DialogQuestion: React.FC<DialogQuestionProps> = ({
                       {/* Result Indicator */}
                       {showResult && (
                         <div className="text-2xl result-indicator">
-                          {status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : ''}
+                          {status === 'Chính xác' ? '✅' : status === 'Không chính xác' ? '❌' : ''}
                         </div>
                       )}
                     </div>

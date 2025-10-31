@@ -1,5 +1,6 @@
 import React from "react";
 import { AnswerOption, AnswerOptionsProps } from "./AnswerOptions";
+import { getAnswerStatus } from "../../lib/answer-evaluation";
 
 interface TextAnswersProps extends Omit<AnswerOptionsProps, 'options'> {
   options: AnswerOption[];
@@ -14,16 +15,7 @@ export const TextAnswers: React.FC<TextAnswersProps> = ({
   theme = 'blue',
   disabled = false
 }) => {
-  const getAnswerStatus = (option: AnswerOption) => {
-    if (!showResult) return '';
-    
-    if (option.isCorrect) {
-      return 'correct';
-    } else if (selectedAnswers.includes(option.id)) {
-      return 'incorrect';
-    }
-    return '';
-  };
+  const getStatus = (option: AnswerOption) => getAnswerStatus(option, selectedAnswers, showResult);
 
   const getThemeClasses = (theme: string) => {
     const themes = {
@@ -40,10 +32,10 @@ export const TextAnswers: React.FC<TextAnswersProps> = ({
         indicator: 'border-green-500 bg-green-500'
       },
       orange: {
-        selected: 'border-orange-500 bg-orange-50',
+        selected: 'border-blue-500 bg-blue-50',
         correct: 'border-green-500 bg-green-50',
         incorrect: 'border-red-500 bg-red-50',
-        indicator: 'border-orange-500 bg-orange-500'
+        indicator: 'border-blue-500 bg-blue-500'
       },
       purple: {
         selected: 'border-purple-500 bg-purple-50',
@@ -68,7 +60,7 @@ export const TextAnswers: React.FC<TextAnswersProps> = ({
     <div className="text-answers-container">
       <div className="space-y-3">
         {options.map((option) => {
-          const status = getAnswerStatus(option);
+          const status = getStatus(option);
           const isSelected = selectedAnswers.includes(option.id);
           
           return (
@@ -80,9 +72,9 @@ export const TextAnswers: React.FC<TextAnswersProps> = ({
                 isSelected ? 'selected' : ''
               } ${
                 showResult 
-                  ? status === 'correct'
+                  ? status === 'Chính xác'
                     ? themeClasses.correct
-                    : status === 'incorrect'
+                    : status === 'Không chính xác'
                       ? themeClasses.incorrect
                       : ''
                   : ''
@@ -117,7 +109,7 @@ export const TextAnswers: React.FC<TextAnswersProps> = ({
                 {/* Result Indicator */}
                 {showResult && (
                   <div className="text-result-indicator">
-                    {status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : ''}
+                    {status === 'Chính xác' ? '✅' : status === 'Không chính xác' ? '❌' : ''}
                   </div>
                 )}
               </div>

@@ -45,98 +45,157 @@ export type MockQuizPayload = {
 };
 
 import { VIDEO_CONTENT_MAP } from './lesson-content-generator';
+import { SINGLE_CHOICE_QA, CLOZE_QA, QAVideoItem } from './qa-library';
+import type { SingleChoiceQA, ClozeQA } from './qa-library';
 
-export const HARDCODED_QUIZZES: Record<string, MockQuizPayload> = {
-  // Unit 1 / Chapter 1 / Lesson 1 - Discover: Greetings
-  '01_01_1-discover': {
-    id: '01_01_1-discover',
-    title: 'Discover new signs',
-    category: 'Lesson',
-    unit: { id: 1, name: 'Unit 1', title: 'Basics' },
-    lesson: { id: 101, name: 'Lesson 1' },
-    questions: [
+export const HARDCODED_QUIZZES: Record<string, MockQuizPayload> = {};
+
+type QaSingleCategory = keyof typeof SINGLE_CHOICE_QA;
+type QaClozeCategory = keyof typeof CLOZE_QA;
+
+const SINGLE_PROMPT_HTML = '<p>Chọn video đúng</p>';
+
+function isQaSingleCategory(categoryKey: string): categoryKey is QaSingleCategory {
+  return Object.prototype.hasOwnProperty.call(SINGLE_CHOICE_QA, categoryKey);
+}
+
+function isQaClozeCategory(categoryKey: string): categoryKey is QaClozeCategory {
+  return Object.prototype.hasOwnProperty.call(CLOZE_QA, categoryKey);
+}
+
+const normalizeLabel = (label: string): string => label.trim().toLowerCase();
+
+function toVideoAnswerOption(item: QAVideoItem, isCorrect: boolean): MockAnswerOption {
+  return {
+    isCorrect,
+    media: { type: 'video', url: item.video, label: item.label },
+  };
+}
+
+function pickQaDistractors(spec: SingleChoiceQA, pool: SingleChoiceQA[], max: number): QAVideoItem[] {
+  const result: QAVideoItem[] = [];
+  const seen = new Set<string>();
+  const addItem = (item: QAVideoItem) => {
+    const key = normalizeLabel(item.label);
+    if (key === normalizeLabel(spec.correct.label)) return;
+    if (seen.has(key)) return;
+    seen.add(key);
+    result.push(item);
+  };
+
+  spec.distractors.forEach(addItem);
+  for (const other of pool) {
+    if (result.length >= max) break;
+    if (normalizeLabel(other.correct.label) === normalizeLabel(spec.correct.label)) continue;
+    addItem(other.correct);
+  }
+
+  return result.slice(0, Math.max(0, max));
+}
+
+function createQaContentQuestion(id: number, unitMeta: { id: number }, spec: SingleChoiceQA): MockQuestion {
+  return {
+    id,
+    status: 'published',
+    unitNumber: unitMeta.id,
+    category: '1a',
+    title: `Từ mới: ${spec.correct.label}`,
+    type: 'content',
+    questionParts: [
       {
-        id: 1,
-        status: 'published',
-        unitNumber: 1,
-        category: '1a',
-        title: 'Từ mới: Chào',
-        type: 'content',
-        questionParts: [
-          { type: 'video', url: '/resources/videos/Chào.mp4', content: 'Chào', caption: 'Chào' },
-        ],
-        answerOptions: [],
-        hint: [],
-      },
-      {
-        id: 2,
-        status: 'published',
-        unitNumber: 1,
-        category: '2a',
-        title: 'Chọn ký hiệu đúng cho "Chào"',
-        type: 'single',
-        questionParts: [
-          { type: 'html', content: '<p>Chọn video đúng</p>' },
-        ],
-        answerOptions: [
-          { isCorrect: true, media: { type: 'video', url: '/resources/videos/Chào.mp4', label: 'Chào' } },
-          { isCorrect: false, media: { type: 'video', url: '/resources/videos/tạm biệt.mp4', label: 'Tạm biệt' } },
-        ],
-        hint: ['Hãy nhớ động tác chào hỏi.'],
-      },
-      {
-        id: 3,
-        status: 'published',
-        unitNumber: 1,
-        category: '2a',
-        title: 'Ký hiệu nào có nghĩa là "Tạm biệt"?',
-        type: 'single',
-        questionParts: [
-          { type: 'html', content: '<p>Chọn video đúng</p>' },
-        ],
-        answerOptions: [
-          { isCorrect: true, media: { type: 'video', url: '/resources/videos/tạm biệt.mp4', label: 'Tạm biệt' } },
-          { isCorrect: false, media: { type: 'video', url: '/resources/videos/xin lỗi.mp4', label: 'Xin lỗi' } },
-        ],
-        hint: [],
-      },
-      {
-        id: 4,
-        status: 'published',
-        unitNumber: 1,
-        category: '2a',
-        title: 'Ký hiệu nào có nghĩa là "Xin lỗi"?',
-        type: 'single',
-        questionParts: [
-          { type: 'html', content: '<p>Chọn video đúng</p>' },
-        ],
-        answerOptions: [
-          { isCorrect: true, media: { type: 'video', url: '/resources/videos/xin lỗi.mp4', label: 'Xin lỗi' } },
-          { isCorrect: false, media: { type: 'video', url: '/resources/videos/Chào.mp4', label: 'Chào' } },
-        ],
-        hint: [],
-      },
-      {
-        id: 5,
-        status: 'published',
-        unitNumber: 1,
-        category: '3a',
-        title: 'Điền vào chỗ trống',
-        type: 'cloze_answer',
-        questionParts: [
-          { type: 'video', url: '/resources/videos/Chào.mp4', content: 'Chào', caption: 'Chào' },
-        ],
-        answerOptions: [
-          { isCorrect: true, answerText: 'chào' },
-          { isCorrect: false, answerText: 'tạm biệt' },
-          { isCorrect: false, answerText: 'xin lỗi' },
-          { isCorrect: false, answerText: 'cảm ơn' },
-        ],
-        hint: ['chào', 'tạm biệt', 'xin lỗi', 'cảm ơn'],
+        type: 'video',
+        url: spec.correct.video,
+        content: spec.correct.label,
+        caption: spec.correct.label,
       },
     ],
-  },
-};
+    answerOptions: [],
+    hint: [],
+  };
+}
+
+function createQaSingleQuestion(
+  id: number,
+  unitMeta: { id: number },
+  spec: SingleChoiceQA,
+  pool: SingleChoiceQA[],
+  htmlContent: string = SINGLE_PROMPT_HTML
+): MockQuestion {
+  const distractors = pickQaDistractors(spec, pool, Math.min(3, Math.max(pool.length - 1, 1)));
+  const options = [
+    toVideoAnswerOption(spec.correct, true),
+    ...distractors.map(item => toVideoAnswerOption(item, false)),
+  ];
+
+  return {
+    id,
+    status: 'published',
+    unitNumber: unitMeta.id,
+    category: '2a',
+    title: spec.prompt,
+    type: 'single',
+    questionParts: [{ type: 'html', content: htmlContent }],
+    answerOptions: options,
+    hint: options
+      .map(opt => opt.media?.label)
+      .filter((label): label is string => Boolean(label))
+      .map(label => label.toLowerCase()),
+  };
+}
+
+function getQaClozeSpec(categoryKey: string, label: string): ClozeQA | undefined {
+  if (!isQaClozeCategory(categoryKey)) return undefined;
+  const pool = CLOZE_QA[categoryKey];
+  return pool.find(spec => normalizeLabel(spec.correctPhrase) === normalizeLabel(label));
+}
+
+function createQaClozeQuestion(
+  id: number,
+  unitMeta: { id: number },
+  spec: SingleChoiceQA,
+  pool: SingleChoiceQA[],
+  categoryKey: string
+): MockQuestion {
+  const clozeSpec = getQaClozeSpec(categoryKey, spec.correct.label);
+  const distractorLabels = pickQaDistractors(spec, pool, 3).map(item => item.label);
+  const baseOptions = clozeSpec
+    ? clozeSpec.options
+    : [spec.correct.label, ...distractorLabels];
+  const normalizedOptions = baseOptions
+    .map(option => option.trim())
+    .filter(Boolean);
+  const uniqueOptions = Array.from(new Map(normalizedOptions.map(opt => [normalizeLabel(opt), opt])).values());
+
+  if (uniqueOptions.length < 2) {
+    uniqueOptions.push('không biết');
+  }
+
+  const answerOptions: MockAnswerOption[] = uniqueOptions.map((option, idx) => ({
+    isCorrect: idx === 0,
+    answerText: option.toLowerCase(),
+  }));
+
+  const hint = uniqueOptions.map(option => option.toLowerCase());
+
+  return {
+    id,
+    status: 'published',
+    unitNumber: unitMeta.id,
+    category: '3a',
+    title: `Điền từ cho ký hiệu "${spec.correct.label}"`,
+    type: 'cloze_answer',
+    questionParts: [
+      {
+        type: 'video',
+        url: spec.correct.video,
+        content: spec.correct.label,
+        caption: spec.correct.label,
+      },
+    ],
+    answerOptions,
+    hint,
+  };
+}
 
 // New function to build discover quiz with 2+3 word structure
 function buildDiscoverQuizStructure(
@@ -146,6 +205,37 @@ function buildDiscoverQuizStructure(
   lessonMeta: { id: number; name: string },
   introLabel: string
 ): MockQuizPayload {
+  const qaPool = isQaSingleCategory(categoryKey) ? SINGLE_CHOICE_QA[categoryKey] : undefined;
+
+  if (qaPool && qaPool.length) {
+    const selected = qaPool.slice(0, Math.min(qaPool.length, 5));
+    const featured = selected.slice(0, Math.min(2, selected.length));
+    const questions: MockQuestion[] = [];
+    let nextId = 1;
+
+    for (const spec of featured) {
+      questions.push(createQaContentQuestion(nextId++, unitMeta, spec));
+      questions.push(createQaSingleQuestion(nextId++, unitMeta, spec, selected));
+    }
+
+    for (const spec of selected.slice(featured.length)) {
+      questions.push(createQaSingleQuestion(nextId++, unitMeta, spec, selected));
+    }
+
+    for (const spec of featured) {
+      questions.push(createQaClozeQuestion(nextId++, unitMeta, spec, selected, categoryKey));
+    }
+
+    return {
+      id: quizId,
+      title: introLabel,
+      category: 'Lesson',
+      unit: unitMeta,
+      lesson: lessonMeta,
+      questions,
+    };
+  }
+
   const entries = Object.entries(VIDEO_CONTENT_MAP[categoryKey]);
   const questions: MockQuestion[] = [];
   
@@ -296,6 +386,31 @@ function buildSingleChoiceFromCategory(
   lessonMeta: { id: number; name: string },
   introLabel: string
 ): MockQuizPayload {
+  const qaPool = isQaSingleCategory(categoryKey) ? SINGLE_CHOICE_QA[categoryKey] : undefined;
+
+  if (qaPool && qaPool.length) {
+    const selected = qaPool.slice(0, Math.min(qaPool.length, 6));
+    const questions: MockQuestion[] = [];
+    let nextId = 1;
+
+    if (selected.length) {
+      questions.push(createQaContentQuestion(nextId++, unitMeta, selected[0]));
+    }
+
+    for (const spec of selected) {
+      questions.push(createQaSingleQuestion(nextId++, unitMeta, spec, selected, `<p>${introLabel}</p>`));
+    }
+
+    return {
+      id: quizId,
+      title: introLabel,
+      category: 'Lesson',
+      unit: unitMeta,
+      lesson: lessonMeta,
+      questions,
+    };
+  }
+
   const entries = Object.entries(VIDEO_CONTENT_MAP[categoryKey]);
   const questions: MockQuestion[] = [];
   if (entries.length) {
@@ -344,6 +459,14 @@ function buildSingleChoiceFromCategory(
 }
 
 // Populate more quizzes for coverage using available videos
+HARDCODED_QUIZZES['01_01_1-discover'] = buildDiscoverQuizStructure(
+  '01_01_1-discover',
+  'greetings',
+  { id: 1, name: 'Unit 1', title: 'Basics' },
+  { id: 101, name: 'Lesson 1' },
+  'Discover new signs'
+);
+
 HARDCODED_QUIZZES['01_01_2-develop'] = buildSingleChoiceFromCategory(
   '01_01_2-develop',
   'family',

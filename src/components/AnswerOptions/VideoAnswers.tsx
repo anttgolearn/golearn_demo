@@ -1,5 +1,6 @@
 import React from "react";
 import { AnswerOption, AnswerOptionsProps } from "./AnswerOptions";
+import { getAnswerStatus } from "../../lib/answer-evaluation";
 
 interface VideoAnswersProps extends Omit<AnswerOptionsProps, 'options'> {
   options: AnswerOption[];
@@ -22,16 +23,7 @@ export const VideoAnswers: React.FC<VideoAnswersProps> = ({
   onVideoPause,
   videoRefs
 }) => {
-  const getAnswerStatus = (option: AnswerOption) => {
-    if (!showResult) return '';
-    
-    if (option.isCorrect) {
-      return 'correct';
-    } else if (selectedAnswers.includes(option.id)) {
-      return 'incorrect';
-    }
-    return '';
-  };
+  const getStatus = (option: AnswerOption) => getAnswerStatus(option, selectedAnswers, showResult);
 
   const getThemeClasses = (theme: string) => {
     const themes = {
@@ -48,10 +40,10 @@ export const VideoAnswers: React.FC<VideoAnswersProps> = ({
         indicator: 'border-green-500 bg-green-500'
       },
       orange: {
-        selected: 'border-orange-500 bg-orange-50',
+        selected: 'border-blue-500 bg-blue-50',
         correct: 'border-green-500 bg-green-50',
         incorrect: 'border-red-500 bg-red-50',
-        indicator: 'border-orange-500 bg-orange-500'
+        indicator: 'border-blue-500 bg-blue-500'
       },
       purple: {
         selected: 'border-purple-500 bg-purple-50',
@@ -76,7 +68,7 @@ export const VideoAnswers: React.FC<VideoAnswersProps> = ({
     <div className="video-answers-container">
       <div className="video-answers-grid">
         {options.map((option, index) => {
-          const status = getAnswerStatus(option);
+          const status = getStatus(option);
           const isSelected = selectedAnswers.includes(option.id);
           const isPlaying = playingVideo === index;
           
@@ -89,9 +81,9 @@ export const VideoAnswers: React.FC<VideoAnswersProps> = ({
                 isSelected ? 'selected' : ''
               } ${
                 showResult 
-                  ? status === 'correct'
+                  ? status === 'Chính xác'
                     ? themeClasses.correct
-                    : status === 'incorrect'
+                    : status === 'Không chính xác'
                       ? themeClasses.incorrect
                       : ''
                   : ''
@@ -149,7 +141,7 @@ export const VideoAnswers: React.FC<VideoAnswersProps> = ({
                       {showResult && (
                         <div className="video-result-indicator">
                           <div className="video-result-badge">
-                            {status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : ''}
+                            {status === 'Chính xác' ? '✅' : status === 'Không chính xác' ? '❌' : ''}
                           </div>
                         </div>
                       )}

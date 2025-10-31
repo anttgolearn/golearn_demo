@@ -6,6 +6,7 @@ import { Card, CardContent } from "../../shared/ui/card";
 import { Progress } from "../../shared/ui/progress";
 import { Badge } from "../../shared/ui/badge";
 import { ArrowLeft, Play, RotateCcw, Check, X, Heart } from "lucide-react";
+import { AnswerFeedbackPanel } from "../../components/molecules/AnswerFeedbackPanel";
 
 interface LessonQuestion {
   id: string;
@@ -73,6 +74,12 @@ const Lesson = () => {
     }
   };
 
+  const handleRetry = () => {
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setIsCorrect(false);
+  };
+
   const handleBack = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(prev => prev - 1);
@@ -127,14 +134,11 @@ const Lesson = () => {
               ))}
             </div>
             {showResult && (
-              <div className={`p-4 rounded-lg ${
-                isCorrect ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"
-              }`}>
-                <p className={`font-medium ${isCorrect ? "text-green-800" : "text-red-800"}`}>
-                  {isCorrect ? "Chính xác!" : "Sai rồi!"}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">{currentQ.explanation}</p>
-              </div>
+              <AnswerFeedbackPanel 
+                isCorrect={isCorrect} 
+                onNext={handleNext} 
+                onRetry={!isCorrect ? handleRetry : undefined}
+              />
             )}
           </div>
         );
@@ -218,15 +222,17 @@ const Lesson = () => {
               Làm lại
             </Button>
             
-            {currentQuestion < questions.length - 1 ? (
-              <Button onClick={handleNext} disabled={!showResult && currentQ.type === "multiple-choice"}>
-                Tiếp theo
-              </Button>
-            ) : (
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Check className="w-4 h-4 mr-2" />
-                Hoàn thành
-              </Button>
+            {!showResult && (
+              currentQuestion < questions.length - 1 ? (
+                <Button onClick={handleNext} disabled={!showResult && currentQ.type === "multiple-choice"}>
+                  Tiếp theo
+                </Button>
+              ) : (
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Check className="w-4 h-4 mr-2" />
+                  Hoàn thành
+                </Button>
+              )
             )}
           </div>
         </div>
